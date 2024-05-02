@@ -27,7 +27,7 @@ class QrxController extends Controller
         $QrType = $QrType->build();
         $QrStatus = $QrStatus->build();
         //get plan & subscription if isset
-        if(  Auth()->user()->subscription){
+        if(  Auth()->user()){
         // get date 
         $now = Carbon::now();
 
