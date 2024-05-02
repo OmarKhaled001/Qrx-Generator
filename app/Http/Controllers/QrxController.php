@@ -29,7 +29,7 @@ class QrxController extends Controller
         //get plan & subscription if isset
         if(  Auth()->user()){
             $user = auth()->user();
-            $subscription = $user->subscription();
+            $subscription = $user->onTrial();
             $nextBillingDate = $subscription->trialEndsAt();
         // retunn view with data
         return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','nextBillingDate'));
