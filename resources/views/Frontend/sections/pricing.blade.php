@@ -40,7 +40,7 @@
                             </div>
 
                             <!-- Button -->
-                            <a href="#" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
+                            <a href="{{route('checkout',['plan','price_1PC1zlLRlOehGOvHKo9Gx6f3'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -74,7 +74,7 @@
                                 <!-- Monthly Price -->	
                                 <div class="price2">
                                     <sup class="color--black">$</sup>								
-                                    <span class="color--black">100</span>
+                                    <span class="color--black">15</span>
                                     <sup class="validity color--grey">&nbsp;/&ensp;Year</sup>
                                 </div>
 
@@ -85,7 +85,7 @@
                             </div>	<!-- End Price -->	
 
                             <!-- Button -->
-                            <a href="#" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
+                            <a href="{{route('checkout',['plan','price_1PAdqvLRlOehGOvHqWbIr1xl'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -105,36 +105,24 @@
                 <!-- ADVANCED PLAN -->
                 <div class="col">
                     <div id="pt-1-3" class="p-table pricing-1-table bg--white-100 block-shadow r-12 wow fadeInUp">
-
-
                         <!-- TABLE HEADER -->
                         <div class="pricing-table-header">
-
                             <!-- Title -->
                             <h5 class="s-24">Advanced</h5>
-
                             <!-- Price -->	
                             <div class="price">	
-
                                 <!-- Monthly Price -->	
                                 <div class="price2">
                                     <sup class="color--black">$</sup>								
-                                    <span class="color--black">150</span>
+                                    <span class="color--black">30</span>
                                     <sup class="validity color--grey">&nbsp;/&ensp;Year</sup>
                                 </div>
-
-  
                                 <!-- Text -->	
                                 <p class="color--grey">For growing teams that need more services and flexibility.</p>
-
                             </div>	<!-- End Price -->	
-
                             <!-- Button -->
-                            <a href="#" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
-
+                            <a href="{{route('checkout',['plan','price_1PAdqvLRlOehGOvHkhPhkDTU'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
                         </div>	<!-- END TABLE HEADER -->
-
-
                         <!-- PRICING FEATURES -->
                         <ul class="pricing-features color--black ico-10 ico--green mt-25">
                             <li><p><span class="flaticon-check"></span> 1000 Qr</p></li>
