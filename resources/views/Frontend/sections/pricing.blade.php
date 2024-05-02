@@ -34,20 +34,20 @@
                             <!-- Price -->	
                             <div class="price">								
                                 <sup class="color--black">$</sup>								
-                                <span class="color--black">0</span>
-                                <sup class="validity color--grey">&nbsp;/&ensp;14 day</sup>
+                                <span class="color--black">6</span>
+                                <sup class="validity color--grey">&nbsp;/&ensp;Year</sup>
                                 <p class="color--grey">For professionals getting started with smaller projects.</p>
                             </div>
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'price_1PC1zlLRlOehGOvHKo9Gx6f3'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
+                            <a href="{{route('checkout',['plan'=>'prod_Q2ADleHKr5sQzl','price'=>'price_1PC5sqLRlOehGOvHxsa79pMm'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
 
                         <!-- PRICING FEATURES -->
                         <ul class="pricing-features color--black ico-10 ico--green mt-25">
-                            <li><p><span class="flaticon-check"></span> 10 Qr</p></li>
+                            <li><p><span class="flaticon-check"></span> 50 Qr</p></li>
                             <li><p><span class="flaticon-check"></span> 100 scan for qr</p></li>
                             <li><p><span class="flaticon-check"></span> For personal use</p></li>
                         </ul>	
@@ -74,7 +74,7 @@
                                 <!-- Monthly Price -->	
                                 <div class="price2">
                                     <sup class="color--black">$</sup>								
-                                    <span class="color--black">15</span>
+                                    <span class="color--black">12</span>
                                     <sup class="validity color--grey">&nbsp;/&ensp;Year</sup>
                                 </div>
 
@@ -85,7 +85,7 @@
                             </div>	<!-- End Price -->	
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'price_1PAdqvLRlOehGOvHqWbIr1xl'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
+                            <a href="{{route('checkout',['plan'=>'prod_Q2AKVqd3VMN4Xq','price'=>'price_1PC5ziLRlOehGOvHYvCTCwOa'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -114,18 +114,18 @@
                                 <!-- Monthly Price -->	
                                 <div class="price2">
                                     <sup class="color--black">$</sup>								
-                                    <span class="color--black">30</span>
+                                    <span class="color--black">15</span>
                                     <sup class="validity color--grey">&nbsp;/&ensp;Year</sup>
                                 </div>
                                 <!-- Text -->	
                                 <p class="color--grey">For growing teams that need more services and flexibility.</p>
                             </div>	<!-- End Price -->	
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'price_1PAdqvLRlOehGOvHkhPhkDTU'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
+                            <a href="{{route('checkout',['plan'=>'prod_Q2AOIk5RDyZaTq','price'=>'price_1PC648LRlOehGOvHzeOj5rcx'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
                         </div>	<!-- END TABLE HEADER -->
                         <!-- PRICING FEATURES -->
                         <ul class="pricing-features color--black ico-10 ico--green mt-25">
-                            <li><p><span class="flaticon-check"></span> 1000 Qr</p></li>
+                            <li><p><span class="flaticon-check"></span> 200 Qr</p></li>
                             <li><p><span class="flaticon-check"></span> 100000 scan for qr</p></li>
                             <li><p><span class="flaticon-check"></span> Advanced user permissions</p></li>
                         </ul>
