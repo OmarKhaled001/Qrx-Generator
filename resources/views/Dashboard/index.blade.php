@@ -17,6 +17,7 @@
         @include('Dashboard.main.sidebar')
         <div class="main-content">
             <div class="page-content">
+                <h1>{{$nextBillingDate}}</h1>
                 <div class="container-fluid">
                     {{-- @include('Dashboard.sections.home.header')
                     @if (!empty($plan))

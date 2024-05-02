@@ -28,11 +28,11 @@ class QrxController extends Controller
         $QrStatus = $QrStatus->build();
         //get plan & subscription if isset
         if(  Auth()->user()){
-        // get date 
-        $now = Carbon::now();
-
+            $user = auth()->user();
+            $subscription = $user->subscription();
+            $nextBillingDate = $subscription->nextPaymentAt();
         // retunn view with data
-        return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs'));
+        return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','nextBillingDate'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
         }
