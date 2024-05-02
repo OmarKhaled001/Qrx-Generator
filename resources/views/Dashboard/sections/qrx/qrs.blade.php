@@ -10,7 +10,7 @@
                         <div class="col-md-6 text-center">
                             
                             <div class="align-middle pt-2" >
-                                <img class="rounded-start img-fluid h-100 object-cover" src="{{asset($qrxCode->path)}}" alt="{{$qrxCode->type}}">
+                                <img class="rounded-start img-fluid h-100 object-cover" src="{{asset('storage/'.$qrxCode->path)}}" alt="{{$qrxCode->type}}">
 
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                                                                         {{-- <a type="button" class="text-success text-end  fw-bold h3 " data-bs-toggle="modal" data-bs-target="#downloadModal{{$qrxCode->id}}">
                                                 <i class="ph ph-download-simple"></i>
                                             </a> --}}
-                                            <a type="button" class="text-success text-end  fw-bold h3 " href="{{asset($qrxCode->path)}}" download>
+                                            <a type="button" class="text-success text-end  fw-bold h3 " href="{{asset('storage/'.$qrxCode->path)}}" download>
                                                 <i class="ph ph-download-simple"></i>
                                             </a>
                                         </div>

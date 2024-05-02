@@ -154,7 +154,7 @@ class QrxCreate extends Component
                     //store qr as image
                       if( $this->gradientTo != null && $this->gradientFrom != null){
                         $qr = QrCode::format('png')
-                        ->size(350)
+                        ->size(500)
                         ->errorCorrection('H')
                         ->encoding('UTF-8')
                         ->style($this->style)
@@ -165,7 +165,7 @@ class QrxCreate extends Component
                         ->generate(route('qr.show', $qrxCode->code) );
                     }else{
                         $qr = QrCode::format('png')
-                        ->size(350)
+                        ->size(500)
                         ->errorCorrection('H')
                         ->encoding('UTF-8')
                         ->style($this->style)
@@ -176,9 +176,9 @@ class QrxCreate extends Component
                         ->generate(route('qr.show', $qrxCode->code) );
                     }   
                 
-                    $path = $qrxCode->code.'.png';
-                    Storage::disk('qrs')->put($path,$qr);
-                    $qrxCode->path = 'qrs/'.$path;
+                    $path = 'qrxs/'.$qrxCode->code.'.png';
+                    Storage::disk('public')->put($path,$qr);
+                    $qrxCode->path = $path;
                     $qrxCode->save();
 
                     // create feture by tab
