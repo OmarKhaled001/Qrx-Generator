@@ -85,7 +85,7 @@
                             </div>	<!-- End Price -->	
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'prod_Q2AKVqd3VMN4Xq','price'=>'price_1PC5ziLRlOehGOvHYvCTCwOa'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
+                            <a href="{{route('checkout',['id'=>2])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted"</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -108,7 +108,7 @@
                         <!-- TABLE HEADER -->
                         <div class="pricing-table-header">
                             <!-- Title -->
-                            <h5 class="s-24">Advanced</h5>
+                            <h5 class="s-24">Advanced Plan</h5>
                             <!-- Price -->	
                             <div class="price">	
                                 <!-- Monthly Price -->	
@@ -121,7 +121,7 @@
                                 <p class="color--grey">For growing teams that need more services and flexibility.</p>
                             </div>	<!-- End Price -->	
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'prod_Q2AOIk5RDyZaTq','price'=>'price_1PC648LRlOehGOvHzeOj5rcx'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
+                            <a href="{{route('checkout',['id'=>3])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
                         </div>	<!-- END TABLE HEADER -->
                         <!-- PRICING FEATURES -->
                         <ul class="pricing-features color--black ico-10 ico--green mt-25">
