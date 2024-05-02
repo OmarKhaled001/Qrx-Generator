@@ -1,0 +1,134 @@
+{
+  "assets-dashboard/fonts/Phosphor.eot": {
+    "file": "icons/Phosphor.eot",
+    "src": "assets-dashboard/fonts/Phosphor.eot"
+  },
+  "assets-dashboard/fonts/Phosphor.svg": {
+    "file": "icons/Phosphor.svg",
+    "src": "assets-dashboard/fonts/Phosphor.svg"
+  },
+  "assets-dashboard/fonts/Phosphor.ttf": {
+    "file": "icons/Phosphor.ttf",
+    "src": "assets-dashboard/fonts/Phosphor.ttf"
+  },
+  "assets-dashboard/fonts/Phosphor.woff": {
+    "file": "icons/Phosphor.woff",
+    "src": "assets-dashboard/fonts/Phosphor.woff"
+  },
+  "assets-dashboard/fonts/Phosphor.woff2": {
+    "file": "icons/Phosphor.woff2",
+    "src": "assets-dashboard/fonts/Phosphor.woff2"
+  },
+  "assets-dashboard/fonts/bootstrap-icons.woff": {
+    "file": "icons/bootstrap-icons.woff",
+    "src": "assets-dashboard/fonts/bootstrap-icons.woff"
+  },
+  "assets-dashboard/fonts/bootstrap-icons.woff2": {
+    "file": "icons/bootstrap-icons.woff2",
+    "src": "assets-dashboard/fonts/bootstrap-icons.woff2"
+  },
+  "assets-dashboard/fonts/boxicons.eot": {
+    "file": "icons/boxicons.eot",
+    "src": "assets-dashboard/fonts/boxicons.eot"
+  },
+  "assets-dashboard/fonts/boxicons.svg": {
+    "file": "icons/boxicons.svg",
+    "src": "assets-dashboard/fonts/boxicons.svg"
+  },
+  "assets-dashboard/fonts/boxicons.ttf": {
+    "file": "icons/boxicons.ttf",
+    "src": "assets-dashboard/fonts/boxicons.ttf"
+  },
+  "assets-dashboard/fonts/boxicons.woff": {
+    "file": "icons/boxicons.woff",
+    "src": "assets-dashboard/fonts/boxicons.woff"
+  },
+  "assets-dashboard/fonts/boxicons.woff2": {
+    "file": "icons/boxicons.woff2",
+    "src": "assets-dashboard/fonts/boxicons.woff2"
+  },
+  "assets-dashboard/fonts/materialdesignicons-webfont.eot": {
+    "file": "icons/materialdesignicons-webfont.eot",
+    "src": "assets-dashboard/fonts/materialdesignicons-webfont.eot"
+  },
+  "assets-dashboard/fonts/materialdesignicons-webfont.ttf": {
+    "file": "icons/materialdesignicons-webfont.ttf",
+    "src": "assets-dashboard/fonts/materialdesignicons-webfont.ttf"
+  },
+  "assets-dashboard/fonts/materialdesignicons-webfont.woff": {
+    "file": "icons/materialdesignicons-webfont.woff",
+    "src": "assets-dashboard/fonts/materialdesignicons-webfont.woff"
+  },
+  "assets-dashboard/fonts/materialdesignicons-webfont.woff2": {
+    "file": "icons/materialdesignicons-webfont.woff2",
+    "src": "assets-dashboard/fonts/materialdesignicons-webfont.woff2"
+  },
+  "assets-dashboard/fonts/remixicon.eot": {
+    "file": "icons/remixicon.eot",
+    "src": "assets-dashboard/fonts/remixicon.eot"
+  },
+  "assets-dashboard/fonts/remixicon.svg": {
+    "file": "icons/remixicon.svg",
+    "src": "assets-dashboard/fonts/remixicon.svg"
+  },
+  "assets-dashboard/fonts/remixicon.ttf": {
+    "file": "icons/remixicon.ttf",
+    "src": "assets-dashboard/fonts/remixicon.ttf"
+  },
+  "assets-dashboard/fonts/remixicon.woff": {
+    "file": "icons/remixicon.woff",
+    "src": "assets-dashboard/fonts/remixicon.woff"
+  },
+  "assets-dashboard/fonts/remixicon.woff2": {
+    "file": "icons/remixicon.woff2",
+    "src": "assets-dashboard/fonts/remixicon.woff2"
+  },
+  "assets-dashboard/images/effect-pattern/pattern.png": {
+    "file": "icons/pattern.png",
+    "src": "assets-dashboard/images/effect-pattern/pattern.png"
+  },
+  "assets-dashboard/images/flags/us.svg": {
+    "file": "icons/us.svg",
+    "src": "assets-dashboard/images/flags/us.svg"
+  },
+  "assets-dashboard/images/modal-bg.png": {
+    "file": "icons/modal-bg.png",
+    "src": "assets-dashboard/images/modal-bg.png"
+  },
+  "assets-dashboard/images/sidebar/img-1.jpg": {
+    "file": "icons/img-1.jpg",
+    "src": "assets-dashboard/images/sidebar/img-1.jpg"
+  },
+  "assets-dashboard/images/sidebar/img-2.jpg": {
+    "file": "icons/img-2.jpg",
+    "src": "assets-dashboard/images/sidebar/img-2.jpg"
+  },
+  "assets-dashboard/images/sidebar/img-3.jpg": {
+    "file": "icons/img-3.jpg",
+    "src": "assets-dashboard/images/sidebar/img-3.jpg"
+  },
+  "assets-dashboard/images/sidebar/img-4.jpg": {
+    "file": "icons/img-4.jpg",
+    "src": "assets-dashboard/images/sidebar/img-4.jpg"
+  },
+  "assets-dashboard/scss/app.scss": {
+    "file": "css/app.min.css",
+    "isEntry": true,
+    "src": "assets-dashboard/scss/app.scss"
+  },
+  "assets-dashboard/scss/bootstrap.scss": {
+    "file": "css/bootstrap.min.css",
+    "isEntry": true,
+    "src": "assets-dashboard/scss/bootstrap.scss"
+  },
+  "assets-dashboard/scss/custom.scss": {
+    "file": "css/custom.min.css",
+    "isEntry": true,
+    "src": "assets-dashboard/scss/custom.scss"
+  },
+  "assets-dashboard/scss/icons.scss": {
+    "file": "css/icons.min.css",
+    "isEntry": true,
+    "src": "assets-dashboard/scss/icons.scss"
+  }
+}
