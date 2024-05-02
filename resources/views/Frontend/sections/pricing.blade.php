@@ -40,7 +40,7 @@
                             </div>
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan','price_1PC1zlLRlOehGOvHKo9Gx6f3'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
+                            <a href="{{route('checkout',['plan'=>'price_1PC1zlLRlOehGOvHKo9Gx6f3'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -85,7 +85,7 @@
                             </div>	<!-- End Price -->	
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan','price_1PAdqvLRlOehGOvHqWbIr1xl'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
+                            <a href="{{route('checkout',['plan'=>'price_1PAdqvLRlOehGOvHqWbIr1xl'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -121,7 +121,7 @@
                                 <p class="color--grey">For growing teams that need more services and flexibility.</p>
                             </div>	<!-- End Price -->	
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan','price_1PAdqvLRlOehGOvHkhPhkDTU'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
+                            <a href="{{route('checkout',['plan'=>'price_1PAdqvLRlOehGOvHkhPhkDTU'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
                         </div>	<!-- END TABLE HEADER -->
                         <!-- PRICING FEATURES -->
                         <ul class="pricing-features color--black ico-10 ico--green mt-25">
