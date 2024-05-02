@@ -18,16 +18,16 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
-                    @include('Dashboard.sections.home.header')
+                    {{-- @include('Dashboard.sections.home.header')
                     @if (!empty($plan))
-                    @include('Dashboard.sections.home.plan-detail')
+                    @include('Dashboard.sections.home.plan-detail') --}}
                         @if($qrxs != null)
                             @include('Dashboard.sections.home.chart')
                             @include('Dashboard.sections.home.top-qr')
                         @endif
-                    @else
+                    {{-- @else
                         @include('Dashboard.sections.qrx.subscripe')
-                    @endif
+                    @endif --}}
                 </div>
             </div>
             @include('Dashboard.main.footer')
