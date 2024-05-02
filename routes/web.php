@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     Route::get('/download', [App\Http\Controllers\QrxController::class, 'downloadQr'])->name('.qr.download');
 });
 Route::get('/x/{code}', [App\Http\Controllers\QrxController::class, 'showQr'])->name('qr.show');
+Route::get('checkout/{plan}', CheckoutController::class)->middleware('auth')->name('checkout');
 
 
 Route::middleware('auth')->group(function () {
