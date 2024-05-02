@@ -16,11 +16,8 @@ return new class extends Migration
             $table->id();
 			$table->string('plan_id');
 			$table->string('title');
-			$table->decimal('price');
-			$table->integer('scans_count');
-			$table->integer('qrs_count');
+			$table->double('price');
 			$table->boolean('is_active');
-			$table->boolean('is_hidden');
             $table->timestamps();
         });
     }
