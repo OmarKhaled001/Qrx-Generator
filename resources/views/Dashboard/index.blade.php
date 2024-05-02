@@ -17,7 +17,7 @@
         @include('Dashboard.main.sidebar')
         <div class="main-content">
             <div class="page-content">
-                <h1>{{Auth()->user->subscribed()}}</h1>
+                <h1>{{Auth()->user()->subscribed()}}</h1>
                 <div class="container-fluid">
                     {{-- @include('Dashboard.sections.home.header')
                     @if (!empty($plan))
