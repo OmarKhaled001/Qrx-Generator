@@ -122,17 +122,7 @@ class QrxCreate extends Component
 
     // genrat Qr
     public function generat(){
-        // get client and subscription
-        $qrxCodes = QrxCode::where('client_id', Auth()->user()->id)->get();
-        $subscription = Subscription::where('client_id', Auth()->user()->id)->get()->first();
-        // cheack subscription
-        if($subscription != null){
-            //get plan
-            $plan = Plan::find($subscription->plan_id);
-            // check subscription exp
-            if($subscription->expire_at >= now()  ){
-                // check count qr from plan
-                if(count($qrxCodes) <= $plan->qrs_count){
+   
                     // covert colors from HEX -> RGB
                     $color        = Hex::fromString($this->color)->toRgba();
                     $bgColor      = Hex::fromString($this->bgColor)->toRgba();
@@ -144,7 +134,7 @@ class QrxCreate extends Component
                     $qrxCode            = new QrxCode();
                     $qrxCode->name      = $this->qrxName;
                     $qrxCode->type      = $this->tab;
-                    $qrxCode->client_id = Auth()->user()->id;
+                    $qrxCode->user_id = Auth()->user()->id;
                     $qrxCode->generateCode();
                     $qrxCode->save();
                     //create style
@@ -256,17 +246,7 @@ class QrxCreate extends Component
                         default:
                     }
                     // if subscription exp redirect to upgrade plan
-                }else{
-                    redirect()->route('dashboard.error.plan.upgrade');
-                }
-                // if used qr's count in your plan redirect to upgrade plan
-            }else{
-                redirect()->route('dashboard.error.plan.upgrade');
-            }
-            // if subscription  = null  redirect to subscripe plan
-        }else{
-            redirect()->route('dashboard.error.plan.subscripe');
-        }
+                
         
     }
 }
