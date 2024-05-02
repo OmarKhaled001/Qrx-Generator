@@ -26,9 +26,7 @@ class QrxCode extends Model implements HasMedia
         'client_id',
     ];
     
-    public function user( ){
-        return $this->belongsTo(User::class);
-    }
+
     public function style( ){
         return $this->hasOne(Style::class);
     }
@@ -54,8 +52,9 @@ class QrxCode extends Model implements HasMedia
         return $this->hasOne(FeatureWifi::class);
     }
 
-
-
+    public function user( ){
+        return $this->belongsTo(User::class);
+    }
     public function generateCode() {
         $this->code = 'qx-'.rand(100000,999999);
         $this->save();
