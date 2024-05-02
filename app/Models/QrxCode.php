@@ -22,6 +22,7 @@ class QrxCode extends Model implements HasMedia
         'code',
         'scan_count',
         'status',
+        'path',
         'client_id',
     ];
     
