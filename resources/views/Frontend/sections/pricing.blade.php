@@ -40,7 +40,7 @@
                             </div>
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'prod_Q2ADleHKr5sQzl','price'=>'price_1PC5sqLRlOehGOvHxsa79pMm'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Free</a>
+                            <a href="{{route('checkout',['id'=>1])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
@@ -85,7 +85,7 @@
                             </div>	<!-- End Price -->	
 
                             <!-- Button -->
-                            <a href="{{route('checkout',['plan'=>'prod_Q2AKVqd3VMN4Xq','price'=>'price_1PC5ziLRlOehGOvHYvCTCwOa'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Start 14-day trial</a>
+                            <a href="{{route('checkout',['plan'=>'prod_Q2AKVqd3VMN4Xq','price'=>'price_1PC5ziLRlOehGOvHYvCTCwOa'])}}" class="pt-btn btn r-04 btn--theme hover--theme">Get srarted</a>
 
                         </div>	<!-- END TABLE HEADER -->
 
