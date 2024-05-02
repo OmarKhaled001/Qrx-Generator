@@ -73,6 +73,12 @@
             "pestphp/pest-plugin": true
         }
     },
+    "repositories": {
+        "foo": {
+            "type": "composer",
+            "url": "https://qrx-generator.zat.pw/"
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }
