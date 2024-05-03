@@ -114,7 +114,7 @@ class QrxController extends Controller
     public function deleteQr(string $id)
     {   
         $qrxCode = QrxCode::find($id);
-        Storage::disk('qrs')->delete($qrxCode->path);
+        Storage::disk('public')->delete($qrxCode->path);
         QrxCode::destroy($id);
         return redirect()->back();
     }
