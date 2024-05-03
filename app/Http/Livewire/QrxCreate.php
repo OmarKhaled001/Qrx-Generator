@@ -90,12 +90,12 @@ class QrxCreate extends Component
     public function render()
     {
         // covert colors from HEX -> RGB
-        $color        = Hex::fromString($this->color)->toRgba();
-        $bgColor      = Hex::fromString($this->bgColor)->toRgba();
+        $color        = Hex::fromString($this->color)->toRgb();
+        $bgColor      = Hex::fromString($this->bgColor)->toRgb();
         // generate qr with gradient color
         if( $this->gradientTo != null && $this->gradientFrom != null){
-            $gradientTo   = Hex::fromString($this->gradientTo)->toRgba();
-            $gradientFrom = Hex::fromString($this->gradientFrom)->toRgba();
+            $gradientTo   = Hex::fromString($this->gradientTo)->toRgb();
+            $gradientFrom = Hex::fromString($this->gradientFrom)->toRgb();
             $QrCode = QrCode::size($this->size)
             ->encoding('UTF-8')
             ->style($this->style)
@@ -133,11 +133,11 @@ class QrxCreate extends Component
                 $endDate = $startDate->addYear(1);
                 if($endDate > now() && $plan->qr_count > $qrxCodex){
                     // covert colors from HEX -> RGB
-                    $color        = Hex::fromString($this->color)->toRgba();
-                    $bgColor      = Hex::fromString($this->bgColor)->toRgba();
+                    $color        = Hex::fromString($this->color)->toRgb();
+                    $bgColor      = Hex::fromString($this->bgColor)->toRgb();
                     if( $this->gradientTo != null && $this->gradientFrom != null){
-                    $gradientTo   = Hex::fromString($this->gradientTo)->toRgba();
-                    $gradientFrom = Hex::fromString($this->gradientFrom)->toRgba();
+                    $gradientTo   = Hex::fromString($this->gradientTo)->toRgb();
+                    $gradientFrom = Hex::fromString($this->gradientFrom)->toRgb();
                     }
                     //create Qr
                     $qrxCode            = new QrxCode();

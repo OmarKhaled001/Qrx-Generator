@@ -45,10 +45,10 @@ class QrxEdit extends Component
         $this->margin       = $qrx->style->margin;
         $this->eye          = $qrx->style->eye;
         $this->style        = $qrx->style->style;
-        $this->color        = Rgba::fromString($qrx->style->color)->toHex()  ;
-        $this->bgColor      = Rgba::fromString($qrx->style->bg_color)->toHex()  ;
-        $this->gradientTo   = Rgba::fromString($qrx->style->gradient_to)->toHex();
-        $this->gradientFrom = Rgba::fromString($qrx->style->gradient_from )->toHex() ;
+        $this->color        = Rgb::fromString($qrx->style->color)->toHex()  ;
+        $this->bgColor      = Rgb::fromString($qrx->style->bg_color)->toHex()  ;
+        $this->gradientTo   = Rgb::fromString($qrx->style->gradient_to)->toHex();
+        $this->gradientFrom = Rgb::fromString($qrx->style->gradient_from )->toHex() ;
         switch ($qrx->type) {
             case "text":
                 $this->text = $qrx->text->text;
@@ -126,12 +126,12 @@ class QrxEdit extends Component
     public function render()
     {
         // covert colors from HEX -> RGB
-        $color        = Hex::fromString($this->color)->toRgba();
-        $bgColor      = Hex::fromString($this->bgColor)->toRgba();
+        $color        = Hex::fromString($this->color)->toRgb();
+        $bgColor      = Hex::fromString($this->bgColor)->toRgb();
         // generate qr with gradient color
         if( $this->gradientTo != null && $this->gradientFrom != null){
-            $gradientTo   = Hex::fromString($this->gradientTo)->toRgba();
-            $gradientFrom = Hex::fromString($this->gradientFrom)->toRgba();
+            $gradientTo   = Hex::fromString($this->gradientTo)->toRgb();
+            $gradientFrom = Hex::fromString($this->gradientFrom)->toRgb();
             $QrCode = QrCode::size($this->size)
             ->style($this->style)
             ->margin($this->margin)
@@ -163,11 +163,11 @@ class QrxEdit extends Component
             if($subscription->expire_at >= now()  ){
                 if(count($qrxCodes) <= $plan->qrs_count){
                     // covert colors from HEX -> RGB
-                    $color        = Hex::fromString($this->color)->toRgba();
-                    $bgColor      = Hex::fromString($this->bgColor)->toRgba();
+                    $color        = Hex::fromString($this->color)->toRgb();
+                    $bgColor      = Hex::fromString($this->bgColor)->toRgb();
                     if( $this->gradientTo != null && $this->gradientFrom != null){
-                    $gradientTo   = Hex::fromString($this->gradientTo)->toRgba();
-                    $gradientFrom = Hex::fromString($this->gradientFrom)->toRgba();
+                    $gradientTo   = Hex::fromString($this->gradientTo)->toRgb();
+                    $gradientFrom = Hex::fromString($this->gradientFrom)->toRgb();
                     }
                     //update Qr
                     $qrxCode            = QrxCode::find($this->qrx->id);
