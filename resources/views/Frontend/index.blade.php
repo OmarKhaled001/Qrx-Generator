@@ -21,7 +21,7 @@
         @include('Frontend.sections.about-us')				
         @include('Frontend.sections.qr-create')				
         @include('Frontend.sections.features')
-        @if( empty(Auth()->user()->subscriptions))				
+        @if( !empty(Auth()->user()->subscriptions))				
         @include('Frontend.sections.pricing')	
         @endif			
         @include('Frontend.sections.contact-us')				
