@@ -22,7 +22,7 @@
                         <li class="nl-simple" aria-haspopup="true"><a href="#hero-1" class="h-link">Home</a></li>
                         <li class="nl-simple" aria-haspopup="true"><a href="#about-us" class="h-link">About Us</a></li>
                         <li class="nl-simple" aria-haspopup="true"><a href="#features" class="h-link">Features</a></li>
-                        @if( count(Auth()->user()->subscriptions) == 0)				
+                        @if( empty(Auth()->user()->subscriptions))				
                         <li class="nl-simple" aria-haspopup="true"><a href="#pricing-1" class="h-link">Pricing</a></li>
                         @endif
                         <li class="nl-simple" aria-haspopup="true"><a href="#contacts-1" class="h-link">Countact Us</a></li>
