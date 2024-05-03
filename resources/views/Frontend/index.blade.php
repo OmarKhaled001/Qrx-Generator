@@ -20,8 +20,10 @@
         @include('Frontend.sections.slider')				
         @include('Frontend.sections.about-us')				
         @include('Frontend.sections.qr-create')				
-        @include('Frontend.sections.features')				
-        @include('Frontend.sections.pricing')				
+        @include('Frontend.sections.features')
+        @if( count(Auth()->user()->subscriptions) > 0)				
+        @include('Frontend.sections.pricing')	
+        @endif			
         @include('Frontend.sections.contact-us')				
         @include('Frontend.main.footer')
     </div>		
