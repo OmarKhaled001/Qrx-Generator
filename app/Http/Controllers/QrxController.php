@@ -132,7 +132,7 @@ class QrxController extends Controller
     public function downloadQr(Request $request)
     {   
         $qrxCode = QrxCode::find($request -> id);
-        $qr = QrCode::format($request -> type)
+        $qr = QrCode::format('eps')
         ->size(250)
         ->errorCorrection('H')
         ->encoding('UTF-8')
@@ -143,9 +143,9 @@ class QrxController extends Controller
 
         return response()->streamDownload(
             $qr,
-            $request->name.$request->type,
+            $request->name.'.eps',
             [
-                'Content-Type' => 'image/'.$request -> type,
+                'Content-Type' => 'image/eps',
             ]
 
         );
