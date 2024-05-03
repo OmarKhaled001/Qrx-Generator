@@ -32,6 +32,7 @@ class QrxController extends Controller
             $subscription = $user->subscriptions;
             $subscription = $user->subscriptions->first();
             $plan_id = $subscription->items->first()->stripe_product;
+            $plan = Plan::where('plan_id',$plan_id)->first()->get();
             $now = Carbon::now();
             $startDate =  Carbon::parse($subscription->created_at);
             $endDate = $startDate->addYear(1);
