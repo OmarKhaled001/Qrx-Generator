@@ -86,7 +86,7 @@ class QrxController extends Controller
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
             if($qrxCode->status == 'pause'){
                 return view('Dashboard.error-not-found');
-            }elseif($qrxCode->scan_count >= $plan->scans_count){
+            }elseif($qrxCode->scan_count >= $plan->scan_count){
                 $qrxCode->status = 'exp';
                 $qrxCode->save();
                 return view('Dashboard.error-not-found');
@@ -96,7 +96,7 @@ class QrxController extends Controller
                 return view('Dashboard.view',compact('qrxCode'));
             }else{
             return view('Dashboard.error-not-found');
-        };
+            };
 
 
     }
