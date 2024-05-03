@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/','Frontend.index')->name('home');
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'getPlans'])->name('home');
 // Client Dashboard
 Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(function () {
     // get qrs by status
