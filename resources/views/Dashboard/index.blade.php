@@ -24,6 +24,8 @@
                         @if($qrxs != null)
                             @include('Dashboard.sections.home.chart')
                             @include('Dashboard.sections.home.top-qr')
+                        @else
+                            @include('Dashboard.sections.qrx.create')
                         @endif
                     @else
                         @include('Dashboard.sections.qrx.subscripe')
