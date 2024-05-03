@@ -184,7 +184,6 @@ class QrxCreate extends Component
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
                         ->generate(route('qr.show', $qrxCode->code) );
                     }   
-                
                     $path = 'qrxs/'.$qrxCode->code.'.png';
                     Storage::disk('public')->put($path,$qr);
                     $qrxCode->path = $path;
@@ -257,6 +256,5 @@ class QrxCreate extends Component
                 }else{
                     redirect()->route('dashboard.error.plan.subscripe');
                 }
-        
     }
 }

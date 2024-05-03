@@ -6,6 +6,7 @@ use App\Models\Plan;
 use App\Models\Style;
 use Spatie\Color\Hex;
 use Spatie\Color\Rgb;
+use Spatie\Color\Rgba;
 use App\Models\QrxCode;
 use Livewire\Component;
 use App\Models\FeatureUrl;
@@ -44,9 +45,10 @@ class QrxEdit extends Component
         $this->margin       = $qrx->style->margin;
         $this->eye          = $qrx->style->eye;
         $this->style        = $qrx->style->style;
-        // $this->color        = ($qrx->style->color )->toHex();
-        // $this->gradientTo   = ($qrx->style->gradient_to )->toHex();
-        // $this->gradientFrom = ($qrx->style->gradient_from )->toHex();
+        $this->color        = Rgba::fromString($qrx->style->color)->toHex()  ;
+        $this->bgColor      = Rgba::fromString($qrx->style->bg_color)->toHex()  ;
+        $this->gradientTo   = Rgba::fromString($qrx->style->gradient_to)->toHex();
+        $this->gradientFrom = Rgba::fromString($qrx->style->gradient_from )->toHex() ;
         switch ($qrx->type) {
             case "text":
                 $this->text = $qrx->text->text;
