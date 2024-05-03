@@ -59,11 +59,11 @@
                                     <div class="mt-4">
                                         <div class="d-flex align-items-center gap-2">
                                             <p class="text-muted mb-0">last scan at : {{$qrxCode->updated_at->format('d/m/Y')}}</p>
-                                                                                        {{-- <a type="button" class="text-success text-end  fw-bold h3 " data-bs-toggle="modal" data-bs-target="#downloadModal{{$qrxCode->id}}">
+                                            <a type="button" class="text-success text-end  fw-bold h3 " data-bs-toggle="modal" data-bs-target="#downloadModal{{$qrxCode->id}}">
                                                 <i class="ph ph-download-simple"></i>
-                                            </a> --}}
+                                            </a>
                                             <a type="button" class="text-success text-end  fw-bold h3 " href="{{asset('storage/'.$qrxCode->path)}}" download>
-                                                <i class="ph ph-download-simple"></i>
+                                                {{-- <i class="ph ph-download-simple"></i> --}}
                                             </a>
                                         </div>
                                     </div>
