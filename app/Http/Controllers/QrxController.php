@@ -27,14 +27,18 @@ class QrxController extends Controller
         $QrType = $QrType->build();
         $QrStatus = $QrStatus->build();
         //get plan & subscription if isset
-        if( Auth()->user()->subscriptions){
+        if( Auth()->user()->subscriptions != null){
             $user = Auth('user')->user();
             $subscription = $user->subscriptions;
             $plan_id = $subscription->items->currentPeriod();
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
+            $now = Carbon::now();
+            $startDate =  Carbon::parse($subscription->created_at);
+            $endDate = $startDate->addYear(1);
+            $countDay = $now->diffInDays($startDate );
+            $totalDays = $endDate->diffInDays($startDate);
             // retunn view with data
-            return response()->json( $plan_id);
-        // return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan'));
+        return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan','totalDays','endDate','countDay'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
         }
