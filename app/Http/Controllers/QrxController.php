@@ -38,7 +38,8 @@ class QrxController extends Controller
             $countDay  = $now->diffInDays($startDate );
             $totalDays = $endDate->diffInDays($startDate);
             // retunn view with data
-        return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan','totalDays','endDate','countDay'));
+            return dd($countDay ,$totalDays);
+        // return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan','totalDays','endDate','countDay'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
         }
