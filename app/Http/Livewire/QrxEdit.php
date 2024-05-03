@@ -179,7 +179,7 @@ class QrxEdit extends Component
                     $qrxCode            = QrxCode::find($this->qrx->id);
                     $qrxCode->name      = $this->qrxName;
                     $qrxCode->type      = $this->tab;
-                    $qrxCode->client_id = Auth()->user()->id;
+                    $qrxCode->user_id = Auth()->user()->id;
                     $qrxCode->save();
                     //update style
                     $qrCodeStyle                 = Style::find($this->qrx->style->id);
@@ -219,9 +219,9 @@ class QrxEdit extends Component
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
                         ->generate(route('qr.show', $qrxCode->code) );
                     }
-                    $path = $qrxCode->code.'.png';
-                    Storage::disk('qrs')->delete($qrxCode->path);
-                    Storage::disk('qrs')->put($path,$qr);
+                    $path = 'qrxs/'.$qrxCode->code.'.png';
+                    Storage::disk('public')->delete($qrxCode->path);
+                    Storage::disk('public')->put($path,$qr);
  
                     if($this->qrx->type == $this->tab){
                     switch ($this->tab) {
