@@ -91,7 +91,7 @@ class QrxController extends Controller
                 $qrxCode->status = 'exp';
                 $qrxCode->save();
                 return view('Dashboard.error-not-found');
-            }else{
+            }elseif($qrxCode->status == 'active'){
                 $qrxCode->scan_count += 1;
                 $qrxCode->save();
                 return view('Dashboard.view',compact('qrxCode'));
