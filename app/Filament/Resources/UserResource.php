@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Client;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
@@ -15,13 +14,13 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\ClientResource\Pages;
+use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
-use App\Filament\Resources\ClientResource\RelationManagers;
+use App\Filament\Resources\UserResource\RelationManagers;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
-class ClientResource extends Resource
+class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
@@ -36,7 +35,7 @@ class ClientResource extends Resource
                 TextInput::make('phone')->required(),
                 TextInput::make('password')->password()->required(),
                 Textarea::make('address')->maxLength(65535)->required(),
-                SpatieMediaLibraryFileUpload::make('client')->collection('clients'),
+                SpatieMediaLibraryFileUpload::make('user')->collection('users'),
                 Toggle::make('is_active')
 
             ]);
@@ -47,7 +46,6 @@ class ClientResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->searchable()->toggleable(isToggledHiddenByDefault: true),
-                SpatieMediaLibraryImageColumn::make('client')->collection('clients')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('phone')->searchable(),
@@ -76,9 +74,9 @@ class ClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListClients::route('/'),
-            'create' => Pages\CreateClient::route('/create'),
-            'edit' => Pages\EditClient::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }    
 }

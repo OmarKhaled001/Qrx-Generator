@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ClientResource\RelationManagers;
+namespace App\Filament\Resources\UserResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Tables;
@@ -27,7 +27,7 @@ class QrxCodesRelationManager extends RelationManager
             ->schema([
                 TextInput::make('name')->required(),
                 TextInput::make('scan_count')->required(),
-                Select::make('client_id') ->relationship('client', 'name')->searchable()->preload()->required(),
+                Select::make('user_id') ->relationship('user', 'name')->searchable()->preload()->required(),
                 Select::make('folder_id') ->relationship('folder', 'name')->searchable()->preload(),
                 Radio::make('status')
                 ->options([
@@ -46,8 +46,7 @@ class QrxCodesRelationManager extends RelationManager
                 TextColumn::make('name')->copyable()->searchable(),
                 TextColumn::make('scan_count')->label('Scan'),
                 TextColumn::make('code')->label('Short Url')->copyable()->searchable(),
-                TextColumn::make('client.name')->searchable()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('folder.name')->searchable()->placeholder('No folder.')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('user.name')->searchable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('type')->searchable(),
                 BadgeColumn::make('status')->searchable()
                 ->colors([
