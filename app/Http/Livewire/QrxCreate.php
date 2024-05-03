@@ -152,11 +152,11 @@ class QrxCreate extends Component
                     $qrCodeStyle->margin         = $this->margin;
                     $qrCodeStyle->eye            = $this->eye;
                     $qrCodeStyle->style          = $this->style;
-                    $qrCodeStyle->color          = $color;
-                    $qrCodeStyle->bg_color       = $bgColor;
+                    $qrCodeStyle->color          = $this->color;
+                    $qrCodeStyle->bg_color       = $this->bgColor;
                     if( $this->gradientTo != null && $this->gradientFrom != null){
-                    $qrCodeStyle->gradient_from  = $gradientFrom;
-                    $qrCodeStyle->gradient_to    = $gradientTo;
+                    $qrCodeStyle->gradient_from  = $this->gradientFrom;
+                    $qrCodeStyle->gradient_to    = $this->gradientTo;
                     }
                     $qrCodeStyle->qrx_code_id    = $qrxCode->id;
                     $qrCodeStyle->save();
