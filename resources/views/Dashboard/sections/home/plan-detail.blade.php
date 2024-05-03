@@ -9,11 +9,11 @@
                     </div>
                 </div>
                 <h4><span class="counter-value" data-target="{{$qrxs}}"></span> used</h4>
-                <p class="text-muted mb-4">Qrx Codes ({{$plan->qrs_count}})</p>
+                <p class="text-muted mb-4">Qrx Codes ({{$plan->qr_count}})</p>
                 <p class="text-muted mb-0"><span class="badge bg-success-subtle text-success"><i class="bi bi-arrow-up"></i> {{$qrxs}}</span> vs last month</p>
             </div>
             <div class="progress progress-sm rounded-0" role="progressbar" aria-valuenow="{{$qrxs}}" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar bg-success" style="width: {{$qrxs+1/$plan->qrs_count *100}}%"></div>
+                <div class="progress-bar bg-success" style="width: {{$qrxs/$plan->qr_count *100}}%"></div>
             </div>
         </div>
     </div><!--end col-->
