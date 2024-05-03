@@ -47,8 +47,10 @@ class QrxEdit extends Component
         $this->style        = $qrx->style->style;
         $this->color        = Rgb::fromString($qrx->style->color)->toHex()  ;
         $this->bgColor      = Rgb::fromString($qrx->style->bg_color)->toHex()  ;
+        if($qrx->style->gradient_to != null && $qrx->style->gradient_from  != null){
         $this->gradientTo   = Rgb::fromString($qrx->style->gradient_to)->toHex();
         $this->gradientFrom = Rgb::fromString($qrx->style->gradient_from )->toHex() ;
+        }
         switch ($qrx->type) {
             case "text":
                 $this->text = $qrx->text->text;
