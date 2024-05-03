@@ -79,7 +79,6 @@ class QrxController extends Controller
     }
     public function showQr(string $code)
     {   
-        if(QrxCode::where('code',$code)->get()->first() != null){
             $qrxCode =QrxCode::where('code',$code)->get()->first();
             $user   = $qrxCode->user;
             $subscription = $user->subscriptions->first();
@@ -95,8 +94,7 @@ class QrxController extends Controller
                 $qrxCode->scan_count += 1;
                 $qrxCode->save();
                 return view('Dashboard.view',compact('qrxCode'));
-            }
-        }else{
+            }else{
             return view('Dashboard.error-not-found');
         };
 
