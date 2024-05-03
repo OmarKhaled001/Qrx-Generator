@@ -122,7 +122,16 @@ class QrxCreate extends Component
 
     // genrat Qr
     public function generat(){
-   
+            if( count(Auth()->user()->subscriptions) > 0){
+                $user = Auth('user')->user();
+                $qrxCodex = QrxCode::where('user_id',$user->id )->count();
+                $subscription = $user->subscriptions;
+                $subscription = $user->subscriptions->first();
+                $plan_id = $subscription->items->first()->stripe_product;
+                $plan = Plan::where('plan_id',$plan_id)->get()->first();
+                $startDate =  Carbon::parse($subscription->created_at);
+                $endDate = $startDate->addYear(1);
+                if($endDate > now() && $plan->qr_count > $qrxCodex){
                     // covert colors from HEX -> RGB
                     $color        = Hex::fromString($this->color)->toRgba();
                     $bgColor      = Hex::fromString($this->bgColor)->toRgba();
@@ -152,7 +161,7 @@ class QrxCreate extends Component
                     $qrCodeStyle->qrx_code_id    = $qrxCode->id;
                     $qrCodeStyle->save();
                     //store qr as image
-                      if( $this->gradientTo != null && $this->gradientFrom != null){
+                    if( $this->gradientTo != null && $this->gradientFrom != null){
                         $qr = QrCode::format('png')
                         ->size(500)
                         ->errorCorrection('H')
@@ -180,7 +189,6 @@ class QrxCreate extends Component
                     Storage::disk('public')->put($path,$qr);
                     $qrxCode->path = $path;
                     $qrxCode->save();
-
                     // create feture by tab
                     switch ($this->tab) {
                         case "text":
@@ -241,12 +249,14 @@ class QrxCreate extends Component
                             $qrxCodeWifi->save();
                             redirect()->route('dashboard.qr.all');
                         break;
-                        case "mp3":
-                        break;
-                        default:
                     }
                     // if subscription exp redirect to upgrade plan
-                
+                    }else{
+                        redirect()->route('dashboard.error.plan.upgrade');
+                    }
+                }else{
+                    redirect()->route('dashboard.error.plan.subscripe');
+                }
         
     }
 }
