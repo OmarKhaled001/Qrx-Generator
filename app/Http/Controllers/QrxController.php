@@ -29,11 +29,11 @@ class QrxController extends Controller
         //get plan & subscription if isset
         if( Auth()->user()->subscriptions){
             $user = Auth('user')->user();
-            $subscription = $user->subscription->currentPeriod();
-            $plan_id = $subscription->items->first()->stripe_product;
+            $subscription = $user->subscription;
+            $plan_id = $subscription->items->currentPeriod();
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
             // retunn view with data
-            return response()->json( $subscription->start);
+            return response()->json( $plan_id);
         // return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
