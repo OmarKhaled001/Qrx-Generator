@@ -34,9 +34,9 @@ class QrxController extends Controller
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
             $now = Carbon::now();
             $startDate =  Carbon::parse($subscription->created_at);
-            $endDate = $startDate->addYear(1);
-            $totalDays = $now->diffInDays($startDate );
-            $countDay = $endDate->diffInDays($startDate);
+            $endDate   = $startDate->addYear(1);
+            $countDay  = $now->diffInDays($startDate );
+            $totalDays = $endDate->diffInDays($startDate);
             // retunn view with data
         return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan','totalDays','endDate','countDay'));
         }else{
