@@ -4,11 +4,11 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\User;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
-use Illuminate\Foundation\Auth\User;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
@@ -46,6 +46,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                SpatieMediaLibraryImageColumn::make('user')->collection('users')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('phone')->searchable(),
