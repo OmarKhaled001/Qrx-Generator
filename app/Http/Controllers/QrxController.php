@@ -79,7 +79,8 @@ class QrxController extends Controller
     }
     public function showQr(string $code)
     {   
-        if($qrxCode = QrxCode::where('code',$code)->get()->first()){
+        if(QrxCode::where('code',$code)->get()->first() != null){
+            $qrxCode =QrxCode::where('code',$code)->get()->first();
             $user   = $qrxCode->user;
             $subscription = $user->subscriptions->first();
             $plan_id = $subscription->items->first()->stripe_product;
