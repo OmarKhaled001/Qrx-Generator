@@ -136,13 +136,15 @@ class QrxController extends Controller
         ->format('png')
         ->generate('https://harrk.dev');
 
-        return response()->streamDownload(
-            $qr,
+        return response()->streamDownload(function (){
+        echo QrCode::size(200)
+            ->format('png')
+            ->generate('https://harrk.dev');
+            },
             'qr-code.png',
             [
                 'Content-Type' => 'image/png',
             ]
-
         );
     }
 
