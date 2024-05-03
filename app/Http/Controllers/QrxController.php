@@ -33,7 +33,8 @@ class QrxController extends Controller
             $plan_id = $subscription->items->first()->stripe_product;
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
             // retunn view with data
-        return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan'));
+            return response()->json( $subscription->current_period_end);
+        // return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
         }
