@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\Style;
 use Spatie\Color\Hex;
@@ -157,13 +158,16 @@ class QrxEdit extends Component
 
     // genrat Qr
     public function generat(){
-        // cheack subscription
-        $qrxCodes = QrxCode::where('client_id', Auth()->user()->id)->get();
-        $subscription = Subscription::where('client_id', Auth()->user()->id)->get()->first();
-        if($subscription != null){
-            $plan = Plan::find($subscription->plan_id);
-            if($subscription->expire_at >= now()  ){
-                if(count($qrxCodes) <= $plan->qrs_count){
+        if( count(Auth()->user()->subscriptions) > 0){
+            $user = Auth('user')->user();
+            $qrxCodex = QrxCode::where('user_id',$user->id )->count();
+            $subscription = $user->subscriptions;
+            $subscription = $user->subscriptions->first();
+            $plan_id = $subscription->items->first()->stripe_product;
+            $plan = Plan::where('plan_id',$plan_id)->get()->first();
+            $startDate =  Carbon::parse($subscription->created_at);
+            $endDate = $startDate->addYear(1);
+            if($endDate > now() && $plan->qr_count > $qrxCodex){
                     // covert colors from HEX -> RGB
                     $color        = Hex::fromString($this->color)->toRgb();
                     $bgColor      = Hex::fromString($this->bgColor)->toRgb();
@@ -183,11 +187,11 @@ class QrxEdit extends Component
                     $qrCodeStyle->margin         = $this->margin;
                     $qrCodeStyle->eye            = $this->eye;
                     $qrCodeStyle->style          = $this->style;
-                    $qrCodeStyle->color          = $color;
-                    $qrCodeStyle->bg_color       = $bgColor;
+                    $qrCodeStyle->color          = $this->color;
+                    $qrCodeStyle->bg_color       = $this->bgColor;
                     if( $this->gradientTo != null && $this->gradientFrom != null){
-                    $qrCodeStyle->gradient_from  = $gradientFrom;
-                    $qrCodeStyle->gradient_to    = $gradientTo;
+                    $qrCodeStyle->gradient_from  = $this->gradientFrom;
+                    $qrCodeStyle->gradient_to    = $this->gradientTo;
                     }
                     $qrCodeStyle->qrx_code_id    = $qrxCode->id;
                     $qrCodeStyle->save();
@@ -347,9 +351,6 @@ class QrxEdit extends Component
                 }else{
                     redirect()->route('dashboard.error.plan.upgrade');
                 }
-            }else{
-                redirect()->route('dashboard.error.plan.upgrade');
-            }
         }else{
             redirect()->route('dashboard.error.plan.subscripe');
         }
