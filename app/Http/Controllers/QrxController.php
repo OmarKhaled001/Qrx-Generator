@@ -28,7 +28,7 @@ class QrxController extends Controller
         $QrStatus = $QrStatus->build();
         //get plan & subscription if isset
         if( count(Auth()->user()->subscriptions) > 0){
-            $user = Auth('user')->user();
+            $user = Auth()->user();
             $subscription = $user->subscriptions->first();
             $plan_id = $subscription->items->first()->stripe_product;
             $plan = Plan::where('plan_id',$plan_id)->get()->first();

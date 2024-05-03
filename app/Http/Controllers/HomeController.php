@@ -8,15 +8,19 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function getPlans(){
-        //check if user auth has subscription
-        if(count(Auth()->user()->subscriptions) > 0){
-            $user   = Auth()->user();
-            $subscription = $user->subscriptions->first();
-            $plan_id = $subscription->items->first()->stripe_product;
-            $plans = Plan::all()->except('plan_id',$plan_id);
-            //retu plan 
-            return view('Frontend.index',compact($plans));
-            
+        if(Auth()->user()){
+            if(count(Auth()->user()->subscriptions) > 0){
+                $user   = Auth()->user();
+                $subscription = $user->subscriptions->first();
+                $plan_id = $subscription->items->first()->stripe_product;
+                $plans = Plan::all()->except('plan_id',$plan_id);
+                //retu plan 
+                return view('Frontend.index',compact($plans));        
+            }else{
+                $plans = Plan::all();
+                //retu plan 
+                return view('Frontend.index',compact($plans));
+            }
         }else{
             $plans = Plan::all();
             //retu plan 
