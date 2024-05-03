@@ -79,25 +79,26 @@ class QrxController extends Controller
     }
     public function showQr(string $code)
     {   
-        $qrxCode = QrxCode::where('code',$code)->get()->first();
-        $user   = $qrxCode->user;
-        // $plan = Plan::where('plan_id',$plan_id)->get()->first();
-        // $subscription = $user->subscriptions->first();
+        if($qrxCode = QrxCode::where('code',$code)->get()->first()){
+            $user   = $qrxCode->user;
+            $subscription = $user->subscriptions->first();
+            $plan_id = $subscription->items->first()->stripe_product;
+            $plan = Plan::where('plan_id',$plan_id)->get()->first();
+            if($qrxCode->status == 'pause'){
+                return view('Dashboard.error-not-found');
+            }elseif($qrxCode->scan_count >= $plan->scans_count){
+                $qrxCode->status = 'exp';
+                $qrxCode->save();
+                return view('Dashboard.error-not-found');
+            }else{
+                $qrxCode->scan_count += 1;
+                $qrxCode->save();
+                return view('Dashboard.view',compact('qrxCode'));
+            }
+        }else{
+            return view('Dashboard.error-not-found');
+        };
 
-        // $subscription = Subscription::where('client_id', $qrxCode->client_id)->get()->first();
-        // $plan = Plan::find($subscription->plan_id);
-        // if($qrxCode->status == 'pause'){
-        //     return view('Dashboard.error-not-found');
-        // }elseif($qrxCode->scan_count >= $plan->scans_count){
-        //     $qrxCode->status = 'exp';
-        //     $qrxCode->save();
-        //     return view('Dashboard.error-not-found');
-        // }else{
-        //     $qrxCode->scan_count += 1;
-        //     $qrxCode->save();
-        //     return view('Dashboard.view',compact('qrxCode'));
-        // };
-        return dd( $user );
 
     }
     public function switchStatuQr(string $id)
