@@ -27,19 +27,12 @@ class QrxController extends Controller
         $QrType = $QrType->build();
         $QrStatus = $QrStatus->build();
         //get plan & subscription if isset
-        if( Auth()->user()->subscription){
-            $user = auth()->user();
-            $subscription = $user->subscription;
-            $planId = $subscription->stripe_id;
-            $status = $subscription->status;
-            $trialEndsAt = $subscription->trial_ends_at;
-            $endsAt = $subscription->ends_at;
-            $createdAt = $subscription->created_at;
-            $subscriptionItem = $subscription->items->first();
-            $planId = $subscriptionItem->stripe_product;
-            $plan = Plan::where('plan_id',$planId)->get()->first();
-
-        // retunn view with data
+        if( Auth()->user()->subscriptions){
+            $user = Auth('user')->user();
+            $subscription = $user->subscriptions->first();
+            $plan_id = $subscription->items->first()->stripe_product;
+            $plan = Plan::where('plan_id',$plan_id)->get()->first();
+            // retunn view with data
         return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
