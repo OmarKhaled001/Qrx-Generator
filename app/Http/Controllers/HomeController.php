@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function getPlans(){
         //check if user auth has subscription
-        if($subscription = Auth()->user()->subscriptions->first()->get()){
+        if(count($subscription = Auth()->user()->subscriptions->first())>0){
             //get plan
             $plan_id = $subscription->items->first()->stripe_product;
             $plans = Plan::all()->except('plan_id',$plan_id);
