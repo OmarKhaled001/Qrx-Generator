@@ -116,9 +116,11 @@ class QrxController extends Controller
     }
     public function editQr(string $id)
     {   
-        $qrx = QrxCode::find($id);
+        if($qrx = QrxCode::find($id)) {
         return view('Dashboard.qrx-edit',compact('qrx'));
-
+        }else{
+            return view('Dashboard.error-not-found');
+        }
     }
     public function deleteQr(string $id)
     {   
