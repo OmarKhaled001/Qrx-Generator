@@ -132,20 +132,23 @@ class QrxController extends Controller
     public function downloadQr(Request $request)
     {   
         $qrxCode = QrxCode::find($request -> id);
-        $qr = QrCode::size(200)
-        ->format('png')
-        ->generate('https://harrk.dev');
+        $qr = QrCode::format($request -> type)
+        ->size($qrxCode->style->size)
+        ->errorCorrection('H')
+        ->encoding('UTF-8')
+        ->style($qrxCode->style->style)
+        ->margin($qrxCode->style->margin)
+        ->eye($qrxCode->style->eye)
+        ->generate(route('qr.show', $qrxCode->code) );
 
-        return response()->streamDownload(function (){
-        echo QrCode::size(200)
-            ->format('png')
-            ->generate('https://harrk.dev');
-            },
-            'qr-code.png',
-            [
-                'Content-Type' => 'image/png',
-            ]
-        );
+        return response()->streamDownload(function ()use ($qr) {
+            echo $qr;
+                },
+                'qr-code.'.$request -> type,
+                [
+                    'Content-Type' => 'image/'.$request -> type,
+                ]
+            );
     }
 
 
