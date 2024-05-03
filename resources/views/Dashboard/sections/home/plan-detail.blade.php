@@ -27,7 +27,7 @@
                 </div>
                 <h4><span class="counter-value" data-target="{{$countDay}}"></span></h4>
                 <p class="text-muted mb-4">Total count of days :({{$totalDays-$countDay}} / {{$totalDays}} day) </p>
-                <p class="text-muted mb-0"><span class="badge bg-success-subtle text-success">expire at : {{$endDate->format('d/m/y')}}</span> </p>
+                <p class="text-muted mb-0"><span class="badge bg-success-subtle text-success">expire at : {{$endDate->format('dd/mm/yyyy')}}</span> </p>
             </div>
             <div class="progress progress-sm rounded-0" role="progressbar" aria-valuenow="{{$countDay}}" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar bg-warning" style="width: {{$countDay/$totalDays*100}}%"></div>
