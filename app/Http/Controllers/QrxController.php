@@ -33,12 +33,11 @@ class QrxController extends Controller
             $plan_id = $subscription->items->first()->stripe_product;
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
             $now = Carbon::now();
-            $startDate =  Carbon::parse($subscription->created_at);
-            $endDate   = $startDate->addYear(1);
-            $countDay  = $now->diffInDays($startDate );
-            $totalDays = $endDate->diffInDays($startDate);
+            $endDate   =  Carbon::parse($subscription->created_at);
+            $countDay  = $now->diffInDays($endDate  );
+            // $totalDays = $endDate->diffInDays($startDate);
             // retunn view with data
-            return dd($startDate );
+            return dd($countDay );
         // return view('Dashboard.index',compact('qrxs','title','QrType','QrStatus','topQrxs','plan','totalDays','endDate','countDay'));
         }else{
             return view('Dashboard.index',compact('qrxs','title'));   
