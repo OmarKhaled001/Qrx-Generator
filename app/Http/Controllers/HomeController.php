@@ -15,16 +15,16 @@ class HomeController extends Controller
                 $plan_id = $subscription->items->first()->stripe_product;
                 $plans = Plan::all()->except('plan_id',$plan_id);
                 //retu plan 
-                return view('Frontend.index',compact($plans));        
+                return view('Frontend.index',compact('plans'));        
             }else{
                 $plans = Plan::all();
                 //retu plan 
-                return view('Frontend.index',compact($plans));
+                return view('Frontend.index',compact('plans'));
             }
         }else{
             $plans = Plan::all();
             //retu plan 
-            return view('Frontend.index',compact($plans));
+            return view('Frontend.index',compact('plans'));
         }
     }
 }
