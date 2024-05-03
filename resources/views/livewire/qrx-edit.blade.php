@@ -45,7 +45,7 @@
             @include('livewire.features.vcard')
             @include('livewire.features.wifi')
             <div class="d-flex text-center p-3">
-                <button type="submit" class="btn btn-success  my-2" wire:click="generat" >Generat</button>
+                <button type="submit" class="btn btn-success  my-2" wire:click="generat" >Edit</button>
             </div>
         </div>
     </div>
