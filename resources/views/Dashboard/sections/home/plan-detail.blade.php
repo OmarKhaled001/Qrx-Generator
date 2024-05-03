@@ -30,7 +30,7 @@
                 <p class="text-muted mb-0"><span class="badge bg-success-subtle text-success">expire at : {{$endDate->format('d-m-Y')}}</span> </p>
             </div>
             <div class="progress progress-sm rounded-0" role="progressbar" aria-valuenow="{{$countDay}}" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar bg-warning" style="width: {{$countDay+1/$totalDays*100}}%"></div>
+                <div class="progress-bar bg-warning" style="width: {{($countDay/$totalDays)*100}}%"></div>
             </div>
         </div>
     </div>
