@@ -139,12 +139,11 @@ class QrxController extends Controller
         ->style($qrxCode->style->style)
         ->margin($qrxCode->style->margin)
         ->eye($qrxCode->style->eye)
-
         ->generate(route('qr.show', $qrxCode->code) );
 
         return response()->streamDownload(
             $qr,
-            $request -> name.$request -> type,
+            $request->name.$request->type,
             [
                 'Content-Type' => 'image/'.$request -> type,
             ]

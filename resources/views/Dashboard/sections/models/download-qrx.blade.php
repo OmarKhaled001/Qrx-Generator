@@ -5,7 +5,7 @@
           <h1 class="modal-title fs-5" id="downloadModal{{$qrxCode->id}}Label">Download {{$qrxCode->name}}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{{route('dashboard.qr.download')}}" method="post" class="p-1">
+        <form action="{{route('dashboard.qr.download')}}" method="get" class="p-1">
           @csrf
           <div class="modal-body">
             <div class="row">
