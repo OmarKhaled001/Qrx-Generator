@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('set null');
+            $table->foreignId('user_id');
             $table->string('type');
             $table->string('stripe_id')->unique();
             $table->string('stripe_status');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamp('ends_at')->nullable();
             $table->timestamps();
 
-            $table->index(['stripe_status']);
+            $table->index(['user_id', 'stripe_status']);
         });
     }
 
