@@ -30,8 +30,8 @@ class QrxController extends Controller
         if( Auth()->user()->subscriptions != null){
             $user = Auth('user')->user();
             $subscription = $user->subscriptions;
-            $plan_id = $subscription->items->stripe_product;
-            $plan = Plan::where('plan_id',$plan_id)->get()->first();
+            $subscription = $user->subscriptions->first();
+            $plan_id = $subscription->items->first()->stripe_product;
             $now = Carbon::now();
             $startDate =  Carbon::parse($subscription->created_at);
             $endDate = $startDate->addYear(1);
