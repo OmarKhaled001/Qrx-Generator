@@ -29,7 +29,7 @@ class QrxController extends Controller
         //get plan & subscription if isset
         if( Auth()->user()->subscriptions){
             $user = Auth('user')->user();
-            $sub= $user->subscription->asStripeSubscription()->current_period_end;
+            $sub= $user->sub->asStripeSubscription()->current_period_end;
             $plan_id = $sub->items->first()->stripe_product;
             $plan = Plan::where('plan_id',$plan_id)->get()->first();
             // retunn view with data
