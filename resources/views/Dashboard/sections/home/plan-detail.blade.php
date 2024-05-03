@@ -25,7 +25,7 @@
                         <i class="ph ph-heartbeat"></i>
                     </div>
                 </div>
-                <h4><span class="counter-value" data-target="{{$countDay}}"></span>day left </h4>
+                <h4><span class="counter-value" data-target="{{$countDay}}"></span>  day left </h4>
                 <p class="text-muted mb-4">Total count of days :({{$totalDays}} day) </p>
                 <p class="text-muted mb-0"><span class="badge bg-success-subtle text-success">expire at : {{$endDate->format('d-m-Y')}}</span> </p>
             </div>
