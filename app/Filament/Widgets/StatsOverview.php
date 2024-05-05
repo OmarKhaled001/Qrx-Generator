@@ -49,7 +49,7 @@ class StatsOverview extends BaseWidget
             ->chart([7, 2, 10, 3, 15, 4, 17])
             ->color('success'),
             //Transaction
-            Card::make('Transaction', Transaction::sum('amount'))
+            Card::make('Transaction', Transaction::sum('amount').' $')
             ->description('amount')
             ->descriptionIcon('heroicon-s-trending-up')
             ->chart([7, 2, 10, 3, 15, 4, 17])
