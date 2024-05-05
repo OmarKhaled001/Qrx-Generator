@@ -30,8 +30,5 @@
         @error('note')
         <div class="text-danger">{{ $message }}</div>
         @enderror
-        <label for="formFile" class="h6 my-2">Image Profile :</label>
-        <input class="form-control" type="file" id="formFile"  wire:model="profile">
-
     </div>
 @endif
