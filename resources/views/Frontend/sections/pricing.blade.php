@@ -37,7 +37,7 @@
         <div class="row justify-content-center">	
             <div class="col-md-10 col-lg-8">
                 <div class="section-title mb-70">	
-                    <h2 class="s-52 w-700">Upgrage Plans</h2>	
+                    <h2 class="s-52 w-700">Upgrade Plans</h2>	
                 </div>	
             </div>
         </div>
@@ -54,7 +54,7 @@
                                 <sup class="validity color--grey">&nbsp;/&ensp;Year</sup>
                                 <p class="color--grey">For professionals getting started with smaller projects.</p>
                             </div>
-                            <a href="{{route('checkout',['id'=>$plan->id])}}" class="pt-btn btn r-04 btn--theme hover--theme">Upgrage</a>
+                            <a href="{{route('checkout',['id'=>$plan->id])}}" class="pt-btn btn r-04 btn--theme hover--theme">Upgrade</a>
                         </div>
                         <ul class="pricing-features color--black ico-10 ico--green mt-25">
                             <li><p><span class="flaticon-check"></span> {{$plan->qr_count}} Qr</p></li>
