@@ -163,7 +163,7 @@ class QrxController extends Controller
         return response()->streamDownload(function ()use ($qr) {
             echo $qr;
                 },
-                'qr-code.'.$request -> type,
+                $request -> name.'.'.$request -> type,
                 [
                     'Content-Type' => 'image/'.$request -> type,
                 ]
