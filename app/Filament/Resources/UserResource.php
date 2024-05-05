@@ -2,16 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class UserResource extends Resource
 {
@@ -23,7 +29,13 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')->required(),
+                TextInput::make('email')->required(),
+                TextInput::make('phone')->required(),
+                TextInput::make('password')->password()->required(),
+                Textarea::make('address')->maxLength(65535)->required(),
+                SpatieMediaLibraryFileUpload::make('user')->collection('users'),
+                Toggle::make('is_active')
             ]);
     }
 
@@ -31,12 +43,18 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                SpatieMediaLibraryImageColumn::make('user')->collection('users')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('email')->searchable(),
+                TextColumn::make('phone')->searchable(),
+                TextColumn::make('qrx_codes_count')->counts('qrxCodes'),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
