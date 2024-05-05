@@ -18,7 +18,6 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
-                    @include('Dashboard.sections.models.new-folder')
                     @if(count($qrxCodes)> 0)
                         @include('Dashboard.sections.qrx.header')
                         @include('Dashboard.sections.qrx.qrs')
