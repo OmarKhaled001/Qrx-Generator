@@ -46,7 +46,6 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->searchable()->toggleable(isToggledHiddenByDefault: true),
-                SpatieMediaLibraryImageColumn::make('user')->collection('users')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('phone')->searchable(),
