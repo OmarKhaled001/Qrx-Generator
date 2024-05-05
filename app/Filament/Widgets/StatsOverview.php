@@ -3,10 +3,11 @@
 namespace App\Filament\Widgets;
 
 use Carbon\Carbon;
-use App\Models\Client;
 use App\Models\Plan;
-use App\Models\QrxCode;
 use App\Models\User;
+use App\Models\Client;
+use App\Models\QrxCode;
+use App\Models\Transaction;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
@@ -44,6 +45,12 @@ class StatsOverview extends BaseWidget
             //plans
             Card::make('Plans', Plan::count())
             ->description('Count of our plans')
+            ->descriptionIcon('heroicon-s-trending-up')
+            ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->color('success'),
+            //Transaction
+            Card::make('Transaction', Transaction::sum('amount'))
+            ->description('amount')
             ->descriptionIcon('heroicon-s-trending-up')
             ->chart([7, 2, 10, 3, 15, 4, 17])
             ->color('success'),
