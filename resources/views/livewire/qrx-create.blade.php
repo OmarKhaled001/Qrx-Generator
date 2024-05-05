@@ -25,9 +25,9 @@
                     <li class="nav-item">
                         <button class="nav-link  {{$tab == 'wifi' ? 'active' :''}} "wire:click="wifi" >Wi-Fi</button>
                     </li>
-                    <li class="nav-item ">
+                    {{-- <li class="nav-item ">
                         <button class="nav-link {{$tab == 'location' ? 'active' :''}}"wire:click="location" >Location</button>
-                    </li>
+                    </li> --}}
                     {{-- <li class="nav-item">
                         <button class="nav-link  {{$tab == 'mp3' ? 'active' :''}} "wire:click="mp3" >Mp3</button>
                     </li> --}}
