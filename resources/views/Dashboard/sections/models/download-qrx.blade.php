@@ -18,7 +18,9 @@
             </div>
             <div class="form-group mt-3">
                 <label for="size">Size:</label>
-                <input id="size" type="number" name="size" class="form-control" value="{{$qrxCode->size}}"> <span>px</span>
+                <div class="d-flex">
+                  <input id="size" type="number" name="size" class="form-control" value="{{$qrxCode->size}}"> <span> px</span>
+                </div>
                 @error('size') <p class="text-danger">{{$message}}</p> @enderror
             </div>
             <div class="form-group mt-3">
