@@ -17,9 +17,9 @@
                 </div>
             </div>
             <div class="form-group mt-3">
-                <label for="type">Size:</label>
-                <input id="size" type="number" name="size" class="form-control" value="{{$qrxCode->name}}"> <span>px</span>
-                @error('type') <p class="text-danger">{{$message}}</p> @enderror
+                <label for="size">Size:</label>
+                <input id="size" type="number" name="size" class="form-control" value="{{$qrxCode->size}}"> <span>px</span>
+                @error('size') <p class="text-danger">{{$message}}</p> @enderror
             </div>
             <div class="form-group mt-3">
                 <label for="type">Type:</label>
