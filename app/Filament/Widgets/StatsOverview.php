@@ -34,25 +34,25 @@ class StatsOverview extends BaseWidget
             Card::make('Clients', User::count())
             ->description('New clients during the week'.' ' .$client->count())
             ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->chart([1, 2, 5, 3, 7, 12, 17])
             ->color('success'),
             //qr codes
             Card::make('Qr Codes', QrxCode::count())
             ->description('New qr code during the week'. ' '.$qrx->count())
             ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->chart([7, 5, 10, 3, 11, 4, 14])
             ->color('success'),
             //plans
             Card::make('Plans', Plan::count())
             ->description('Count of our plans')
             ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->chart([1, 2, 3, 2, 4, 3, 4])
             ->color('success'),
             //Transaction
             Card::make('Transaction', Transaction::sum('amount').' $')
             ->description('amount')
             ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->chart([7, 2, 10, 8, 15, 4, 17])
             ->color('success'),
         ];
     }
