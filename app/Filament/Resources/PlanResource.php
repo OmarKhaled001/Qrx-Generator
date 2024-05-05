@@ -30,13 +30,12 @@ class PlanResource extends Resource
         return $form
             ->schema([
                 TextInput::make('title')->required()->columnSpan(2),
+                TextInput::make('plan_id')->required(),
                 TextInput::make('price')->required(),
-                TextInput::make('duration')->suffix('/Month')->required(),
-                TextInput::make('scans_count')->required()->columnSpan(2),
-                TextInput::make('qrs_count')->required()->columnSpan(2),
-                Textarea::make('details')->maxLength(65535)->required()->columnSpan(2),
+                TextInput::make('price_id')->required(),
+                TextInput::make('scan_count')->required()->columnSpan(2),
+                TextInput::make('qr_count')->required()->columnSpan(2),
                 Toggle::make('is_active'),
-                Toggle::make('is_hidden'),
             ]);
     }
 
@@ -46,11 +45,11 @@ class PlanResource extends Resource
             ->columns([
                 TextColumn::make('id')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('title')->copyable()->searchable()->copyable(),
-                TextColumn::make('scans_count')->label('Scan'),
-                TextColumn::make('qrs_count')->label('Qr Count'),
-                TextColumn::make('duration')->label('Duration')->searchable(),
+                TextColumn::make('scan_count')->label('Scan'),
+                TextColumn::make('qr_count')->label('Qr Count'),
+                TextColumn::make('plan_id'),
+                TextColumn::make('price_id'),
                 ToggleColumn::make('is_active')->toggleable(isToggledHiddenByDefault: true),
-                ToggleColumn::make('is_hidden')->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
 
