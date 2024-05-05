@@ -47,8 +47,8 @@ class PlanResource extends Resource
                 TextColumn::make('title')->copyable()->searchable()->copyable(),
                 TextColumn::make('scan_count')->label('Scan'),
                 TextColumn::make('qr_count')->label('Qr Count'),
-                TextColumn::make('plan_id'),
-                TextColumn::make('price_id'),
+                TextColumn::make('plan_id')->isCopyable(),
+                TextColumn::make('price_id')->isCopyable(),
                 ToggleColumn::make('is_active')->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
