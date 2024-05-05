@@ -23,7 +23,7 @@ class MonthlyQrxCodesChart
                 \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','text')->count(),
                 \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','url')->count(),
                 \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','phone')->count(),
-                \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','messeage')->count(),
+                \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','message')->count(),
                 \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','email')->count(),
                 \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','vcard')->count(),
                 \App\Models\QrxCode::where('user_id', Auth()->user()->id)->where('type','wifi')->count(),
