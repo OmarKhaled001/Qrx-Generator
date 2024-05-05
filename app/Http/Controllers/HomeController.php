@@ -13,7 +13,7 @@ class HomeController extends Controller
                 $user   = Auth()->user();
                 $subscription = $user->subscriptions->first();
                 $plan_id = $subscription->items->first()->stripe_product;
-                $plans = Plan::except('plan_id',$plan_id);
+                $plans = Plan::where('plan_id', '!=', $plan_id)->get();
                 //retu plan 
                 return view('Frontend.index',compact('plans'));        
             }else{
