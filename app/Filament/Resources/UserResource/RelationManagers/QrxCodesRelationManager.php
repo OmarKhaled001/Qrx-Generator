@@ -8,7 +8,9 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\BadgeColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -25,8 +27,7 @@ class QrxCodesRelationManager extends RelationManager
             ->schema([
                 TextInput::make('name')->required(),
                 TextInput::make('scan_count')->required(),
-                Select::make('client_id') ->relationship('client', 'name')->searchable()->preload()->required(),
-                Select::make('folder_id') ->relationship('folder', 'name')->searchable()->preload(),
+                Select::make('user_id') ->relationship('user', 'name')->searchable()->preload()->required(),
                 Radio::make('status')
                 ->options([
                     'active' => 'Active',
@@ -40,7 +41,18 @@ class QrxCodesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                TextColumn::make('id')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('name')->copyable()->searchable(),
+                TextColumn::make('scan_count')->label('Scan'),
+                TextColumn::make('code')->label('Short Url')->copyable()->searchable(),
+                TextColumn::make('user.name')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('type')->searchable(),
+                BadgeColumn::make('status')->searchable()
+                ->colors([
+                    'success '=> 'active',
+                    'warning'=>  'pause' ,
+                    'danger '=>  'exp',
+            ]),
             ])
             ->filters([
                 //

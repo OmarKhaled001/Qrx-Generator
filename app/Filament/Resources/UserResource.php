@@ -32,8 +32,10 @@ class UserResource extends Resource
                 TextInput::make('name')->required(),
                 TextInput::make('email')->required(),
                 TextInput::make('phone')->required(),
+                TextInput::make('country')->required(),
+                TextInput::make('city')->required(),
+                TextInput::make('area')->required(),
                 TextInput::make('password')->password()->required(),
-                Textarea::make('address')->maxLength(65535)->required(),
                 SpatieMediaLibraryFileUpload::make('user')->collection('users'),
                 Toggle::make('is_active')
             ]);
