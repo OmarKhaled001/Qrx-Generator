@@ -17,6 +17,11 @@
                 </div>
             </div>
             <div class="form-group mt-3">
+                <label for="type">Size:</label>
+                <input id="size" type="number" name="size" class="form-control" value="{{$qrxCode->name}}"> <span>px</span>
+                @error('type') <p class="text-danger">{{$message}}</p> @enderror
+            </div>
+            <div class="form-group mt-3">
                 <label for="type">Type:</label>
                 <select name="type" class="select2 form-select mt-1" id="type">
                     <option selected value="png">Png</option>

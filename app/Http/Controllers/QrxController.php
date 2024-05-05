@@ -139,7 +139,7 @@ class QrxController extends Controller
         $gradientTo   = Hex::fromString($qrxCode->style->gradient_to)->toRgb();
         $gradientFrom = Hex::fromString($qrxCode->style->gradient_from)->toRgb();
         $qr = QrCode::format($request -> type)
-        ->size($qrxCode->style->size)
+        ->size($request -> size)
         ->errorCorrection('H')
         ->encoding('UTF-8')
         ->style($qrxCode->style->style)
@@ -150,7 +150,7 @@ class QrxController extends Controller
         ->generate(route('qr.show', $qrxCode->code) );
         }else{
             $qr = QrCode::format($request -> type)
-            ->size($qrxCode->style->size)
+            ->size($request -> size)
             ->errorCorrection('H')
             ->encoding('UTF-8')
             ->style($qrxCode->style->style)
