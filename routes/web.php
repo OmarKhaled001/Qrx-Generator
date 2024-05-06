@@ -37,6 +37,7 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     Route::get('/edit/{id}', [App\Http\Controllers\QrxController::class, 'editQr'])->name('.qr.edit');
     Route::get('/download', [App\Http\Controllers\QrxController::class, 'downloadQr'])->name('.qr.download');
 });
+Route::post('/', [App\Http\Controllers\ContactController::class, 'store'])->name('countact');
 Route::get('/x/{code}', [App\Http\Controllers\QrxController::class, 'showQr'])->name('qr.show');
 Route::get('checkout/{id?}', CheckoutController::class)->middleware('auth')->name('checkout');
 

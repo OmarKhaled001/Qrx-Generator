@@ -24,12 +24,15 @@
          <div class="row justify-content-center">	
              <div class="col-md-11 col-lg-10 col-xl-8">
                  <div class="form-holder">
-                    <form name="contactform" class="row contact-form">
+                    <form  method="POST" action="{{ route('countact') }}" name="contactform" class="row contact-form" >
+                        @csrf
                         <!-- Contact Form Input -->
                         <div class="col-md-12">
                             <p class="p-lg">Your Name: </p>
                             <span>Please enter your real name: </span>
                             <input type="text" name="name" class="form-control name" placeholder="Your Name*"> 
+                            @error('name') <p class="text-danger">{{$message}}</p> @enderror
+
                         </div>
 
                                     
@@ -37,24 +40,32 @@
                             <p class="p-lg">Your Email Address: </p>
                             <span>Please carefully check your email address for accuracy</span>
                             <input type="text" name="email" class="form-control email" placeholder="Email Address*"> 
+                            @error('email') <p class="text-danger">{{$message}}</p> @enderror
+
                         </div>
 
                         <div class="col-md-12">
                             <p class="p-lg">Phone: </p>
                             <span>Please enter your real phone: </span>
-                            <input type="text" name="name" class="form-control name" placeholder="Your Name*"> 
+                            <input type="text" name="phone" class="form-control name" placeholder="Your Phone*"> 
+                            @error('phone') <p class="text-danger">{{$message}}</p> @enderror
+
                         </div>
 
                         <div class="col-md-12">
                             <p class="p-lg">Subject: </p>
                             <span>Please enter your real subject: </span>
-                            <input type="text" name="name" class="form-control name" placeholder="Your Name*"> 
+                            <input type="text" name="subject" class="form-control name" placeholder="Subject*"> 
+                            @error('subject') <p class="text-danger">{{$message}}</p> @enderror
+
                         </div>
 
                         <div class="col-md-12">
                             <p class="p-lg">Explain your question in details: </p>
                             <span>Your OS version, Martex version & build, steps you did. Be VERY precise!</span>
                             <textarea class="form-control message" name="message" rows="6" placeholder="I have a problem with..."></textarea>
+                            @error('message') <p class="text-danger">{{$message}}</p> @enderror
+
                         </div> 
                         <div class="col-md-12 mt-15 form-btn text-right">	
                             <button type="submit" class="btn btn--theme hover--theme submit">Submit Request</button>	
