@@ -24,8 +24,8 @@
         </section>
     </div>
     @include('Dashboard.main.scripts')
-    <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
     <script src="{{ asset('dashboard_assets/js/pages/password-addon.init.js') }}"></script>
+    <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
 
 </body>
 </html>
