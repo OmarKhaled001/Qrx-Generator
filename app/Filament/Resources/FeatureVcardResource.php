@@ -34,7 +34,6 @@ class FeatureVcardResource extends Resource
                 TextInput::make('phone')->required(),
                 TextInput::make('tel'),
                 TextInput::make('email'),
-                SpatieMediaLibraryFileUpload::make('vcard')->collection('vcards'),
                 Textarea::make('address')->columnSpanFull(),
                 Textarea::make('note')->columnSpanFull(),
 
