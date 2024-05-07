@@ -222,7 +222,7 @@ class QrxEdit extends Component
                     }
                     $path = 'qrxs/'.$qrxCode->code.'.png';
                     Storage::disk('public')->delete($qrxCode->path);
-                    Cache::flush();
+                    Cache::flush('some-key');
                     Storage::disk('public')->put($path,$qr);
                     if($this->qrx->type == $this->tab){
                     switch ($this->tab) {
