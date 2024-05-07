@@ -10,7 +10,6 @@
     <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/favicon.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{ asset('assets-dashboard/libs/multi.js/multi.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets-dashboard/libs/@tarekraafat/autocomplete.js/css/autoComplete.css') }}" rel="stylesheet">
     @include('Dashboard.main.css')
 </head>
 
@@ -49,12 +48,6 @@
     <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
     <script src="{{ asset('assets-dashboard/js/pages/password-addon.init.js') }}"></script>
     <script src="{{ asset('assets-dashboard/libs/multi.js/multi.min.js') }}"></script>
-    <script src="{{ asset('assets-dashboard/libs/@tarekraafat/autocomplete.js/autoComplete.min.js') }}"></script>
-    <script src="{{ asset('assets-dashboard/js/pages/form-advanced.init.js') }}"></script>
-    <script src="{{asset('assets-dashboard/js/pages/flag-input.init.js')}}"></script>
-    <script>
-    $("#tel").intlTelInput({utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/js/utils.js"});
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
     <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v2.0.11/dist/clipboard.min.js"></script>
