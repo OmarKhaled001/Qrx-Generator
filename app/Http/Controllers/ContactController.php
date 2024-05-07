@@ -24,6 +24,6 @@ class ContactController extends Controller
         $countact->subject  = $request->subject ;
         $countact->message  = $request->message ;
         $countact->save();
-        redirect()->back();
+        redirect()->route('home');
     }
 }
