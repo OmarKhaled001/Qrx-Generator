@@ -19,6 +19,7 @@ use App\Models\FeatureVcard;
 use App\Models\Subscription;
 use App\Models\FeatureMessage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -221,8 +222,8 @@ class QrxEdit extends Component
                     }
                     $path = 'qrxs/'.$qrxCode->code.'.png';
                     Storage::disk('public')->delete($qrxCode->path);
+                    Cache::flush();
                     Storage::disk('public')->put($path,$qr);
- 
                     if($this->qrx->type == $this->tab){
                     switch ($this->tab) {
                         case "text":
