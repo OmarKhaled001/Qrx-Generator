@@ -9,8 +9,8 @@
     <meta content="Themesbrand" name="author" />
     <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/favicon.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="{{ asset('dashboard_assets/libs/multi.js/multi.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('dashboard_assets/libs/@tarekraafat/autocomplete.js/css/autoComplete.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets-dashboard/libs/multi.js/multi.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets-dashboard/libs/@tarekraafat/autocomplete.js/css/autoComplete.css') }}" rel="stylesheet">
     @include('Dashboard.main.css')
 </head>
 
@@ -46,12 +46,12 @@
         </section>
     </div>
     @include('Dashboard.main.scripts')
-    <script src="{{ asset('dashboard_assets/libs/multi.js/multi.min.js') }}"></script>
-    <script src="{{ asset('dashboard_assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js') }}"></script>
-    <script src="{{ asset('dashboard_assets/js/pages/form-advanced.init.js') }}"></script>
-    <script src="{{ asset('dashboard_assets/js/pages/password-addon.init.js') }}"></script>
-    <script src="{{asset('dashboard_assets/js/pages/flag-input.init.js')}}"></script>
-    <script src="{{ asset('dashboard_assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets-dashboard/libs/multi.js/multi.min.js') }}"></script>
+    <script src="{{ asset('assets-dashboard/libs/@tarekraafat/autocomplete.js/autoComplete.min.js') }}"></script>
+    <script src="{{ asset('assets-dashboard/js/pages/form-advanced.init.js') }}"></script>
+    <script src="{{ asset('assets-dashboard/js/pages/password-addon.init.js') }}"></script>
+    <script src="{{asset('assets-dashboard/js/pages/flag-input.init.js')}}"></script>
+    <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
     <script>
     $("#tel").intlTelInput({utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/js/utils.js"});
     </script>
