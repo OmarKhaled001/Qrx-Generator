@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+
     public function getPlans(){
         if(Auth()->user()){
             if(count(Auth()->user()->subscriptions) > 0){
