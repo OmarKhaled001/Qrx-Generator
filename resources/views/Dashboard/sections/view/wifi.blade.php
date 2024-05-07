@@ -32,3 +32,4 @@
 <input readonly  id="foo" class="form-control" value="{{$qrxCode->wifi->encryption}}" />
 </div>
 <a class="btn btn-success h1 text-center mt-5" href="{{'WIFI:S:'.$qrxCode->wifi->wireless_ssid.';T:'.$qrxCode->wifi->encryption.';P:'.$qrxCode->wifi->password.';;'}}" >Connect</a>
+@endif
