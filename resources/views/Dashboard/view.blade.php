@@ -46,12 +46,12 @@
         </section>
     </div>
     @include('Dashboard.main.scripts')
+    <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
+    <script src="{{ asset('assets-dashboard/js/pages/password-addon.init.js') }}"></script>
     <script src="{{ asset('assets-dashboard/libs/multi.js/multi.min.js') }}"></script>
     <script src="{{ asset('assets-dashboard/libs/@tarekraafat/autocomplete.js/autoComplete.min.js') }}"></script>
     <script src="{{ asset('assets-dashboard/js/pages/form-advanced.init.js') }}"></script>
-    <script src="{{ asset('assets-dashboard/js/pages/password-addon.init.js') }}"></script>
     <script src="{{asset('assets-dashboard/js/pages/flag-input.init.js')}}"></script>
-    <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
     <script>
     $("#tel").intlTelInput({utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/js/utils.js"});
     </script>
