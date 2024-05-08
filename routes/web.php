@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SocialiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,5 +48,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class)->group(function(){
+    Route::get('/{provider}/callback','callback')->name('callback');
+    Route::get('/{provider}/redirect','redirect')->name('redirect');
+});
+
 
 require __DIR__.'/auth.php';

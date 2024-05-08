@@ -15,6 +15,7 @@
         "laravel/cashier": "^15.3",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
+        "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.8",
         "laravolt/avatar": "^5.1",
         "livewire/livewire": "2.12.5",
@@ -73,12 +74,12 @@
             "pestphp/pest-plugin": true
         }
     },
-    "repositories": {
-        "foo": {
-            "type": "composer",
-            "url": "https://qrx-generator.zat.pw/"
+    "repositories": [
+        {
+            "url": "https://github.com/OmarKhaled001/Qrx-Generator.git",
+            "type": "git"
         }
-    },
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }
