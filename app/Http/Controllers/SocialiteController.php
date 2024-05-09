@@ -38,13 +38,23 @@ class SocialiteController extends Controller
                 DB::commit();
                 }
                 // login and return to home 
-                Auth::login($user);
-                return redirect()->route('dashboard');
+                if (! $token = auth()->attempt($user)) {
+                    return response(['error' => 'Unauthorized'], 401);
+                }
+                return $this->createNewToken($token);
             }
             catch (\Exception $e) {
                 DB::rollback();
                 return redirect()->route('login')->withErrors(['error' => $e->getMessage()]);
             }
+        }
+
+        protected function createNewToken($token){
+            return response([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 36000000,
+            ]);
         }
     
 }
