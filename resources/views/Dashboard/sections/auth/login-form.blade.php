@@ -9,6 +9,15 @@
                     <div class="text-center mt-5">
                         <h5 class="fs-3xl">Welcome Back</h5>
                         <p class="text-muted">Sign in to continue to QrX.</p>
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                     </div>
                     <div class="p-2 mt-5">
                         <form method="POST" action="{{ route('login') }}">
