@@ -37,7 +37,7 @@ class SocialiteController extends Controller
             }
             catch (\Exception $e) {
                 DB::rollback();
-                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+                return redirect()->route('login')->withErrors(['error' => $e->getMessage()]);
             }
             // login and return to home 
             Auth::login($user);
