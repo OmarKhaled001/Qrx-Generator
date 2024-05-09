@@ -7,12 +7,13 @@ use App\Models\QrxCode;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements JWTSubject, HasMedia
 {
     use HasApiTokens, HasFactory, Notifiable ,Billable,InteractsWithMedia;
 
@@ -75,6 +76,15 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(QrxCode::class);
     }
 
+        public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    
+    public function getJWTCustomClaims() {
+        return [];
+    }
+    
 
 
 
