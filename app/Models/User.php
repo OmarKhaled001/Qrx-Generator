@@ -30,6 +30,8 @@ class User extends Authenticatable implements HasMedia
         'is_active',
         'email',
         'password',
+        'provider',
+        'provider_id',
     ];
 
     /**
@@ -73,7 +75,7 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(QrxCode::class);
     }
 
- 
+
 
 
 }
