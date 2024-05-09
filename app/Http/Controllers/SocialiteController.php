@@ -17,13 +17,15 @@ class SocialiteController extends Controller
     }
 
     public function callback($provider){
-        // get data or store frome provider
-        $user_provider = Socialite::driver($provider)->user();
-        // check if is login before 
-        $user = User::where(['provider'=>$provider , 'provider_id'=>$user_provider->id])->first();
-        if(! $user){
+
+        
             DB::beginTransaction();
             try {
+                // get data or store frome provider
+                $user_provider = Socialite::driver($provider)->user();
+                // check if is login before 
+                $user = User::where(['provider'=>$provider , 'provider_id'=>$user_provider->id])->first();
+                if(! $user){
                 // create user 
                 $user               =  new User;
                 $user->name         =  $user_provider->name;
@@ -34,14 +36,15 @@ class SocialiteController extends Controller
                 //save data
                 $user->save();
                 DB::commit();
+                }
+                // login and return to home 
+                Auth::login($user);
+                return redirect()->route('dashboard');
             }
             catch (\Exception $e) {
                 DB::rollback();
                 return redirect()->route('login')->withErrors(['error' => $e->getMessage()]);
             }
-            // login and return to home 
-            Auth::login($user);
-            return redirect()->route('dashboard');
         }
-    }
+    
 }
