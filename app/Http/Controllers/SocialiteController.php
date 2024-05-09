@@ -25,7 +25,7 @@ class SocialiteController extends Controller
             DB::beginTransaction();
             try {
                 // create user 
-                $user               = new User;
+                $user               =  new User;
                 $user->name         =  $user_provider->name;
                 $user->email        =  $user_provider->email;
                 $user->password     =  Hash::make(Str::random(8));
@@ -34,14 +34,14 @@ class SocialiteController extends Controller
                 //save data
                 $user->save();
                 DB::commit();
-                // login and return to home 
-                Auth::login($user);
-                return redirect()->route('home');
             }
             catch (\Exception $e) {
                 DB::rollback();
                 return redirect()->back()->withErrors(['error' => $e->getMessage()]);
             }
+            // login and return to home 
+            Auth::login($user);
+            return redirect()->route('dashboard');
         }
     }
 }
