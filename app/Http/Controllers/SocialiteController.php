@@ -38,7 +38,7 @@ class SocialiteController extends Controller
                 DB::commit();
                 }
                 // login and return to home 
-                if (! $token = auth()->attempt($user)) {
+                if (! $token = Auth::login($user)) {
                     return response(['error' => 'Unauthorized'], 401);
                 }
                 return $this->createNewToken($token);
