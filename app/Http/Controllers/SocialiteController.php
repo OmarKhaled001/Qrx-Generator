@@ -20,7 +20,7 @@ class SocialiteController extends Controller
         // get data or store frome provider
         $user_provider = Socialite::driver($provider)->user();
         // check if is login before 
-        $user = User::where(['provider'=>$provider , 'provider_id'=>$user_provider->id]);
+        $user = User::where(['provider'=>$provider , 'provider_id'=>$user_provider->id])->first();
         if(! $user){
             DB::beginTransaction();
             try {
