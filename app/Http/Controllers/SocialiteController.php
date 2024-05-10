@@ -38,10 +38,8 @@ class SocialiteController extends Controller
                 DB::commit();
                 }
                 // login and return to home 
-                if (! $token = Auth::login($user)) {
-                    return response(['error' => 'Unauthorized'], 401);
-                }
-                return $this->createNewToken($token);
+                Auth::login($user);
+                return redirect()->route('dashboard');
             }
             catch (\Exception $e) {
                 DB::rollback();
@@ -49,12 +47,6 @@ class SocialiteController extends Controller
             }
         }
 
-        protected function createNewToken($token){
-            return response([
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 36000000,
-            ]);
-        }
+
     
 }
