@@ -41,9 +41,7 @@ class ApiSocialiteController extends Controller
                 $user->save();
                 DB::commit();
                 }
-
                 return response($user);
-
             }
             
             catch (\Exception $e) {
