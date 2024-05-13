@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SocialiteController as ApiSocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
@@ -50,6 +51,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class)->group(function(){
+    Route::get('/{provider}/callback','callback')->name('callback');
+    Route::get('/{provider}/redirect','redirect')->name('redirect');
+});
+
+Route::prefix('api/auth')->name('socialite.')->controller(ApiSocialiteController::class)->group(function(){
     Route::get('/{provider}/callback','callback')->name('callback');
     Route::get('/{provider}/redirect','redirect')->name('redirect');
 });
