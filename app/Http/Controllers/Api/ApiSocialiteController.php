@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -43,7 +42,7 @@ class ApiSocialiteController extends Controller
                 DB::commit();
                 }
                 // login and return to home 
-                if (! $token = Auth::login($user)) {
+                if (! $token = auth()->attempt([$user->email ,$user->password])) {
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
                 return $this->createNewToken($token);
