@@ -41,11 +41,8 @@ class ApiSocialiteController extends Controller
                 $user->save();
                 DB::commit();
                 }
-                // login and return to home 
-                if (! $token = auth()->attempt([$user->email ,$user->password])) {
-                    return response()->json(['error' => 'Unauthorized'], 401);
-                }
-                return $this->createNewToken($token);
+
+                return response($user);
 
             }
             
