@@ -1,11 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Http\Requests\UpdateClientProfileRequest;
-use App\Models\Cart;
+
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Client;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -15,7 +12,6 @@ class AuthController extends Controller
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
-
 
     public function login(Request $request){
     	$validator = Validator::make($request->all(), [
@@ -30,7 +26,6 @@ class AuthController extends Controller
         }
         return $this->createNewToken($token);
     }
-
 
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
@@ -52,18 +47,14 @@ class AuthController extends Controller
         ], 201);
     }
 
-
     public function logout() {
         auth()->logout();
         return response(['message' => 'user successfully signed out']);
     }
 
-
     public function refresh() {
         return $this->createNewToken(auth()->refresh());
     }
-
-
 
 
     protected function createNewToken($token){

@@ -14,8 +14,6 @@ class SocialiteController extends Controller
     }
 
     public function callback($provider){
-
-        
             DB::beginTransaction();
             try {
                 // get data or store frome provider
@@ -27,5 +25,4 @@ class SocialiteController extends Controller
                 return response(['error' => $e->getMessage()], 400);
             }
         }
-
 }
