@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\SocialiteController as ApiSocialiteController;
+use App\Http\Controllers\Api\ApiSocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
