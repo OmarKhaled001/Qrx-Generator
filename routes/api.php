@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\api\SocialiteController;
 
 /*
 |--------------------------------------------------------------------------
