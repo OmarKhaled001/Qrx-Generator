@@ -56,8 +56,8 @@ Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class
 });
 
 Route::prefix('api/auth')->name('socialite.')->controller(ApiSocialiteController::class)->group(function(){
-    Route::get('/{provider}/callback','callback')->name('Apicallback');
-    Route::get('/{provider}/redirect','redirect')->name('Apiredirect');
+    Route::get('/{provider}/callback','Apicallback')->name('Apicallback');
+    Route::get('/{provider}/redirect','Apiredirect')->name('Apiredirect');
 });
 
 
