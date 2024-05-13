@@ -41,6 +41,7 @@ class SocialiteController extends Controller
                 Auth::login($user);
                 return redirect()->route('dashboard');
             }
+            
             catch (\Exception $e) {
                 DB::rollback();
                 return redirect()->route('login')->withErrors(['error' => $e->getMessage()]);
@@ -48,5 +49,4 @@ class SocialiteController extends Controller
         }
 
 
-    
 }
