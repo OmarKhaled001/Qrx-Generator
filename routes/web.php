@@ -56,8 +56,8 @@ Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class
 });
 
 Route::prefix('api/auth')->name('socialite.')->controller(ApiSocialiteController::class)->group(function(){
-    Route::get('/{provider}/callback','callback')->name('callback');
-    Route::get('/{provider}/redirect','redirect')->name('redirect');
+    Route::post('/{provider}/callback','callback')->name('callback');
+    Route::post('/{provider}/redirect','redirect')->name('redirect');
 });
 
 
