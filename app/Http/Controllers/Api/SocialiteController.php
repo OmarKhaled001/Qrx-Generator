@@ -14,15 +14,9 @@ class SocialiteController extends Controller
     }
 
     public function callback($provider){
-            DB::beginTransaction();
-            try {
-                // get data or store frome provider
+
                 $user_provider = Socialite::driver($provider)->user();
                 return  response($user_provider,200);
-            }
-            catch (\Exception $e) {
-                DB::rollback();
-                return response(['error' => $e->getMessage()], 400);
-            }
+        
         }
 }
