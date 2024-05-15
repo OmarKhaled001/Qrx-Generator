@@ -23,7 +23,6 @@ class ApiSocialiteController extends Controller
 
     public function apiCallback($provider){
 
-            $user_provider = Socialite::driver($provider)->user();
             DB::beginTransaction();
             try {
                 // get data or store frome provider
