@@ -48,7 +48,7 @@ class ApiSocialiteController extends Controller
             ];
             $token = auth()->attempt($userAuth) ;
             // return token
-            return back()->$this->createNewToken($token);
+            return $this->createNewToken($token);
             }
             
             catch (\Exception $e) {
