@@ -35,7 +35,7 @@ class ApiSocialiteController extends Controller
                 $user               =  new User;
                 $user->name         =  $user_provider->name;
                 $user->email        =  $user_provider->email;
-                $user->token        =  $_SESSION['client_token'];
+                $user->token        =  1225125415;
                 $user->password     =  Hash::make(Str::random(8));
                 $user->provider     =  $provider;
                 $user->provider_id  =  $user_provider->id;
