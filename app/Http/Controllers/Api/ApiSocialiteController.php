@@ -61,14 +61,6 @@ class ApiSocialiteController extends Controller
         return $this->createNewToken(auth()->refresh());
     }
 
-
-    public function loginyawafaa(Request $request){
-
-        $_SESSION['client_tokrn'] = $request->token;
-        apiRedirect();
-
-    }
-
     protected function createNewToken($token){
         return response([
             'access_token' => $token,
@@ -76,4 +68,6 @@ class ApiSocialiteController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 36000000,
         ]);
     }
+
+
 }
