@@ -13,16 +13,17 @@ use Laravel\Socialite\Facades\Socialite;
 
 class ApiSocialiteController extends Controller
 {
-    
-    public function Apiredirect(Request $request,$provider){
+
+
+    public function apiRedirect(Request $request,$provider){
         $device_token = $request->device_token;
         return Socialite::driver($provider)->redirect();
     }
 
-    public function Apicallback($provider){
-        
-            $user_provider = Socialite::driver($provider)->user();
 
+    public function apiCallback($provider){
+
+            $user_provider = Socialite::driver($provider)->user();
             DB::beginTransaction();
             try {
                 // get data or store frome provider
@@ -34,6 +35,7 @@ class ApiSocialiteController extends Controller
                 $user               =  new User;
                 $user->name         =  $user_provider->name;
                 $user->email        =  $user_provider->email;
+                $user->token        =  $_SESSION['client_token'];
                 $user->password     =  Hash::make(Str::random(8));
                 $user->provider     =  $provider;
                 $user->provider_id  =  $user_provider->id;
@@ -41,21 +43,33 @@ class ApiSocialiteController extends Controller
                 $user->save();
                 DB::commit();
                 }
-                return response($user);
+                // login 
+            $userAuth = [
+                'email' =>  $user->email,
+                'password' => $user->password
+            ];
+            $token = auth()->attempt($userAuth) ;
+            // return token
+            return back()->$this->createNewToken($token);
             }
             
             catch (\Exception $e) {
                 DB::rollback();
                 return response(['error' => $e->getMessage()], 400);
-            
         }
-
     }
     
     public function refresh() {
         return $this->createNewToken(auth()->refresh());
     }
 
+
+    public function loginyawafaa(Request $request){
+
+        $_SESSION['client_tokrn'] = $request->token;
+        apiRedirect();
+
+    }
 
     protected function createNewToken($token){
         return response([
