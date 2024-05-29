@@ -173,47 +173,6 @@ class QrxController extends Controller
             );
     }
 
-    public function downloadVcar(Request $request)
-    {   
-        $qrxCode = QrxCode::find($request -> id);
-        $color        = Hex::fromString($qrxCode->style->color)->toRgb();
-        $bgColor      = Hex::fromString($qrxCode->style->bg_color)->toRgb();
-        // generate qr with gradient color
-        if( $qrxCode->style->gradient_to != null && $qrxCode->style->gradient_from != null){
-        $gradientTo   = Hex::fromString($qrxCode->style->gradient_to)->toRgb();
-        $gradientFrom = Hex::fromString($qrxCode->style->gradient_from)->toRgb();
-        $qr = QrCode::format($request -> type)
-        ->size($request -> size)
-        ->errorCorrection('H')
-        ->encoding('UTF-8')
-        ->style($qrxCode->style->style)
-        ->margin($qrxCode->style->margin)
-        ->eye($qrxCode->style->eye)
-        ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
-        ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
-        ->generate(route('qr.show', $qrxCode->code) );
-        }else{
-            $qr = QrCode::format($request -> type)
-            ->size($request -> size)
-            ->errorCorrection('H')
-            ->encoding('UTF-8')
-            ->style($qrxCode->style->style)
-            ->margin($qrxCode->style->margin)
-            ->eye($qrxCode->style->eye)
-            ->color($color->red(),$color->green(),$color->blue())
-            ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
-            ->generate(route('qr.show', $qrxCode->code) );
-        }
-        return response()->streamDownload(function ()use ($qr) {
-            echo $qr;
-                },
-                $request -> name.'.'.$request -> type,
-                [
-                    'Content-Type' => 'image/'.$request -> type,
-                ]
-            );
-    }
-
 
 
 }

@@ -55,11 +55,6 @@ Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class
     Route::get('/{provider}/redirect','redirect')->name('redirect');
 });
 
-Route::prefix('api/auth')->name('socialite.')->controller(ApiSocialiteController::class)->group(function(){
-    Route::get('/{provider}/callback','Apicallback')->name('Apicallback');
-    Route::get('/{provider}/redirect','Apiredirect')->name('Apiredirect');
-    Route::get('/wafaa/login','loginyawafaa')->name('Apiredirect');
-});
 
 
 
