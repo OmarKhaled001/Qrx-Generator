@@ -44,8 +44,8 @@
                                     <h5 class="fs-sm mb-4 title">Sign In with</h5>
                                 </div>
                                 <div class="pt-2 hstack gap-2 justify-content-center">
-                                    <a type="button" href="{{route('socialite.redirect','facebook')}}" class="btn btn-subtle-primary btn-icon"><i class="ri-facebook-fill fs-lg"></i></a>
-                                    <a type="button" href="{{route('socialite.redirect','google')}}" class="btn btn-subtle-danger "><i class="ri-google-fill fs-lg"></i> Login With Google</a>
+                                    {{-- <a type="button" href="{{route('socialite.redirect','facebook')}}" class="btn btn-subtle-primary btn-icon"><i class="ri-facebook-fill fs-lg"></i></a> --}}
+                                    <a type="button" href="{{route('socialite.redirect','google')}}" class="btn btn-subtle-danger btn-icon"><i class="ri-google-fill fs-lg"></i></a>
                                 </div>
                             </div>
                             <div class="mt-4">
