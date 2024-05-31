@@ -10,7 +10,6 @@
     <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/favicon.ico') }}">
     @include('Dashboard.main.css')
 </head>
-
 <body>
     <div id="layout-wrapper">
         @include('Dashboard.main.topbar')

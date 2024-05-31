@@ -103,6 +103,7 @@ class QrxController extends Controller
 
 
     }
+    
     public function switchStatuQr(string $id)
     {   
         $qrxCode = QrxCode::find($id);
