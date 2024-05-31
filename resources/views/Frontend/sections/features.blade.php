@@ -42,7 +42,9 @@
                     <div class="fbox-6 fb-4 wow fadeInUp my-4">
                         <!-- Icon -->
                         <div class="fbox-ico ico-55">
-                            <i class="fa-solid fa-link fa-2xl"></i>
+                            <div class="shape-ico color--theme">
+                                <i class="fa-solid fa-link fa-2xl"></i>
+                            </div>
                         </div>
                         <div class="fbox-txt">
                             <h6 class="s-20 w-700">Link</h6>
@@ -90,7 +92,7 @@
                             </div>
                         </div>
                         <div class="fbox-txt">
-                            <h6 class="s-20 w-700">SEO Services</h6>
+                            <h6 class="s-20 w-700">Email</h6>
                             <p>Luctus augue egestas undo ultrice and quisque lacus</p>
                         </div>
                     </div>
