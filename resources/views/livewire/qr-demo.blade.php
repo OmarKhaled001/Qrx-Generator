@@ -1,8 +1,8 @@
-<div class="row card d-flex align-items-center" wire:poll>
+<div class="row d-flex align-items-center" wire:poll>
     <div class="col-lg-6 col-sm-12 left-column wow fadeInRight">
-        <div id="rw-2-2" class="review-2 bg--white-100 r-08">
+        <div id="rw-2-2" class="review-2 bg--white-100  r-08">
             <div class="blog-post-img mb-35">
-                <div class="img-fluid r-16 text-center ">
+                <div class="img-fluid r-16 text-center">
                     {{$QrCode}}
                 </div>
             </div>
@@ -14,7 +14,7 @@
 
     <div class="col-lg-6 col-sm-12">
         <div class="txt-block right-column wow fadeInLeft">
-                <div class="r-08 w-100">
+                <div class=" r-08 w-100">
                     <div class="col-md-12 my-2 contact-form">
                         <h5 class="p-lg">Text :</label>
                         <input type="text" class="form-control my-1"  placeholder="write text" wire:model="text">
