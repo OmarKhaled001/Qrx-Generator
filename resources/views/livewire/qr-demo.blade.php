@@ -13,7 +13,7 @@
     </div>
 
     <div class="col-lg-6 col-sm-12">
-        <div class="txt-block right-column wow fadeInLeft p-3">
+        <div class="txt-block right-column wow fadeInLeft">
                 <div class="r-08 w-100">
                     <div class="col-md-12 my-2 contact-form">
                         <h5 class="p-lg">Text :</label>
