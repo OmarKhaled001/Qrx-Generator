@@ -30,24 +30,14 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <div class="float-end">
-                                    <a href="#" class="text-muted">Forgot password?</a>
-                                </div>
+                              
                                 <label class="form-label" for="password-input">Password <span class="text-danger">*</span></label>
                                 <div class="position-relative auth-pass-inputgroup mb-3">
                                     <input type="password" class="form-control pe-5 password-input " name="password" placeholder="Enter Your password" id="password-input">
                                     <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
                                 </div>
                             </div>
-                            <div class="mt-4 pt-2 text-center">
-                                <div class="signin-other-title position-relative">
-                                    <h5 class="fs-sm mb-4 title">Sign In with</h5>
-                                </div>
-                                <div class="pt-2 hstack gap-2 justify-content-center">
-                                    {{-- <a type="button" href="{{route('socialite.redirect','facebook')}}" class="btn btn-subtle-primary btn-icon"><i class="ri-facebook-fill fs-lg"></i></a> --}}
-                                    <a type="button" href="{{route('socialite.redirect','google')}}" class="btn btn-subtle-danger btn-icon"><i class="ri-google-fill fs-lg"></i></a>
-                                </div>
-                            </div>
+                         
                             <div class="mt-4">
                                 <button class="btn btn-primary w-100" type="submit">Sign In</button>
                             </div>
