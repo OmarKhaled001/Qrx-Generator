@@ -23,5 +23,5 @@
     <h5> Body : </h5>
 </div>
 <textarea readonly id="foo" class="form-control"  >{{$qrxCode->email->body}}</textarea>
-<a class="btn btn-success h1 text-center mt-5" href="mailto:{{$qrxCode->email->email}}?&subject={{$qrxCode->email->subject}}?&body={{$qrxCode->email->body}}" >Send <i class="fa-solid fa-paper-plane"></i></a>
+<a class="btn btn-success h1 text-center mt-5" href="mailto:{{ str_replace('%40', '@', rawurlencode($qrxCode->email->email)) }}?subject={{ rawurlencode($qrxCode->email->subject) }}&body={{ rawurlencode($qrxCode->email->body) }}" >Send <i class="fa-solid fa-paper-plane"></i></a>
 @endif

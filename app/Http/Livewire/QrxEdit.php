@@ -18,6 +18,8 @@ use App\Models\FeaturePhone;
 use App\Models\FeatureVcard;
 use App\Models\Subscription;
 use App\Models\FeatureMessage;
+use App\Support\QrOptions;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +27,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrxEdit extends Component
 {
+    use AuthorizesRequests;
 
     // Property
     public $qrxName ='' ,$text ='' , $url ='' ,
@@ -136,18 +139,18 @@ class QrxEdit extends Component
         if( $this->gradientTo != null && $this->gradientFrom != null){
             $gradientTo   = Hex::fromString($this->gradientTo)->toRgb();
             $gradientFrom = Hex::fromString($this->gradientFrom)->toRgb();
-            $QrCode = QrCode::size($this->size)
+            $QrCode = QrCode::size(QrOptions::size($this->size))
             ->style($this->style)
-            ->margin($this->margin)
+            ->margin(QrOptions::margin($this->margin))
             ->eye($this->eye)
             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
             ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
             ->generate('https://hossam-x-studios.com');
         }else{
             // generate qr with color
-            $QrCode = QrCode::size($this->size)
+            $QrCode = QrCode::size(QrOptions::size($this->size))
             ->style($this->style)
-            ->margin($this->margin)
+            ->margin(QrOptions::margin($this->margin))
             ->eye($this->eye)
             ->color($color->red(),$color->green(),$color->blue())
             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -159,6 +162,10 @@ class QrxEdit extends Component
 
     // genrat Qr
     public function generat(){
+        $this->authorize('update', $this->qrx);
+        if ($this->tab === 'url') {
+            $this->validate(['url' => ['required', 'url:http,https', 'max:255']]);
+        }
         if( count(Auth()->user()->subscriptions) > 0){
             $user = Auth('user')->user();
             $qrxCodex = QrxCode::where('user_id',$user->id )->count();
@@ -180,12 +187,11 @@ class QrxEdit extends Component
                     $qrxCode            = QrxCode::find($this->qrx->id);
                     $qrxCode->name      = $this->qrxName;
                     $qrxCode->type      = $this->tab;
-                    $qrxCode->user_id = Auth()->user()->id;
                     $qrxCode->save();
                     //update style
                     $qrCodeStyle                 = Style::find($this->qrx->style->id);
-                    $qrCodeStyle->size           = $this->size;
-                    $qrCodeStyle->margin         = $this->margin;
+                    $qrCodeStyle->size           = QrOptions::size($this->size);
+                    $qrCodeStyle->margin         = QrOptions::margin($this->margin);
                     $qrCodeStyle->eye            = $this->eye;
                     $qrCodeStyle->style          = $this->style;
                     $qrCodeStyle->color          = $this->color;
@@ -203,7 +209,7 @@ class QrxEdit extends Component
                         ->errorCorrection('H')
                         ->encoding('UTF-8')
                         ->style($this->style)
-                        ->margin($this->margin)
+                        ->margin(QrOptions::margin($this->margin))
                         ->eye($this->eye)
                         ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -214,7 +220,7 @@ class QrxEdit extends Component
                         ->errorCorrection('H')
                         ->encoding('UTF-8')
                         ->style($this->style)
-                        ->margin($this->margin)
+                        ->margin(QrOptions::margin($this->margin))
                         ->eye($this->eye)
                         ->color($color->red(),$color->green(),$color->blue())
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())

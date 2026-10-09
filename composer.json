@@ -18,7 +18,7 @@
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.8",
         "laravolt/avatar": "^5.1",
-        "livewire/livewire": "2.12.5",
+        "livewire/livewire": "2.12.7",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/color": "^1.5",
         "tymon/jwt-auth": "^2.1"

@@ -8,7 +8,10 @@ use Spatie\Color\Hex;
 use App\Models\Folder;
 use App\Models\QrxCode;
 use App\Models\Subscription;
+use App\Support\QrOptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use App\Charts\MonthlyStatusChart;
 use App\Charts\MonthlyQrxCodesChart;
 use Illuminate\Support\Facades\Storage;
@@ -106,7 +109,8 @@ class QrxController extends Controller
     
     public function switchStatuQr(string $id)
     {   
-        $qrxCode = QrxCode::find($id);
+        $qrxCode = QrxCode::findOrFail($id);
+        $this->authorize('update', $qrxCode);
         if($qrxCode->status != 'active'){
             $qrxCode->status = 'active';
             $qrxCode->save();
@@ -121,6 +125,7 @@ class QrxController extends Controller
     public function editQr(string $id)
     {   
         if($qrx = QrxCode::find($id)) {
+        $this->authorize('update', $qrx);
         return view('Dashboard.qrx-edit',compact('qrx'));
         }else{
             return view('Dashboard.error-not-found');
@@ -128,37 +133,48 @@ class QrxController extends Controller
     }
     public function deleteQr(string $id)
     {   
-        $qrxCode = QrxCode::find($id);
+        $qrxCode = QrxCode::findOrFail($id);
+        $this->authorize('delete', $qrxCode);
         Storage::disk('public')->delete($qrxCode->path);
         QrxCode::destroy($id);
         return redirect()->back();
     }
     public function downloadQr(Request $request)
     {   
-        $qrxCode = QrxCode::find($request -> id);
+        $validated = $request->validate([
+            'id'   => ['required', 'integer'],
+            'type' => ['required', Rule::in(array_keys(QrOptions::DOWNLOAD_FORMATS))],
+            'size' => ['nullable', 'integer'],
+            'name' => ['nullable', 'string', 'max:255'],
+        ]);
+        $qrxCode = QrxCode::findOrFail($validated['id']);
+        $this->authorize('view', $qrxCode);
+        $type     = $validated['type'];
+        $size     = QrOptions::size($validated['size'] ?? $qrxCode->style->size, QrOptions::MAX_DOWNLOAD_SIZE);
+        $fileName = (Str::slug($validated['name'] ?? '') ?: $qrxCode->code).'.'.$type;
         $color        = Hex::fromString($qrxCode->style->color)->toRgb();
         $bgColor      = Hex::fromString($qrxCode->style->bg_color)->toRgb();
         // generate qr with gradient color
         if( $qrxCode->style->gradient_to != null && $qrxCode->style->gradient_from != null){
         $gradientTo   = Hex::fromString($qrxCode->style->gradient_to)->toRgb();
         $gradientFrom = Hex::fromString($qrxCode->style->gradient_from)->toRgb();
-        $qr = QrCode::format($request -> type)
-        ->size($request -> size)
+        $qr = QrCode::format($type)
+        ->size($size)
         ->errorCorrection('H')
         ->encoding('UTF-8')
         ->style($qrxCode->style->style)
-        ->margin($qrxCode->style->margin)
+        ->margin(QrOptions::margin($qrxCode->style->margin))
         ->eye($qrxCode->style->eye)
         ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
         ->generate(route('qr.show', $qrxCode->code) );
         }else{
-            $qr = QrCode::format($request -> type)
-            ->size($request -> size)
+            $qr = QrCode::format($type)
+            ->size($size)
             ->errorCorrection('H')
             ->encoding('UTF-8')
             ->style($qrxCode->style->style)
-            ->margin($qrxCode->style->margin)
+            ->margin(QrOptions::margin($qrxCode->style->margin))
             ->eye($qrxCode->style->eye)
             ->color($color->red(),$color->green(),$color->blue())
             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -167,9 +183,9 @@ class QrxController extends Controller
         return response()->streamDownload(function ()use ($qr) {
             echo $qr;
                 },
-                $request -> name.'.'.$request -> type,
+                $fileName,
                 [
-                    'Content-Type' => 'image/'.$request -> type,
+                    'Content-Type' => QrOptions::DOWNLOAD_FORMATS[$type],
                 ]
             );
     }

@@ -24,7 +24,7 @@
 </div>
 <div class="d-flex align-items-center">
     <input  readonly id="foo" class="form-control" value="{{$qrxCode->vcard->email}}" />
-    <a class="btn btn-success mx-1" href="mailto:{{$qrxCode->vcard->email}}"  >
+    <a class="btn btn-success mx-1" href="mailto:{{ str_replace('%40', '@', rawurlencode($qrxCode->vcard->email)) }}"  >
         <i class="fa-solid fa-envelope"></i>
     </a>
 </div>

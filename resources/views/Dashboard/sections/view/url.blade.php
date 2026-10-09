@@ -6,9 +6,11 @@
 </div>
 <div class="d-flex align-items-center mt-5">
     <input readonly id="foo" class="form-control" value="{{$qrxCode->url->url}}" />
-    <a class="btn btn-success mx-1" href="{{$qrxCode->url->url}}" target="_blank"  >
+    @if($qrxCode->url->safeHref())
+    <a class="btn btn-success mx-1" href="{{$qrxCode->url->safeHref()}}" target="_blank" rel="noopener noreferrer nofollow">
         <i class="fa-solid fa-link"></i>
     </a>
+    @endif
     <button class="btn btn-success" data-clipboard-text="{{$qrxCode->url->url}}"  >
         <i class="fa-solid fa-copy"></i>
     </button>

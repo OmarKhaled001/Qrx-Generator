@@ -20,5 +20,5 @@
     <h5> Masseage : </h5><button class="btn text-success h1 text-end" data-clipboard-text="{{$qrxCode->message->message}}"  ><i class="fa-solid fa-copy"></i></button>
 </div>
 <textarea readonly  id="foo" class="form-control"  >{{$qrxCode->message->message}}</textarea>
-<a class="btn btn-success h1 text-center mt-5" href="sms:{{$qrxCode->message->phone}}?&body={{$qrxCode->message->message}}">Send <i class="fa-solid fa-paper-plane"></i></a>
+<a class="btn btn-success h1 text-center mt-5" href="sms:{{$qrxCode->message->phone}}?body={{ rawurlencode($qrxCode->message->message) }}">Send <i class="fa-solid fa-paper-plane"></i></a>
 @endif

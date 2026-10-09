@@ -3,11 +3,16 @@
 namespace App\Http\Livewire;
 
 use Spatie\Color\Hex;
+use App\Support\QrOptions;
 use Livewire\Component;
+use Illuminate\Support\Facades\RateLimiter;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrDemo extends Component
 {
+    // Public, unauthenticated: cap component requests (typing, polling, download) per IP.
+    private const REQUESTS_PER_MINUTE = 120;
+
     // Property
     public $qrxName ='' ,$text ='' ,
     $settings='size' , $eye='square' ,
@@ -15,6 +20,15 @@ class QrDemo extends Component
     $style='square' , $bgColor='#ffffff' ,
     $gradientFrom='' , $gradientTo='' ,
     $color='#000000' , $tab='text' ,$qr;
+
+    public function hydrate()
+    {
+        $key = 'qr-demo:'.request()->ip();
+        if (RateLimiter::tooManyAttempts($key, self::REQUESTS_PER_MINUTE)) {
+            abort(429);
+        }
+        RateLimiter::hit($key, 60);
+    }
 
     public function color(){
         $this->reset('gradientFrom','gradientTo') ;
@@ -41,19 +55,19 @@ class QrDemo extends Component
                 $gradientTo   = Hex::fromString($this->gradientTo)->toRgba();
                 $gradientFrom = Hex::fromString($this->gradientFrom)->toRgba();
                 if($this->text != null ){
-                $QrCode = QrCode::size($this->size)
+                $QrCode = QrCode::size(QrOptions::size($this->size))
                 ->encoding('UTF-8')
                 ->style($this->style)
-                ->margin($this->margin)
+                ->margin(QrOptions::margin($this->margin))
                 ->eye($this->eye)
                 ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
                 ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
                 ->generate($this->text);
                 }else{
-                    $QrCode = QrCode::size($this->size)
+                    $QrCode = QrCode::size(QrOptions::size($this->size))
                     ->encoding('UTF-8')
                     ->style($this->style)
-                    ->margin($this->margin)
+                    ->margin(QrOptions::margin($this->margin))
                     ->eye($this->eye)
                     ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
                     ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -62,19 +76,19 @@ class QrDemo extends Component
             }else{
                 if($this->text != null ){
                 // generate qr with color
-                $QrCode = QrCode::size($this->size)
+                $QrCode = QrCode::size(QrOptions::size($this->size))
                 ->encoding('UTF-8')
                 ->style($this->style)
-                ->margin($this->margin)
+                ->margin(QrOptions::margin($this->margin))
                 ->eye($this->eye)
                 ->color($color->red(),$color->green(),$color->blue())
                 ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
                 ->generate($this->text);
                 }else{
-                    $QrCode = QrCode::size($this->size)
+                    $QrCode = QrCode::size(QrOptions::size($this->size))
                     ->encoding('UTF-8')
                     ->style($this->style)
-                    ->margin($this->margin)
+                    ->margin(QrOptions::margin($this->margin))
                     ->eye($this->eye)
                     ->color($color->red(),$color->green(),$color->blue())
                     ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -96,19 +110,19 @@ class QrDemo extends Component
                         $gradientTo   = Hex::fromString($this->gradientTo)->toRgba();
                         $gradientFrom = Hex::fromString($this->gradientFrom)->toRgba();
                         if($this->text != null ){
-                        $QrCode = QrCode::size($this->size)
+                        $QrCode = QrCode::size(QrOptions::size($this->size))
                         ->encoding('UTF-8')
                         ->style($this->style)
-                        ->margin($this->margin)
+                        ->margin(QrOptions::margin($this->margin))
                         ->eye($this->eye)
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
                         ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
                         ->generate($this->text);
                         }else{
-                            $QrCode = QrCode::size($this->size)
+                            $QrCode = QrCode::size(QrOptions::size($this->size))
                             ->encoding('UTF-8')
                             ->style($this->style)
-                            ->margin($this->margin)
+                            ->margin(QrOptions::margin($this->margin))
                             ->eye($this->eye)
                             ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
                             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -117,23 +131,23 @@ class QrDemo extends Component
                     }else{
                         if($this->text != null ){
                         // generate qr with color
-                        $QrCode = QrCode::size($this->size)
+                        $QrCode = QrCode::size(QrOptions::size($this->size))
                         ->format('png')
                         ->errorCorrection('h')
                         ->encoding('UTF-8')
                         ->style($this->style)
-                        ->margin($this->margin)
+                        ->margin(QrOptions::margin($this->margin))
                         ->eye($this->eye)
                         ->color($color->red(),$color->green(),$color->blue())
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
                         ->generate($this->text);
                         }else{
-                            $QrCode = QrCode::size($this->size)
+                            $QrCode = QrCode::size(QrOptions::size($this->size))
                             ->format('png')
                             ->errorCorrection('h')
                             ->encoding('UTF-8')
                             ->style($this->style)
-                            ->margin($this->margin)
+                            ->margin(QrOptions::margin($this->margin))
                             ->eye($this->eye)
                             ->color($color->red(),$color->green(),$color->blue())
                             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())

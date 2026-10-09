@@ -18,6 +18,7 @@ use App\Models\FeatureVcard;
 use App\Models\Subscription;
 use Livewire\WithFileUploads;
 use App\Models\FeatureMessage;
+use App\Support\QrOptions;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -96,10 +97,10 @@ class QrxCreate extends Component
         if( $this->gradientTo != null && $this->gradientFrom != null){
             $gradientTo   = Hex::fromString($this->gradientTo)->toRgb();
             $gradientFrom = Hex::fromString($this->gradientFrom)->toRgb();
-            $QrCode = QrCode::size($this->size)
+            $QrCode = QrCode::size(QrOptions::size($this->size))
             ->encoding('UTF-8')
             ->style($this->style)
-            ->margin($this->margin)
+            ->margin(QrOptions::margin($this->margin))
             ->eye($this->eye)
             ->color($color->red(),$color->green(),$color->blue())
             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -107,10 +108,10 @@ class QrxCreate extends Component
             ->generate('https://hossam-x-studios.com');
         }else{
             // generate qr with color
-            $QrCode = QrCode::size($this->size)
+            $QrCode = QrCode::size(QrOptions::size($this->size))
             ->encoding('UTF-8')
             ->style($this->style)
-            ->margin($this->margin)
+            ->margin(QrOptions::margin($this->margin))
             ->eye($this->eye)
             ->color($color->red(),$color->green(),$color->blue())
             ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -122,6 +123,9 @@ class QrxCreate extends Component
 
     // genrat Qr
     public function generat(){
+        if ($this->tab === 'url') {
+            $this->validate(['url' => ['required', 'url:http,https', 'max:255']]);
+        }
             if( count(Auth()->user()->subscriptions) > 0){
                 $user = Auth('user')->user();
                 $qrxCodex = QrxCode::where('user_id',$user->id )->count();
@@ -148,8 +152,8 @@ class QrxCreate extends Component
                     $qrxCode->save();
                     //create style
                     $qrCodeStyle                 = new Style();
-                    $qrCodeStyle->size           = $this->size;
-                    $qrCodeStyle->margin         = $this->margin;
+                    $qrCodeStyle->size           = QrOptions::size($this->size);
+                    $qrCodeStyle->margin         = QrOptions::margin($this->margin);
                     $qrCodeStyle->eye            = $this->eye;
                     $qrCodeStyle->style          = $this->style;
                     $qrCodeStyle->color          = $this->color;
@@ -167,7 +171,7 @@ class QrxCreate extends Component
                         ->errorCorrection('H')
                         ->encoding('UTF-8')
                         ->style($this->style)
-                        ->margin($this->margin)
+                        ->margin(QrOptions::margin($this->margin))
                         ->eye($this->eye)
                         ->gradient($gradientFrom->red(),$gradientFrom->green(),$gradientFrom->blue(),$gradientTo->red(),$gradientTo->green(),$gradientTo->blue(), 'diagonal')
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
@@ -178,7 +182,7 @@ class QrxCreate extends Component
                         ->errorCorrection('H')
                         ->encoding('UTF-8')
                         ->style($this->style)
-                        ->margin($this->margin)
+                        ->margin(QrOptions::margin($this->margin))
                         ->eye($this->eye)
                         ->color($color->red(),$color->green(),$color->blue())
                         ->backgroundColor($bgColor->red(),$bgColor->green(),$bgColor->blue())
