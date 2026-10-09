@@ -97,3 +97,9 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Admin panel uses the brand teal, IBM Plex Sans, dark mode, and follows the user's language** (SetLocale added to the panel middleware; Filament ships Arabic).
 - **`php artisan app:make-admin email@…`** creates or promotes an administrator on real servers (the demo seeder only runs outside production).
 - **Admin stats widget** (users, paying subscribers, QR codes, scans in 30 days) is in M8 rather than L6, because it is small and useful from day one; L6 adds revenue reporting.
+
+## M9 — MVP cutover
+
+- **"Browser smoke test" = an HTTP + Livewire end-to-end journey test** (register → verify → create → scan → change → download, plus the RTL pass over every dashboard page). A real browser pass is done once at the end of the run (final report).
+- **JSON key order is not asserted:** MySQL normalises JSON object key order, so tests compare payloads by keys and values. Nothing in the app depends on payload key order.
+- **MVP merged into `master` locally** with a merge commit; nothing is pushed (origin is public). Later phases continue on `redesign/v2` and are merged again at the end.

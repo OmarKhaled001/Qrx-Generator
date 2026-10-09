@@ -84,3 +84,24 @@ The `scans` table stores no raw IP addresses. Each row holds:
 - `referrer_host`;
 - `country` (nullable): taken from a trusted proxy header such as Cloudflare's `CF-IPCountry` when present. A GeoIP database can be added later;
 - `visitor_hash` (nullable): HMAC-SHA256 of IP + user agent, keyed with a secret that **rotates daily**. It can count unique visitors within a day but can't be reversed or linked across days.
+
+## v2 test mapping (M9 gate)
+
+Every row above is covered by a passing v2 test. 165 tests pass on PHP 8.5 with both SQLite and MySQL 8.4 (strict).
+
+| Area | v2 tests |
+|---|---|
+| Auth (register, login/logout, reset, verification, confirmation, profile, delete account) | `tests/Feature/Auth/*` (Registration, Authentication, PasswordReset, EmailVerification, PasswordConfirmation, Profile) |
+| QR creation for all 8 types, payload validation, URL schemes | `Qr/QrBuilderTest`, `Domain/QrCodeActionsTest`, `Domain/QrTypeValidationTest` |
+| Quota / plan limits (free tier replaces "no subscription → plans page") | `Qr/QrBuilderTest` (free limit, paid limit), `Domain/SubscriptionsTest` |
+| Ownership: view, edit, pause, delete, download; guests; 404 | `Qr/QrIndexTest`, `Qr/QrShowTest`, `Qr/QrBuilderTest`, `Qr/QrDownloadTest`, `Domain/QrCodePolicyTest` |
+| Lists, status filters (incl. derived limit reached), search | `Qr/QrIndexTest` |
+| Downloads PNG/SVG/EPS, size clamp, allowlist, file name | `Qr/QrDownloadTest`, `Domain/QrRendererTest` |
+| Scan page: all types, counting, paused/limit/unknown (404), unsafe URLs, escaping, vCard | `Public/ScanPageTest`, `Domain/RecordScanTest` |
+| Scans store no raw IP | `Domain/RecordScanTest::test_no_raw_ip_address_is_stored_anywhere` |
+| Billing: checkout, swap, portal, webhook → plan, active plans only | `Billing/BillingTest`, `Billing/StripeWebhookTest`, `Public/HomePageTest` |
+| Admin: access, users, QR codes, plans, make-admin | `Admin/AdminPanelTest` |
+| i18n / RTL guardrails | `Ui/LogicalPropertiesTest`, `Ui/HardcodedStringTest`, `Ui/TranslationCoverageTest`, `Ui/LocaleTest`, `Ui/ComponentsTest` |
+| Whole journey (LTR + RTL) | `EndToEndJourneyTest` |
+
+Not carried over by design: the 7 `feature_*` tables, the `admins` table and second guard, the `transactions` table, stored PNG files, MP3 type (dropped), JWT/Sanctum API.

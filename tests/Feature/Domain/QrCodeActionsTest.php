@@ -32,7 +32,7 @@ class QrCodeActionsTest extends TestCase
 
             $this->assertSame($type, $qrCode->type);
             $this->assertSame(QrStatus::Active, $qrCode->status);
-            $this->assertSame(QrCodeFactory::samplePayload($type), $qrCode->fresh()->payload);
+            $this->assertEquals(QrCodeFactory::samplePayload($type), $qrCode->fresh()->payload); // key order differs on MySQL
             $this->assertMatchesRegularExpression('/^[2-9a-hj-km-np-zA-HJ-NP-Z]{'.ShortCode::LENGTH.'}$/', $qrCode->code);
         }
 

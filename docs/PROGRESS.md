@@ -28,8 +28,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M6 Public | ✅ done | see git log |
 | M7 Billing | ✅ done | see git log |
 | M8 Admin | ✅ done | see git log |
-| M9 MVP cutover | 🔄 next | |
-| L1 Social login | ⏳ | |
+| M9 MVP cutover | ✅ done (merged to master locally) | see git log |
+| L1 Social login | 🔄 next | |
 | L2 Analytics | ⏳ | |
 | L3 Design completion | ⏳ | |
 | L4 Marketing site | ⏳ | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M8 done: Filament 5 panel at `/admin` (is_admin only, brand colours, dark mode, SetLocale), resources Users / QR codes / Plans, StatsOverview widget, `app:make-admin` command.
+M9 done: end-to-end journey test (LTR + RTL), 165 tests green on PHP 8.5 with SQLite and MySQL 8.4, behaviour inventory mapped to v2 tests, README rewritten, MVP merged into `master` (local).
 
-**Next:** M9 MVP cutover: end-to-end journey test (register → verify → create QR → scan → edit → download; RTL), behaviour-inventory parity check (every row → v2 test), README + deploy docs, remove `spikes/` vendor leftovers, merge `redesign/v2` into `master` (local only, no push).
+**Next:** L1 social login (Google/Facebook via Socialite; buttons only when configured), then L2 analytics, L3 design completion (Filament theme, gallery), L4 marketing (demo, contact form), L6 admin reporting (invoice.paid), L8 Arabic QA (validation/auth messages, Filament). L5 (free tier) and L7 (Location) were folded into the MVP.

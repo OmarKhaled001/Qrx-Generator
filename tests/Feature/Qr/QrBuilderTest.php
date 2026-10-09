@@ -51,7 +51,7 @@ class QrBuilderTest extends TestCase
 
         $qrCode = QrCode::sole();
         $this->assertSame($type, $qrCode->type);
-        $this->assertSame($payload, $qrCode->payload);
+        $this->assertEquals($payload, $qrCode->payload); // key order differs on MySQL
         $this->assertSame($this->user->id, $qrCode->user_id);
     }
 
@@ -116,7 +116,8 @@ class QrBuilderTest extends TestCase
         $this->assertSame(QrType::Wifi, $fresh->type);
         $this->assertSame('Cafe', $fresh->payload['ssid']);
         $this->assertArrayNotHasKey('url', $fresh->payload);
-        $this->assertSame(['from' => '#112233', 'to' => '#445566'], $fresh->design['gradient']);
+        // MySQL reorders JSON object keys, so compare keys and values, not order.
+        $this->assertEquals(['from' => '#112233', 'to' => '#445566'], $fresh->design['gradient']);
         $this->assertSame('dot', $fresh->design['style']);
         $this->assertSame($qrCode->code, $fresh->code);
     }

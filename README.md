@@ -1,58 +1,96 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Qrx
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Dynamic QR codes you can edit, track and brand. Every printed code opens a short link (`/x/{code}`), so its content can change without reprinting.
 
-## About Laravel
+- **8 QR types:** website, text, phone call, SMS, email, contact card (vCard), Wi-Fi, location
+- **Builder:** live preview, module and corner styles, colours or gradients, quiet zone, low-contrast warning
+- **Scan analytics:** counts and per-scan rows (device, referrer, country) with **no raw IP addresses stored**
+- **Plans:** a free tier (3 codes, 100 scans each) and paid plans through Stripe (Laravel Cashier)
+- **English and Arabic,** right-to-left ready throughout; light and dark mode
+- **Admin panel (Filament)** for users, QR codes and plans
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+PHP 8.5 · Laravel 13 · Livewire 4 · Filament 5 · Fortify · Cashier 16 (Stripe) · Socialite · bacon/bacon-qr-code 3 · Tailwind CSS 4 · Vite 8
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+- PHP 8.3+ (8.5 recommended) with `imagick` (PNG/EPS QR files), `gd`, `intl`, `pdo_sqlite` or `pdo_mysql`, `bcmath`
+- Composer 2, Node 22+
+- SQLite (local) or MySQL 8.4 (production)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Local setup
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sh
+composer install
+npm install && npm run build
+cp .env.example .env && php artisan key:generate
+touch database/database.sqlite
+php artisan migrate:fresh --seed
+php artisan serve            # http://localhost:8000
+npm run dev                  # optional: hot reload while editing views/CSS
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Local PHP without `imagick` still runs everything except PNG/EPS downloads. The Docker image in `docker/php-test` has every extension:
 
-## Contributing
+```sh
+docker build --build-arg PHP_VERSION=8.5 -t qrx-php85 docker/php-test
+docker run --rm -p 8000:8000 -v "$PWD":/app -w /app qrx-php85 php artisan serve --host=0.0.0.0
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Demo accounts (seeded outside production; password `password`)
 
-## Code of Conduct
+| Account | Email | Use |
+|---|---|---|
+| Admin | `admin@qrx.test` | Admin panel at `/admin` |
+| Demo customer | `demo@qrx.test` | Dashboard with one QR code of every type and sample scans |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Mail goes to the log (`MAIL_MAILER=log`), so verification and reset links are in `storage/logs/laravel.log`.
 
-## Security Vulnerabilities
+## Stripe (payments)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Create test-mode keys and set `STRIPE_KEY`, `STRIPE_SECRET`.
+2. Create a product with a recurring monthly price for each paid plan and set `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_BUSINESS`, `STRIPE_PRICE_AGENCY`, then `php artisan db:seed --class=PlanSeeder` (or edit plans in `/admin`).
+3. Webhooks: `stripe listen --forward-to localhost:8000/stripe/webhook`, and set `STRIPE_WEBHOOK_SECRET` to the secret it prints. Events needed: `customer.subscription.created/updated/deleted`, `customer.updated`, `customer.deleted`, `invoice.payment_action_required`, `invoice.paid`.
+4. Enable the Customer Portal in Stripe for "Manage billing".
 
-## License
+Without keys, everything works except the checkout and billing-portal buttons.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Social login (optional)
+
+Set `GOOGLE_CLIENT_ID/SECRET` and/or `FACEBOOK_CLIENT_ID/SECRET`. Callback URLs are `{APP_URL}/auth/{google|facebook}/callback`. The buttons appear only for configured providers.
+
+## Tests and checks
+
+```sh
+bin/test                      # full suite in Docker (PHP 8.5 + imagick)
+php artisan test              # locally (imagick-dependent paths need the extension)
+vendor/bin/pint --test        # code style
+vendor/bin/phpstan analyse    # static analysis (Larastan level 5)
+```
+
+The suite includes three guardrails: no physical left/right CSS utilities (RTL), no untranslated view text, and a complete Arabic translation file. CI (`.github/workflows/ci.yml`) runs everything on SQLite and MySQL 8.4.
+
+## Production notes
+
+- `APP_ENV=production`, `APP_DEBUG=false`, MySQL, a real mail driver.
+- `php artisan migrate --force && php artisan db:seed --class=PlanSeeder --force`, then `php artisan app:make-admin you@example.com`.
+- `php artisan config:cache route:cache view:cache` and `npm run build` on deploy.
+- Behind Cloudflare, scans get a country automatically (`CF-IPCountry`); otherwise set `QRX_COUNTRY_HEADER` or leave it empty.
+- The `/x/{code}` URL is what printed codes contain: keep it stable.
+
+## Project map
+
+| Path | What |
+|---|---|
+| `app/Enums/QrType.php` | The 8 types: labels, fields, validation |
+| `app/Services/QrRenderer.php` | SVG/PNG/EPS rendering (bacon-qr-code 3) |
+| `app/Services/Subscriptions.php` | Current plan, quotas, scan limits |
+| `app/Actions/Qr/*` | Create / update / record scan |
+| `app/Livewire/Dashboard/*` | QR list, builder, detail page |
+| `app/Http/Controllers/ScanController.php` | Public scan page `/x/{code}` |
+| `app/Filament/*` | Admin panel |
+| `resources/css/tokens.css` | Design tokens (colours, type, radii) |
+| `resources/views/components/ui/*` | UI components (`/dev/ui` gallery locally) |
+| `lang/ar.json` | Arabic translations |
+| `docs/` | Audit, plan, decisions log, progress, behaviour inventory |
