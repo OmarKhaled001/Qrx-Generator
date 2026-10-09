@@ -53,3 +53,15 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Login is throttled to 5 attempts per minute per email + IP** (Fortify default kept).
 - **New users get the language they signed up in** (`users.locale`).
 - **Arabic plurals** use Laravel's range syntax with Arabic's zero/one/two/few/many forms rather than English singular/plural.
+
+## M5 — QR management
+
+- **One builder for create and edit** (type → content → design, sticky live preview). Switching type resets only the content fields; the short code never changes on edit.
+- **Editing is allowed even at the plan limit** (the old app blocked it, audit M3); only creating is capped.
+- **At the limit, the builder shows an upgrade prompt** and the save button is disabled; the server enforces it too.
+- **EPS download is a paid-plan feature** (matches the plan feature lists); PNG and SVG for everyone. Download sizes: 500 / 1000 / 2000 px (clamped 100–2000 server-side).
+- **Contrast warning** when the code/background contrast is below 3:1 (WCAG luminance), since low-contrast codes often fail to scan. It warns but does not block.
+- **Invalid colours fall back to defaults when rendering**, so a half-typed hex in the live preview never errors; validation still rejects them on save.
+- **The Wi-Fi password is never shown on the dashboard detail page** (it is shown on the public scan page, which is its purpose).
+- **Delete uses the browser's native confirm dialog** (`wire:confirm`), translated; accessible and dependency-free.
+- **"Limit reached" is a list filter**, derived from the owner's plan rather than stored.

@@ -24,8 +24,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M2 Domain | ✅ done | see git log |
 | M3 UI foundations | ✅ done | see git log |
 | M4 Auth | ✅ done | see git log |
-| M5 QR management | 🔄 next | |
-| M6 Public | ⏳ | |
+| M5 QR management | ✅ done | see git log |
+| M6 Public | 🔄 next | |
 | M7 Billing | ⏳ | |
 | M8 Admin | ⏳ | |
 | M9 MVP cutover | ⏳ | |
@@ -40,8 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M4 done: Fortify views (login, register, forgot/reset, verify email, confirm password), `/profile` (details, password, delete account), first `/dashboard` (plan usage, scans, most scanned), all behind `auth` + `verified`.
+M5 done: `/qr` (QrIndex: filters incl. derived limit-reached, search, pause/resume, delete), `/qr/create` + `/qr/{id}/edit` (QrBuilder with live preview, gradient, contrast warning, quota prompt), `/qr/{id}` (QrShow: copy link, download, actions), `/qr/{id}/download` (PNG/SVG/EPS; EPS paid only).
 
-**Next:** M5 QR management: Livewire `Dashboard\QrIndex` (list, search, status filter incl. derived "limit reached"), `Dashboard\QrBuilder` (create/edit, live preview), `Dashboard\QrShow` (detail, copy, download PNG/SVG/EPS, pause/resume, delete), download controller.
-
-Helper: `python3 <scratchpad>/missing_keys.py` lists strings missing from `lang/ar.json` (TranslationCoverageTest enforces it anyway).
+**Next:** M6 public: `/x/{code}` scan page (8 types; paused / limit-reached / unknown = friendly pages with 404; URL type redirects; vCard .vcf download), landing page with pricing, error pages.
