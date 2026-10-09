@@ -25,8 +25,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M3 UI foundations | ✅ done | see git log |
 | M4 Auth | ✅ done | see git log |
 | M5 QR management | ✅ done | see git log |
-| M6 Public | 🔄 next | |
-| M7 Billing | ⏳ | |
+| M6 Public | ✅ done | see git log |
+| M7 Billing | 🔄 next | |
 | M8 Admin | ⏳ | |
 | M9 MVP cutover | ⏳ | |
 | L1 Social login | ⏳ | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M5 done: `/qr` (QrIndex: filters incl. derived limit-reached, search, pause/resume, delete), `/qr/create` + `/qr/{id}/edit` (QrBuilder with live preview, gradient, contrast warning, quota prompt), `/qr/{id}` (QrShow: copy link, download, actions), `/qr/{id}/download` (PNG/SVG/EPS; EPS paid only).
+M6 done: `/x/{code}` scan page (8 types, URL redirect, vCard .vcf, unavailable/unknown pages with 404, no-store + noindex, throttle:scans), landing page with types and pricing (`partials/pricing.blade.php`), branded error pages (`components/error-page`), `Route::fallback`.
 
-**Next:** M6 public: `/x/{code}` scan page (8 types; paused / limit-reached / unknown = friendly pages with 404; URL type redirects; vCard .vcf download), landing page with pricing, error pages.
+**Next:** M7 billing: `/billing` page (current plan, plans, manage billing), `/billing/checkout/{plan}` (Cashier Checkout, purchasable plans only), Billing Portal redirect, Cashier webhook (CSRF-exempt), `.env.example` Stripe placeholders.

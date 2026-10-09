@@ -65,3 +65,15 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **The Wi-Fi password is never shown on the dashboard detail page** (it is shown on the public scan page, which is its purpose).
 - **Delete uses the browser's native confirm dialog** (`wire:confirm`), translated; accessible and dependency-free.
 - **"Limit reached" is a list filter**, derived from the owner's plan rather than stored.
+
+## M6 — Public
+
+- **Website QR codes redirect straight to the site** (302) after counting the scan. The old app showed an intermediate page; a redirect is what people expect from a QR code. Only http/https targets redirect; anything else is shown as text, never linked.
+- **Paused and over-limit codes show the same "temporarily unavailable" page** (HTTP 404, approved change #2), so scanners never learn about the owner's plan. Unknown codes get "we could not find this code" (404).
+- **Contact cards offer "Save contact"** as a vCard 3.0 download (`/x/{code}/contact.vcf`), which phones import natively; the old app only displayed the fields.
+- **Wi-Fi scan page:** shows the network and a reveal/copy password field with instructions. Web pages cannot join a network, so the old "Connect" link (which never worked in browsers) is gone.
+- **Location scan page:** "Open in Google Maps" / "Open in Apple Maps" links; no embedded map (avoids loading a third-party map for every scan).
+- **Scan pages send `Cache-Control: no-store`** (every scan reaches the server and is counted) and `X-Robots-Tag: noindex`.
+- **`/x/{code}` is rate-limited to 300 requests/minute per IP**, generous because venues share one IP behind NAT.
+- **Error pages use a standalone layout** (no session, forms or Livewire) so the 500 page cannot itself fail; a `Route::fallback` routes unknown URLs through the web middleware so 404s are localised.
+- **Landing page (MVP):** hero, the 8 types, pricing from the database (active plans only). L4 adds the live demo and contact form.

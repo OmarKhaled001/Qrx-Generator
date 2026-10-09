@@ -1,15 +1,23 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrDownloadController;
+use App\Http\Controllers\ScanController;
 use App\Livewire\Dashboard\QrBuilder;
 use App\Livewire\Dashboard\QrIndex;
 use App\Livewire\Dashboard\QrShow;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home')->name('home');
+Route::get('/', HomeController::class)->name('home');
+
+// The public page every printed QR code opens. Keep this URL stable.
+Route::middleware('throttle:scans')->group(function () {
+    Route::get('/x/{code}', [ScanController::class, 'show'])->name('scan.show');
+    Route::get('/x/{code}/contact.vcf', [ScanController::class, 'vcard'])->name('scan.vcard');
+});
 
 Route::post('/locale/{locale}', LocaleController::class)->name('locale.update');
 
@@ -29,3 +37,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 if (app()->environment('local', 'testing')) {
     Route::view('/dev/ui', 'dev.ui')->name('dev.ui');
 }
+
+// Unknown URLs go through the web middleware too, so the 404 page is localised.
+Route::fallback(fn () => abort(404));
