@@ -2,18 +2,28 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Plan;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
+    use RefreshDatabase;
 
-        $response->assertStatus(200);
+    public function test_the_home_page_renders_and_lists_plans(): void
+    {
+        Plan::create([
+            'plan_id' => 'prod_starter',
+            'price_id' => 'price_starter',
+            'title' => 'Starter',
+            'price' => 9,
+            'qr_count' => 10,
+            'scan_count' => 1000,
+            'is_active' => true,
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Starter');
     }
 }

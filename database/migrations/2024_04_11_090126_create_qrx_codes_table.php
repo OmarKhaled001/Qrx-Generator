@@ -16,7 +16,8 @@ return new class extends Migration
 			$table->string('name');
 			$table->string('type');
 			$table->string('code')->unique();
-			$table->string('path')->unique();
+			// Set after the QR image is rendered, which needs the saved code.
+			$table->string('path')->nullable()->unique();
 			$table->integer('scan_count')->default('0');
 			$table->string('status')->default('active');
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('set null');

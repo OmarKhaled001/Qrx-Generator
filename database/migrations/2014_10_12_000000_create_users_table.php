@@ -16,16 +16,21 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone');
-            $table->string('country');
-            $table->string('city');
-            $table->string('area');
+            // Required by the registration form, but unknown for social-login users.
+            $table->string('phone')->nullable();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
+            $table->string('area')->nullable();
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
             $table->boolean('is_active')->nullable();
 			$table->string('code')->nullable()->unique();
             $table->date('expire_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->unique(['provider', 'provider_id']);
         });
     }
 

@@ -38,6 +38,9 @@
                                 </div>
                             </div>
                          
+                            <div class="text-end">
+                                <a href="{{ route('password.request') }}" class="text-muted">Forgot password?</a>
+                            </div>
                             <div class="mt-4">
                                 <button class="btn btn-primary w-100" type="submit">Sign In</button>
                             </div>

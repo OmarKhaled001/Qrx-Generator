@@ -216,6 +216,7 @@ class QrxCreate extends Component
                             $qrxCodeEmail->qrx_code_id = $qrxCode->id;
                             $qrxCodeEmail->save();
                             redirect()->route('dashboard.qr.all');
+                        break;
                         case "message":
                             $qrxCodeMessage              = new FeatureMessage();
                             $qrxCodeMessage->phone       = $this->phone;

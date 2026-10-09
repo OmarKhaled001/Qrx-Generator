@@ -14,15 +14,18 @@ class Plan extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'type',
+        'plan_id',
+        'price_id',
         'title',
-        'details',
         'price',
-        'duration',
-        'scans_count',
-        'qrs_count',
+        'qr_count',
+        'scan_count',
         'is_active',
-        'is_hidden'
+    ];
+
+    protected $casts = [
+        'price' => 'float',
+        'is_active' => 'boolean',
     ];
     
 

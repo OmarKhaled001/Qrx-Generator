@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class)->group(function(){
+Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class)->where(['provider' => 'google|facebook'])->group(function(){
     Route::get('/{provider}/callback','callback')->name('callback');
     Route::get('/{provider}/redirect','redirect')->name('redirect');
 });

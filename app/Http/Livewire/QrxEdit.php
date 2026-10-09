@@ -67,6 +67,7 @@ class QrxEdit extends Component
                 $this->email   = $qrx->email->email;
                 $this->subject = $qrx->email->subject;
                 $this->body    = $qrx->email->body;
+            break;
             case "message":
                 $this->phone = $qrx->message->phone;
                 $this->message = $qrx->message->message;
@@ -254,6 +255,7 @@ class QrxEdit extends Component
                             $qrxCodeEmail->qrx_code_id = $qrxCode->id;
                             $qrxCodeEmail->save();
                             redirect()->route('dashboard.qr.all');
+                        break;
                         case "message":
                             $qrxCodeMessage              = FeatureMessage::find($this->qrx->message->id);
                             $qrxCodeMessage->phone       = $this->phone;
@@ -316,6 +318,7 @@ class QrxEdit extends Component
                                 $qrxCodeEmail->qrx_code_id = $qrxCode->id;
                                 $qrxCodeEmail->save();
                                 redirect()->route('dashboard.qr.all');
+                            break;
                             case "message":
                                 $qrxCodeMessage              = new FeatureMessage();
                                 $qrxCodeMessage->phone       = $this->phone;

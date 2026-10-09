@@ -35,8 +35,8 @@ class SocialiteController extends Controller
                 $user->provider_id  =  $user_provider->id;
                 //save data
                 $user->save();
-                DB::commit();
                 }
+                DB::commit();
                 // login and return to home 
                 Auth::login($user);
                 return redirect()->route('dashboard');

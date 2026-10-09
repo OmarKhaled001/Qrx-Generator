@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -43,6 +44,13 @@ class Admin extends Authenticatable
 
         public function qrxCodes( ){
         return $this->hasMany(QrxCode::class);
+    }
+
+    // Filament v2 rejects users without this outside APP_ENV=local.
+    // Only the admins table authenticates on Filament's guard, so every admin may enter.
+    public function canAccessFilament(): bool
+    {
+        return true;
     }
 
 }
