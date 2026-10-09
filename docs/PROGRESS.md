@@ -36,10 +36,10 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | L5 Free tier | ✅ folded into M2/M5/M7 | |
 | L6 Admin reporting | ✅ done | see git log |
 | L7 Location QR | ✅ folded into M2/M5/M6 | |
-| L8 Arabic | 🔄 next | |
+| L8 Arabic | ✅ done | see git log |
 
 ## Current phase notes
 
-L6 done: `payments` table + `RecordStripePayment` listener (invoice.paid), Revenue stat + `RevenueChart` widget.
+All phases done (M0–M9, L1–L8). 197 tests green on PHP 8.5 (SQLite; MySQL 8.4 verified at M9). Pint and Larastan clean.
 
-**Next:** L8 Arabic: `lang/ar/{validation,auth,passwords,pagination}.php`, Filament in Arabic check, RTL review in a real browser, then final merge to master + local run + final report.
+**Remaining:** final merge of `redesign/v2` into `master` (local), local run (`composer install`, `npm install && npm run build`, `migrate:fresh --seed`, `php artisan serve`), real-browser check, final report.

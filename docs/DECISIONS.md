@@ -135,3 +135,11 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Revenue comes from Stripe's `invoice.paid` webhook,** recorded by a listener on Cashier's `WebhookReceived` event into a `payments` table (idempotent per invoice; zero-amount invoices skipped). It reflects money actually paid, unlike the old app's pre-payment "transactions".
 - **Admin dashboard:** "Revenue (30 days)" stat plus a 6-month revenue/sign-ups chart. Amounts are shown in USD (the configured Cashier currency).
 - **Add `invoice.paid` to the Stripe webhook events** (README lists it).
+
+## L8 — Arabic
+
+- **UI strings were translated phase by phase** (360+ in `lang/ar.json`, enforced by TranslationCoverageTest), so L8 added Laravel's own message files: `lang/ar/{validation,auth,passwords,pagination}.php`, with Arabic attribute names.
+- **Arabic copy is Modern Standard Arabic,** written in-house rather than by a professional translator. Worth a review by a native copywriter before launch, especially marketing headlines.
+- **"QR" stays in Latin script** in Arabic text (standard usage); brand, file formats (PNG/SVG/EPS) and Stripe likewise.
+- **Digits:** Laravel's `Number` helpers follow the locale, so Arabic pages show Arabic-Indic digits in counts; phone numbers, URLs, codes and emails are forced left-to-right with `dir="ltr"`.
+- **The admin panel uses Filament's built-in Arabic** and switches to RTL from the user's language.
