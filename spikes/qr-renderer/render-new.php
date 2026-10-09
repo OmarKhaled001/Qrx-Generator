@@ -19,4 +19,4 @@ foreach ($combos as $name => $c) {
     }
 }
 
-echo 'new: rendered '.count($combos)." combos x 3 formats on PHP ".PHP_VERSION."\n";
+echo 'new: rendered '.count($combos).' combos x 3 formats on PHP '.PHP_VERSION."\n";
