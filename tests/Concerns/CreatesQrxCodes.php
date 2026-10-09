@@ -2,8 +2,13 @@
 
 namespace Tests\Concerns;
 
+use App\Models\FeatureEmail;
+use App\Models\FeatureMessage;
+use App\Models\FeaturePhone;
 use App\Models\FeatureText;
 use App\Models\FeatureUrl;
+use App\Models\FeatureVcard;
+use App\Models\FeatureWifi;
 use App\Models\Plan;
 use App\Models\QrxCode;
 use App\Models\Style;
@@ -36,10 +41,27 @@ trait CreatesQrxCodes
             'qrx_code_id' => $qrxCode->id,
         ]);
 
-        match ($type) {
-            'url' => FeatureUrl::forceCreate(['url' => $feature['url'] ?? 'https://example.com', 'qrx_code_id' => $qrxCode->id]),
-            default => FeatureText::forceCreate(['text' => $feature['text'] ?? 'hello', 'qrx_code_id' => $qrxCode->id]),
-        };
+        $defaults = [
+            'text' => ['text' => 'hello'],
+            'url' => ['url' => 'https://example.com'],
+            'phone' => ['phone' => '+201000000000'],
+            'message' => ['phone' => '+201000000000', 'message' => 'Hi there'],
+            'email' => ['email' => 'hello@example.com', 'subject' => 'Hello', 'body' => 'Body text'],
+            'vcard' => ['full_name' => 'Jane Doe', 'email' => 'jane@example.com', 'phone' => '+201000000001', 'tel' => '+20220000000', 'address' => 'Cairo', 'note' => 'Note'],
+            'wifi' => ['wireless_ssid' => 'Office', 'password' => 'secret-pass', 'encryption' => 'WPA/WEP'],
+        ];
+
+        $model = [
+            'text' => FeatureText::class,
+            'url' => FeatureUrl::class,
+            'phone' => FeaturePhone::class,
+            'message' => FeatureMessage::class,
+            'email' => FeatureEmail::class,
+            'vcard' => FeatureVcard::class,
+            'wifi' => FeatureWifi::class,
+        ][$type];
+
+        $model::forceCreate($feature + $defaults[$type] + ['qrx_code_id' => $qrxCode->id]);
 
         return $qrxCode;
     }

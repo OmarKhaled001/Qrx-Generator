@@ -1,0 +1,15 @@
+{
+    "name": "qrx/qr-renderer-spike",
+    "description": "M0 spike: QR rendering on bacon/bacon-qr-code 3 without simple-qrcode",
+    "type": "project",
+    "require": {
+        "php": "^8.3",
+        "bacon/bacon-qr-code": "^3.1",
+        "ext-imagick": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spike\\": "src/"
+        }
+    }
+}

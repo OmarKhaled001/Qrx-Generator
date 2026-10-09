@@ -1,6 +1,6 @@
 # Qrx-Generator — Redesign & Modernization Plan
 
-_Revision 2, 2026-10-09, on `master` @ `ce4ddf1`. Strategy and schema are approved; the MVP roadmap below **awaits your approval before `redesign/v2` is created**. Revision 1 (the A-vs-B comparison) is in git history at `ce4ddf1`._
+_Revision 2, 2026-10-09. Strategy, schema and the MVP roadmap are approved; work happens on `redesign/v2`. **M0 is complete** (see §5). Revision 1 (the A-vs-B comparison) is in git history at `ce4ddf1`._
 
 ## 0. Status
 
@@ -9,6 +9,7 @@ _Revision 2, 2026-10-09, on `master` @ `ce4ddf1`. Strategy and schema are approv
 | Security fixes (ownership policies, Livewire 2.12.7, URL/size/format checks, demo rate limit) | `26cc548` | On `master` (local, not pushed) |
 | Migrations as single source of truth; all 62 tests green; `migrate:fresh --seed` clean on MySQL 8.4 strict | `0484b97` | On `master` |
 | Audit + plan moved to `docs/` | `ce4ddf1` | On `master` |
+| **M0:** behaviour inventory (87/87 tests), QR renderer spike (parity proven), test Dockerfile | M0 commit | On `redesign/v2`: [behaviour-inventory.md](behaviour-inventory.md), [spike results](../spikes/qr-renderer/README.md) |
 
 **Target stack** (verified 2026-10-09 from php.net and Packagist): **PHP 8.5.11** · Laravel 13.35 · Livewire 4.4 · Filament 5.10 · Cashier 16.8 · Tailwind 4.3 · Vite 8.3. There is no version ceiling.
 
@@ -84,7 +85,7 @@ Nothing is live, so this is acceptable. Each returns in the phase named above.
 | `users` | name, email, password, `is_admin` (bool), phone/country/city/area (nullable), provider/provider_id (nullable, for L1), locale, Cashier columns | `User implements FilamentUser`; `canAccessPanel()` returns `$this->is_admin` |
 | `plans` | title, stripe_product_id, stripe_price_id, price, qr_limit, scan_limit, is_active, sort_order, features (JSON) | Maps a Stripe price to quotas |
 | `qr_codes` | user_id, name, `type` (enum), `payload` (JSON), `design` (JSON), `code` (unique short code), `status` (enum), `scan_count`, image_path | One model; `payload` cast to a per-type value object |
-| `scans` | qr_code_id, scanned_at, device (mobile/tablet/desktop), referrer_host | No IP or personal data; obvious bots skipped |
+| `scans` | qr_code_id, scanned_at, device (mobile/tablet/desktop), referrer_host, country (nullable), visitor_hash (nullable) | **No raw IP** (your rule): country from a trusted proxy header (e.g. `CF-IPCountry`); `visitor_hash` = HMAC-SHA256(IP + user agent) with a daily-rotating key. Obvious bots skipped |
 | Cashier | `subscriptions`, `subscription_items` | Source of truth for "is subscribed / which plan / until when" |
 | `contacts` | — | Comes back with the contact form in L4 |
 
@@ -149,7 +150,7 @@ Estimates are working days for one developer familiar with Laravel, **±30 %**. 
 
 | Phase | Steps | Proven by | Days |
 |---|---|---|---|
-| **M0 Prep** (on `master`) | Behaviour inventory (every MVP flow → existing test, or a new characterization test against the old app) · QR renderer spike on bacon 3 (visual parity) | `docs/behaviour-inventory.md`; parity image grid + snapshot tests | 1–2 |
+| **M0 Prep** ✅ done (on `redesign/v2`, while it still holds the old app) | Behaviour inventory (every MVP flow → existing test, or a new characterization test against the old app) · QR renderer spike on bacon 3 (visual parity) | `docs/behaviour-inventory.md`; parity image grid + snapshot tests | 1–2 |
 | **M1 Skeleton** | Laravel 13 / PHP 8.5 skeleton on `redesign/v2`; Livewire 4, Filament 5, Fortify, Cashier 16, Tailwind 4, Vite 8; CI; port the MVP-relevant tests, marked skipped | CI green; tests listed as skipped, 0 failing | 1–2 |
 | **M2 Domain** | 2.1 Migrations, enums, models, factories, seeders · 2.2 7 payload types + `QrRenderer` + `QrOptions` · 2.3 Actions, `QrCodePolicy`, `Subscriptions` service · 2.4 `RecordScan` | `migrate:fresh --seed`; un-skipped ownership, creation, URL-scheme and size-clamp tests; unit tests per payload type | 4–6 |
 | **M3 UI foundations** | 3.1 Tokens (light), fonts, Heroicons, app / guest / public layouts · 3.2 MVP components · 3.3 i18n + RTL infrastructure and CI checks | Component render tests; RTL pseudo-locale snapshot; lint in CI | 3–4 |
