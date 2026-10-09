@@ -73,6 +73,10 @@
     background-image: var(--gradient-brand);
 }
 
+@utility bg-brand-gradient-deep {
+    background-image: var(--gradient-brand-deep);
+}
+
 @utility text-brand-gradient {
     background-image: var(--gradient-brand);
     background-clip: text;

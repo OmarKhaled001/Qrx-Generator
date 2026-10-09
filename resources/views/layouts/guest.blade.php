@@ -37,7 +37,7 @@
         </div>
 
         {{-- Brand panel (large screens): what the product does, no invented social proof. --}}
-        <aside class="relative hidden w-[42%] max-w-2xl overflow-hidden bg-brand-gradient p-12 text-white lg:flex lg:flex-col lg:justify-between xl:p-16" aria-hidden="true">
+        <aside class="relative hidden w-[42%] max-w-2xl overflow-hidden bg-brand-gradient-deep p-12 text-white lg:flex lg:flex-col lg:justify-between xl:p-16" aria-hidden="true">
             <div class="absolute inset-0 opacity-15 [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(closest-side,#000,transparent)]"></div>
             <div class="relative inline-flex w-fit rounded-2xl bg-white p-3 shadow-pop"><x-ui.logo class="h-9 text-neutral-900" /></div>
             <div class="relative">

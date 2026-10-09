@@ -16,7 +16,7 @@ class BrandPaletteTest extends TestCase
         $brand = BrandPalette::get('brand');
 
         $this->assertSame([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950], array_keys($brand));
-        $this->assertSame('oklch(0.556 0.107 202)', $brand[600]);
+        $this->assertSame('oklch(0.545 0.107 202)', $brand[600]);
         $this->assertCount(11, BrandPalette::get('neutral'));
     }
 

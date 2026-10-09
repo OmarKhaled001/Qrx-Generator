@@ -4,7 +4,7 @@
     "start_url": "/dashboard",
     "display": "standalone",
     "background_color": "#f9fafb",
-    "theme_color": "#00858e",
+    "theme_color": "#00828b",
     "icons": [
         { "src": "/brand/qrx-icon-192.png", "sizes": "192x192", "type": "image/png" },
         { "src": "/brand/qrx-icon-512.png", "sizes": "512x512", "type": "image/png" },

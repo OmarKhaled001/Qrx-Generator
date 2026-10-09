@@ -40,7 +40,7 @@ The design tokens in [resources/css/tokens.css](../resources/css/tokens.css) are
 | Role | Token | Hex |
 |---|---|---|
 | Gradient start | `brand-500` | `#00a5ab` |
-| Primary (buttons, links, theme colour) | `brand-600` | `#00858e` |
+| Primary (buttons, links, theme colour) | `brand-600` | `#00828b` |
 | Primary hover / ink on light | `brand-700` | `#006a74` |
 | Gradient end / accent | `accent-600` | `#7543e9` |
 | Ink (text, light-mode wordmark) | `neutral-900` | `#121825` |

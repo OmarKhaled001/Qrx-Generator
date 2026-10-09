@@ -6,7 +6,7 @@
 <title>{{ $title ? $title.' · ' : '' }}{{ config('app.name') }}</title>
 @php($description ??= __('Dynamic QR codes you can edit, track and brand.'))
 <meta name="description" content="{{ $description }}">
-<meta name="theme-color" content="#00858e">
+<meta name="theme-color" content="#00828b">
 <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
 <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">

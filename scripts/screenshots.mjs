@@ -80,6 +80,12 @@ for (const locale of ['ar', 'en']) {
             await page.goto(appUrl + shot.path);
             await settle(page);
 
+            // A page wider than the viewport scrolls sideways on phones: report it loudly.
+            const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+            if (overflow > 0) {
+                console.warn(`OVERFLOW ${shot.name} ${locale} ${device}: ${overflow}px wider than the viewport`);
+            }
+
             const file = `${shot.name}-${locale}-${device}${theme === 'dark' ? '-dark' : ''}.png`;
             await page.screenshot({ path: new URL(file, out).pathname, fullPage: shot.full ?? false });
             console.log(`docs/screenshots/${file}`);

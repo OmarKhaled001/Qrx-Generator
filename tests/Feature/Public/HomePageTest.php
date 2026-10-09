@@ -36,4 +36,40 @@ class HomePageTest extends TestCase
 
         $this->actingAs(User::factory()->create())->get('/')->assertSee(__('Current plan'));
     }
+
+    public function test_every_landing_section_is_rendered(): void
+    {
+        $this->seed(PlanSeeder::class);
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        foreach (['how-it-works', 'use-cases', 'features', 'styles', 'demo', 'analytics', 'pricing', 'faq', 'contact'] as $section) {
+            $this->assertStringContainsString('id="'.$section.'"', $html, "Missing #{$section}");
+        }
+    }
+
+    public function test_the_analytics_preview_is_labelled_as_sample_data(): void
+    {
+        $this->seed(PlanSeeder::class);
+
+        $this->get('/')->assertSee([__('Example data'), __('Illustration with sample data, not real results.')]);
+    }
+
+    public function test_the_comparison_table_follows_plan_capabilities(): void
+    {
+        $this->seed(PlanSeeder::class);
+        Plan::query()->whereNot('slug', 'free')->update(['is_active' => false]);
+
+        // Only the free plan is left: EPS, analytics and priority support are all "not included".
+        $this->get('/')
+            ->assertSee(__('Compare plans'))
+            ->assertSeeInOrder([__('EPS for professional print'), __('Not included'), __('Scan analytics'), __('Not included'), __('Priority support'), __('Not included')]);
+    }
+
+    public function test_it_shows_no_invented_social_proof(): void
+    {
+        $this->seed(PlanSeeder::class);
+
+        $this->get('/')->assertDontSee(['testimonial', 'Trusted by', 'customers', 'happy users'], false);
+    }
 }

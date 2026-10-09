@@ -176,3 +176,28 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Plan name shown under a "Current plan" label, never composed into a sentence** (`:plan plan`): Arabic adjective agreement made composed phrases ungrammatical.
 - **Auth pages are split-screen on large screens**; the brand panel states what the product does (no testimonials or numbers).
 - **Screen-reader tables wrap in an `sr-only` div**: a `<table class="sr-only">` keeps its row heights and was stretching pages by ~250px.
+
+## R4 — Landing sections
+
+- **Sections:**
+  - hero
+  - how it works (3 steps)
+  - use cases by industry (tabs)
+  - the 8 types
+  - style gallery
+  - live demo (mini builder)
+  - analytics preview
+  - pricing with a comparison table
+  - FAQ
+  - contact
+  - final CTA
+
+  Each section is a partial in `resources/views/landing/`.
+- **No testimonials, customer logos, user counts or statistics.** Omitted entirely rather than shipped as hidden placeholders: nothing to forget to remove before launch. A test fails if the page says "testimonial", "Trusted by", "customers" or "happy users".
+- **The analytics preview uses visibly labelled sample data** ("Example data" badge + "Illustration with sample data, not real results." caption): it shows what the product does, it doesn't claim results.
+- **The style gallery shows real, scannable codes** rendered from the shared presets (cached for a day; rendering is the slow part); "Try this style" loads the preset into the live demo via a Livewire event.
+- **The comparison table is computed from plan data and capabilities** (limits, EPS/analytics on paid plans, "Priority support" from the plan's feature list), so it can't drift from what the app enforces.
+- **FAQ answers describe actual behaviour** (downgrade keeps links; codes past the free scan limit show a notice; no IPs stored). Native `<details>` for keyboard and screen-reader support without JavaScript.
+- **Free plan price shown as "$0 / month"** instead of the word "Free" next to the plan named "Free".
+- **Contrast fixes found while reviewing:** brand-600 nudged from L 0.556 to 0.545 (white on primary buttons was 4.43:1, now 4.6:1); a deeper gradient (`brand-700 → accent-700`, ≥ 6.3:1) for surfaces with white text (CTA band, auth panel, "Most popular").
+- **Bug found by the mobile screenshots:** the comparison table's `sr-only` labels are absolutely positioned and escaped their `overflow-x-auto` scroller, making every page 600px wide on phones. The scroller is now `relative`; `scripts/screenshots.mjs` warns about any page wider than the viewport.

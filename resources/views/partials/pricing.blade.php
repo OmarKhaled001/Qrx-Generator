@@ -5,21 +5,21 @@
         @php($isCurrent = $currentPlan?->is($plan) || ($currentPlan?->is_free && $plan->is_free))
         @php($featured = $plan->slug === 'business')
         <article @class([
-            'relative flex flex-col rounded-xl border bg-surface p-6 shadow-card',
-            'border-primary ring-1 ring-primary' => $featured,
-            'border-line' => ! $featured,
+            'relative flex flex-col rounded-2xl border bg-surface p-6 transition-[box-shadow,transform] duration-300 hover:-translate-y-1',
+            'border-primary shadow-raised ring-1 ring-primary hover:shadow-glow' => $featured,
+            'border-line shadow-card hover:shadow-raised' => ! $featured,
         ])>
             @if ($featured)
-                <x-ui.badge color="primary" class="absolute -top-3 start-6">{{ __('Most popular') }}</x-ui.badge>
+                <span class="absolute -top-3 start-6 rounded-full bg-brand-gradient-deep px-3 py-0.5 text-xs font-semibold text-white shadow-glow">{{ __('Most popular') }}</span>
             @endif
             <h3 class="text-lg font-semibold text-ink">{{ __($plan->name) }}</h3>
             <p class="mt-4 flex items-baseline gap-1">
-                <span class="text-4xl font-semibold tracking-tight text-ink">{{ $plan->is_free ? __('Free') : $plan->formattedPrice() }}</span>
-                @unless ($plan->is_free)<span class="text-sm text-ink-muted">{{ __('/ month') }}</span>@endunless
+                <span class="text-4xl font-bold tracking-tight text-ink tabular-nums">{{ $plan->formattedPrice() }}</span>
+                <span class="text-sm text-ink-muted">{{ __('/ month') }}</span>
             </p>
             <ul class="mt-6 flex-1 space-y-3 text-sm text-ink-muted">
                 @foreach ($plan->features ?? [] as $feature)
-                    <li class="flex gap-2"><x-heroicon-o-check class="mt-0.5 size-4 shrink-0 text-success-600" aria-hidden="true" />{{ __($feature) }}</li>
+                    <li class="flex gap-2"><x-heroicon-m-check-circle class="mt-0.5 size-4 shrink-0 text-success-600" aria-hidden="true" />{{ __($feature) }}</li>
                 @endforeach
             </ul>
             <div class="mt-8">

@@ -6,7 +6,7 @@
         url('/#features') => __('Features'),
         url('/#pricing') => __('Pricing'),
         url('/#faq') => __('FAQ'),
-        url('/#contact') => View::exists('partials.landing-contact') ? __('Contact') : null,
+        url('/#contact') => View::exists('landing.contact') ? __('Contact') : null,
     ]);
 @endphp
 <!DOCTYPE html>

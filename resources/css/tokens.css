@@ -15,7 +15,7 @@
     --color-brand-300: oklch(0.836 0.098 196);
     --color-brand-400: oklch(0.745 0.118 197);
     --color-brand-500: oklch(0.652 0.120 199);
-    --color-brand-600: oklch(0.556 0.107 202);
+    --color-brand-600: oklch(0.545 0.107 202);
     --color-brand-700: oklch(0.476 0.090 205);
     --color-brand-800: oklch(0.404 0.073 207);
     --color-brand-900: oklch(0.343 0.058 209);
@@ -121,6 +121,8 @@
     --highlight: transparent;
     /* Brand gradient (logo tile, hero accents, highlighted plan). */
     --gradient-brand: linear-gradient(135deg, var(--color-brand-500), var(--color-accent-600));
+    /* Deeper variant for surfaces that carry white text (≥ 4.5:1 at both ends). */
+    --gradient-brand-deep: linear-gradient(135deg, var(--color-brand-700), var(--color-accent-700));
     --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.906 0.066 196 / 0.55), transparent 70%);
     color-scheme: light;
 }
