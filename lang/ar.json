@@ -272,5 +272,18 @@
     "50,000 scans per QR code": "50,000 عملية مسح لكل رمز QR",
     "500 dynamic QR codes": "500 رمز QR ديناميكي",
     "500,000 scans per QR code": "500,000 عملية مسح لكل رمز QR",
-    "Priority support": "دعم ذو أولوية"
+    "Priority support": "دعم ذو أولوية",
+    "Your plan, usage and payment details.": "خطتك واستخدامك وبيانات الدفع.",
+    "Manage billing": "إدارة الفوترة",
+    "Thank you!": "شكرًا لك!",
+    "Your payment went through. Your new limits apply as soon as Stripe confirms it, usually within a few seconds.": "تمت عملية الدفع بنجاح. ستُطبَّق حدودك الجديدة فور تأكيد Stripe، وعادةً خلال ثوانٍ.",
+    "Your subscription is cancelled and ends on :date. After that you move to the free plan.": "تم إلغاء اشتراكك وينتهي في :date. بعد ذلك ستنتقل إلى الخطة المجانية.",
+    "Your last payment failed. Update your payment method to keep your plan.": "فشلت عملية الدفع الأخيرة. حدّث وسيلة الدفع للاحتفاظ بخطتك.",
+    "Free forever": "مجانية للأبد",
+    ":price / month": ":price / شهريًا",
+    "Scans per QR code": "عمليات المسح لكل رمز QR",
+    "Change plan": "تغيير الخطة",
+    "Payments are handled securely by Stripe. Prices are per month; you can cancel any time from Manage billing.": "تتم المدفوعات بأمان عبر Stripe. الأسعار شهرية، ويمكنك الإلغاء في أي وقت من إدارة الفوترة.",
+    "You are now on the :plan plan.": "أنت الآن على خطة :plan.",
+    "You do not have a billing account yet.": "ليس لديك حساب فوترة بعد."
 }

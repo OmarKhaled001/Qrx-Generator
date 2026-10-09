@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
@@ -29,6 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('/qr/{qrCode}', QrShow::class)->name('qr.show');
     Route::livewire('/qr/{qrCode}/edit', QrBuilder::class)->name('qr.edit');
     Route::get('/qr/{qrCode}/download', QrDownloadController::class)->name('qr.download');
+
+    Route::get('/billing', [BillingController::class, 'show'])->name('billing');
+    Route::get('/billing/checkout/{plan:slug}', [BillingController::class, 'checkout'])->name('billing.checkout');
+    Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

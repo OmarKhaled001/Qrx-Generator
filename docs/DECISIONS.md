@@ -77,3 +77,13 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **`/x/{code}` is rate-limited to 300 requests/minute per IP**, generous because venues share one IP behind NAT.
 - **Error pages use a standalone layout** (no session, forms or Livewire) so the 500 page cannot itself fail; a `Route::fallback` routes unknown URLs through the web middleware so 404s are localised.
 - **Landing page (MVP):** hero, the 8 types, pricing from the database (active plans only). L4 adds the live demo and contact form.
+
+## M7 — Billing
+
+- **Cashier only, no custom transactions table** (approved). Invoices and payment methods live in Stripe's Billing Portal ("Manage billing").
+- **Existing subscribers switch plans with `swap()`** (prorated by Stripe) instead of a second Checkout, so nobody ends up with two subscriptions.
+- **New limits apply when Stripe's webhook arrives** (usually seconds); the success page says so instead of granting limits on the redirect, which could be faked.
+- **Monthly prices** ($9 / $29 / $79) as display values; real amounts come from the Stripe prices configured in `.env` (`STRIPE_PRICE_*`), placeholders until you create them.
+- **Promotion codes are allowed** in Checkout (`allowPromotionCodes`), as in the old app.
+- **Stripe webhooks are CSRF-exempt** (`stripe/*`), as Cashier requires; signature verification is on as soon as `STRIPE_WEBHOOK_SECRET` is set.
+- **Checkout URL uses the plan slug** (`/billing/checkout/business`); free, inactive and unknown plans return 404.

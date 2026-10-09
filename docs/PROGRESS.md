@@ -26,8 +26,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M4 Auth | ✅ done | see git log |
 | M5 QR management | ✅ done | see git log |
 | M6 Public | ✅ done | see git log |
-| M7 Billing | 🔄 next | |
-| M8 Admin | ⏳ | |
+| M7 Billing | ✅ done | see git log |
+| M8 Admin | 🔄 next | |
 | M9 MVP cutover | ⏳ | |
 | L1 Social login | ⏳ | |
 | L2 Analytics | ⏳ | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M6 done: `/x/{code}` scan page (8 types, URL redirect, vCard .vcf, unavailable/unknown pages with 404, no-store + noindex, throttle:scans), landing page with types and pricing (`partials/pricing.blade.php`), branded error pages (`components/error-page`), `Route::fallback`.
+M7 done: `/billing` (plan, usage, grace/past-due notices, plans), `/billing/checkout/{plan:slug}` (Cashier Checkout or swap), `/billing/portal`, Stripe webhook CSRF-exempt, `.env.example` Stripe/OAuth placeholders. Tests stub Stripe via `Tests\Concerns\FakesStripe`.
 
-**Next:** M7 billing: `/billing` page (current plan, plans, manage billing), `/billing/checkout/{plan}` (Cashier Checkout, purchasable plans only), Billing Portal redirect, Cashier webhook (CSRF-exempt), `.env.example` Stripe placeholders.
+**Next:** M8 admin: Filament 5 panel (canAccessPanel via is_admin, brand colour, SetLocale), resources Users (toggle admin), Plans, QR codes; `app:make-admin` command.
