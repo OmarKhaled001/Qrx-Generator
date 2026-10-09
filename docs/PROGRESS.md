@@ -30,8 +30,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M8 Admin | ✅ done | see git log |
 | M9 MVP cutover | ✅ done (merged to master locally) | see git log |
 | L1 Social login | ✅ done | see git log |
-| L2 Analytics | 🔄 next | |
-| L3 Design completion | ⏳ | |
+| L2 Analytics | ✅ done | see git log |
+| L3 Design completion | 🔄 next | |
 | L4 Marketing site | ⏳ | |
 | L5 Free tier | ⏳ (folded into M2/M7, see DECISIONS) | |
 | L6 Admin reporting | ⏳ | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-L1 done: Socialite Google/Facebook (`App\Http\Controllers\Auth\SocialiteController`), buttons on login/register only when configured, account linking by email, password-less account deletion by email confirmation. Unit tests added.
+L2 done: `App\Services\ScanStats`, `x-ui.bar-chart`, per-QR analytics partial (paid) / upgrade card (free), dashboard 30-day chart.
 
-**Next:** L2 analytics: per-QR scan chart (30 days) + device/country breakdown on the QR detail page (paid plans; free sees totals + upsell), dashboard 30-day scans chart.
+**Next:** L3 design completion: Filament custom theme importing `tokens.css` (vite theme), gallery additions (bar chart, status badges), remaining polish.

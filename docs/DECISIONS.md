@@ -111,3 +111,10 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **New social accounts are created verified** and without a password; such users can set one via "Forgot password", and delete their account by typing their email (no password to confirm with).
 - **No email from the provider → clear error,** no account (Facebook accounts can withhold the email).
 - **Found during L1:** `tests/Unit` was an empty directory that git does not track, so after switching branches PHPUnit refused to start. It now holds real unit tests (vCard escaping, contrast, clamping).
+
+## L2 — Analytics
+
+- **Per-QR breakdown (daily chart, unique visitors, devices, top countries) is a paid-plan feature,** matching the seeded plan feature lists; free users keep totals and see an upgrade card. The dashboard's 30-day chart is for everyone.
+- **Charts are server-rendered SVG** with a screen-reader table, no JavaScript chart library. Time runs left to right in both languages (a mirrored time axis confuses more than it helps).
+- **"Unique visitors" = distinct daily visitor hashes, summed over days,** because the hash key rotates daily (privacy by design); the same person on two days counts twice.
+- **Country names come from ICU (`intl`)** in the user's language, e.g. "مصر" for EG in Arabic.

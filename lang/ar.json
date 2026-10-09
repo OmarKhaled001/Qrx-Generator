@@ -326,5 +326,16 @@
     "or continue with": "أو تابع باستخدام",
     "Continue with :provider": "المتابعة باستخدام :provider",
     "Signing in with :provider did not work. Please try again.": "تعذّر تسجيل الدخول باستخدام :provider. يرجى المحاولة مجددًا.",
-    "Your :provider account did not share an email address, so we cannot create your account.": "لم يشارك حسابك في :provider عنوان بريد إلكتروني، لذا لا يمكننا إنشاء حسابك."
+    "Your :provider account did not share an email address, so we cannot create your account.": "لم يشارك حسابك في :provider عنوان بريد إلكتروني، لذا لا يمكننا إنشاء حسابك.",
+    "Last 30 days": "آخر 30 يومًا",
+    "Scans per day, last 30 days": "عمليات المسح يوميًا خلال آخر 30 يومًا",
+    "See when, where and on which devices this code is scanned.": "اعرف متى وأين وعلى أي أجهزة يُمسح هذا الرمز.",
+    "Daily scans, unique visitors, devices and countries are included in every paid plan.": "عمليات المسح اليومية والزوار الفريدون والأجهزة والدول متاحة في كل الخطط المدفوعة.",
+    "Unique visitors": "الزوار الفريدون",
+    "Devices": "الأجهزة",
+    "Top countries": "أكثر الدول",
+    "No data yet.": "لا توجد بيانات بعد.",
+    "Mobile": "هاتف محمول",
+    "Tablet": "جهاز لوحي",
+    "Desktop": "حاسوب مكتبي"
 }
