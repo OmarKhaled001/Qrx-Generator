@@ -21,8 +21,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 |---|---|---|
 | M0 Prep | ✅ done | `1f9899b` |
 | M1 Skeleton | ✅ done | see git log |
-| M2 Domain | 🔄 next | |
-| M3 UI foundations | ⏳ | |
+| M2 Domain | ✅ done | see git log |
+| M3 UI foundations | 🔄 next | |
 | M4 Auth | ⏳ | |
 | M5 QR management | ⏳ | |
 | M6 Public | ⏳ | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M1: Laravel 13.35 skeleton in place; Livewire 4.4.7, Filament 5.10.1, Fortify 1.41, Cashier 16.8, Socialite 5.31, bacon-qr-code 3.1.1, blade-heroicons, Larastan installed; Filament panel at `/admin`; CI workflow and `bin/test` added.
+M2 done: plans / qr_codes / scans schema, `QrType` (8 types incl. Location) and `QrStatus` enums, `QrDesign`, `QrOptions`, `ShortCode`, `QrRenderer` (bacon 3), `Subscriptions` (Cashier → plan, free fallback, quotas), actions (Create/Update/RecordScan), `QrCodePolicy`, factories and seeders (admin@qrx.test / demo@qrx.test, password `password`).
 
-**Next:** M2 domain (migrations, enums, models, QR types, renderer, actions, policy, Subscriptions service, scan recording).
+**Next:** M3 UI foundations (tokens, fonts, layouts, Blade components, i18n/RTL infrastructure, lint tests).
