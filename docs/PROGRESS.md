@@ -29,17 +29,17 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M7 Billing | ✅ done | see git log |
 | M8 Admin | ✅ done | see git log |
 | M9 MVP cutover | ✅ done (merged to master locally) | see git log |
-| L1 Social login | 🔄 next | |
-| L2 Analytics | ⏳ | |
-| L3 Design completion | ⏳ | |
-| L4 Marketing site | ⏳ | |
-| L5 Free tier | ⏳ (folded into M2/M7, see DECISIONS) | |
-| L6 Admin reporting | ⏳ | |
-| L7 Location QR | ⏳ (folded into M2, see DECISIONS) | |
-| L8 Arabic | ⏳ | |
+| L1 Social login | ✅ done | see git log |
+| L2 Analytics | ✅ done | see git log |
+| L3 Design completion | ✅ done | see git log |
+| L4 Marketing site | ✅ done | see git log |
+| L5 Free tier | ✅ folded into M2/M5/M7 | |
+| L6 Admin reporting | ✅ done | see git log |
+| L7 Location QR | ✅ folded into M2/M5/M6 | |
+| L8 Arabic | ✅ done | see git log |
 
 ## Current phase notes
 
-M9 done: end-to-end journey test (LTR + RTL), 165 tests green on PHP 8.5 with SQLite and MySQL 8.4, behaviour inventory mapped to v2 tests, README rewritten, MVP merged into `master` (local).
+All phases done (M0–M9, L1–L8). 197 tests green on PHP 8.5 (SQLite; MySQL 8.4 verified at M9). Pint and Larastan clean.
 
-**Next:** L1 social login (Google/Facebook via Socialite; buttons only when configured), then L2 analytics, L3 design completion (Filament theme, gallery), L4 marketing (demo, contact form), L6 admin reporting (invoice.paid), L8 Arabic QA (validation/auth messages, Filament). L5 (free tier) and L7 (Location) were folded into the MVP.
+**Remaining:** final merge of `redesign/v2` into `master` (local), local run (`composer install`, `npm install && npm run build`, `migrate:fresh --seed`, `php artisan serve`), real-browser check, final report.

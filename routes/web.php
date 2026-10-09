@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
@@ -21,6 +22,11 @@ Route::middleware('throttle:scans')->group(function () {
 });
 
 Route::post('/locale/{locale}', LocaleController::class)->name('locale.update');
+
+Route::middleware('guest')->prefix('auth')->name('socialite.')->group(function () {
+    Route::get('/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('redirect');
+    Route::get('/{provider}/callback', [SocialiteController::class, 'callback'])->name('callback');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');

@@ -103,3 +103,43 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **"Browser smoke test" = an HTTP + Livewire end-to-end journey test** (register → verify → create → scan → change → download, plus the RTL pass over every dashboard page). A real browser pass is done once at the end of the run (final report).
 - **JSON key order is not asserted:** MySQL normalises JSON object key order, so tests compare payloads by keys and values. Nothing in the app depends on payload key order.
 - **MVP merged into `master` locally** with a merge commit; nothing is pushed (origin is public). Later phases continue on `redesign/v2` and are merged again at the end.
+
+## L1 — Social login
+
+- **Google and Facebook buttons appear only when their client ID is configured;** unconfigured providers return 404.
+- **A social sign-in with the email of an existing account links to that account** instead of failing or duplicating it. Google/Facebook verify emails, so this is safe; the email is lower-cased first.
+- **New social accounts are created verified** and without a password; such users can set one via "Forgot password", and delete their account by typing their email (no password to confirm with).
+- **No email from the provider → clear error,** no account (Facebook accounts can withhold the email).
+- **Found during L1:** `tests/Unit` was an empty directory that git does not track, so after switching branches PHPUnit refused to start. It now holds real unit tests (vCard escaping, contrast, clamping).
+
+## L2 — Analytics
+
+- **Per-QR breakdown (daily chart, unique visitors, devices, top countries) is a paid-plan feature,** matching the seeded plan feature lists; free users keep totals and see an upgrade card. The dashboard's 30-day chart is for everyone.
+- **Charts are server-rendered SVG** with a screen-reader table, no JavaScript chart library. Time runs left to right in both languages (a mirrored time axis confuses more than it helps).
+- **"Unique visitors" = distinct daily visitor hashes, summed over days,** because the hash key rotates daily (privacy by design); the same person on two days counts twice.
+- **Country names come from ICU (`intl`)** in the user's language, e.g. "مصر" for EG in Arabic.
+
+## L3 — Design completion
+
+- **`tokens.css` is the single source for the admin too:** `App\Support\BrandPalette` reads the OKLCH brand and neutral palettes from it for Filament's `colors()`, and the Filament theme imports the same file. Change a token once; app and admin follow.
+- **Admin fonts are self-hosted** (Filament's default would load Bunny Fonts from a CDN).
+- **Dark mode already shipped in M3,** so L3 covered the admin theme and the gallery (now including the chart).
+
+## L4 — Marketing site
+
+- **Landing demo needs no account and stores nothing;** previews and SVG download only (SVG works without imagick). Over the per-IP limit it shows a friendly notice instead of erroring.
+- **Contact form:** validation, a hidden honeypot field (bots get a fake "sent"), and 3 messages per 10 minutes per IP. Messages go to an admin inbox ("Messages", unread badge, mark as read, reply by email) rather than email, so nothing depends on a mail setup.
+
+## L6 — Admin reporting
+
+- **Revenue comes from Stripe's `invoice.paid` webhook,** recorded by a listener on Cashier's `WebhookReceived` event into a `payments` table (idempotent per invoice; zero-amount invoices skipped). It reflects money actually paid, unlike the old app's pre-payment "transactions".
+- **Admin dashboard:** "Revenue (30 days)" stat plus a 6-month revenue/sign-ups chart. Amounts are shown in USD (the configured Cashier currency).
+- **Add `invoice.paid` to the Stripe webhook events** (README lists it).
+
+## L8 — Arabic
+
+- **UI strings were translated phase by phase** (360+ in `lang/ar.json`, enforced by TranslationCoverageTest), so L8 added Laravel's own message files: `lang/ar/{validation,auth,passwords,pagination}.php`, with Arabic attribute names.
+- **Arabic copy is Modern Standard Arabic,** written in-house rather than by a professional translator. Worth a review by a native copywriter before launch, especially marketing headlines.
+- **"QR" stays in Latin script** in Arabic text (standard usage); brand, file formats (PNG/SVG/EPS) and Stripe likewise.
+- **Digits:** Laravel's `Number` helpers follow the locale, so Arabic pages show Arabic-Indic digits in counts; phone numbers, URLs, codes and emails are forced left-to-right with `dir="ltr"`.
+- **The admin panel uses Filament's built-in Arabic** and switches to RTL from the user's language.

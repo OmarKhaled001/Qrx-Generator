@@ -17,6 +17,12 @@
         <x-ui.stat :label="__('Current plan')" :value="__($plan->name)" :hint="__(':scans scans per QR code', ['scans' => Number::format($plan->scan_limit)])" icon="heroicon-o-credit-card" />
     </div>
 
+    @if ($qrCount > 0)
+        <x-ui.card :heading="__('Scans')" :description="__('Last 30 days')" class="mt-8">
+            <x-ui.bar-chart :series="$dailyScans" :label="__('Scans per day, last 30 days')" />
+        </x-ui.card>
+    @endif
+
     <div class="mt-8">
         @if ($topQrCodes->isEmpty())
             <x-ui.empty-state :heading="__('No QR codes yet')" :description="__('Create your first dynamic QR code. You can change where it points at any time.')">
