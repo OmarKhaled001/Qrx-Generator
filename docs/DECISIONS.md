@@ -143,3 +143,8 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **"QR" stays in Latin script** in Arabic text (standard usage); brand, file formats (PNG/SVG/EPS) and Stripe likewise.
 - **Digits:** Laravel's `Number` helpers follow the locale, so Arabic pages show Arabic-Indic digits in counts; phone numbers, URLs, codes and emails are forced left-to-right with `dir="ltr"`.
 - **The admin panel uses Filament's built-in Arabic** and switches to RTL from the user's language.
+
+## Final run
+
+- **Real-browser visual check not done:** this machine has no Chrome, and installing one was out of scope for an unattended run. Every page is covered by HTTP/Livewire tests (incl. the RTL pass over all dashboard pages), but nobody has looked at the pages yet. Please click through the list in the final report.
+- **Local server runs on port 8010,** because port 8000 is used by another app on this machine; it runs inside the PHP 8.5 Docker image so PNG/EPS downloads (imagick) work. `.env` `APP_URL` was set to `http://localhost:8010`.

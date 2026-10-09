@@ -42,4 +42,4 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 All phases done (M0–M9, L1–L8). 197 tests green on PHP 8.5 (SQLite; MySQL 8.4 verified at M9). Pint and Larastan clean.
 
-**Remaining:** final merge of `redesign/v2` into `master` (local), local run (`composer install`, `npm install && npm run build`, `migrate:fresh --seed`, `php artisan serve`), real-browser check, final report.
+**Done.** Merged into `master` (local, not pushed); app running at http://localhost:8010 (`docker rm -f qrx-serve` to stop). Real-browser visual check still to do by a person (no Chrome on this machine).
