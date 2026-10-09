@@ -22,8 +22,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M0 Prep | ✅ done | `1f9899b` |
 | M1 Skeleton | ✅ done | see git log |
 | M2 Domain | ✅ done | see git log |
-| M3 UI foundations | 🔄 next | |
-| M4 Auth | ⏳ | |
+| M3 UI foundations | ✅ done | see git log |
+| M4 Auth | 🔄 next | |
 | M5 QR management | ⏳ | |
 | M6 Public | ⏳ | |
 | M7 Billing | ⏳ | |
@@ -40,6 +40,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M2 done: plans / qr_codes / scans schema, `QrType` (8 types incl. Location) and `QrStatus` enums, `QrDesign`, `QrOptions`, `ShortCode`, `QrRenderer` (bacon 3), `Subscriptions` (Cashier → plan, free fallback, quotas), actions (Create/Update/RecordScan), `QrCodePolicy`, factories and seeders (admin@qrx.test / demo@qrx.test, password `password`).
+M3 done: tokens (`resources/css/tokens.css`), IBM Plex fonts, light/dark, layouts `layouts::app|guest|public`, `x-ui.*` components, `/dev/ui` gallery, SetLocale + `/locale/{locale}`, `lang/ar.json`, lint tests (logical properties, hard-coded strings, translation coverage).
 
-**Next:** M3 UI foundations (tokens, fonts, layouts, Blade components, i18n/RTL infrastructure, lint tests).
+**Next:** M4 auth (Fortify views: login, register, forgot/reset, verify email, confirm password; profile page with delete account).
+
+Rule for every new view: strings in `__()`, Arabic added to `lang/ar.json`, logical utilities only (the tests enforce all three). Run `npm run build` before `bin/test`.

@@ -4,6 +4,7 @@ namespace Tests\Feature\Domain;
 
 use App\Models\QrCode;
 use App\Models\User;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
@@ -45,7 +46,12 @@ class QrCodePolicyTest extends TestCase
     public function test_is_admin_cannot_be_mass_assigned(): void
     {
         $user = User::factory()->create();
-        $user->fill(['is_admin' => true])->save();
+
+        try {
+            $user->fill(['is_admin' => true])->save();
+        } catch (MassAssignmentException) {
+            // Outside production unfillable attributes throw instead of being dropped.
+        }
 
         $this->assertFalse($user->fresh()->is_admin);
     }

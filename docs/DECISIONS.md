@@ -33,3 +33,14 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Free plan: 3 QR codes, 100 scans per QR.** Paid plans seeded as Starter $9 (25 QRs / 5k scans), Business $29 (100 / 50k), Agency $79 (500 / 500k), monthly. Prices are display values; the real charge is whatever the Stripe price says.
 - **Stripe price IDs live in `config/qrx.php`** (env placeholders), not `env()` in the seeder, so they survive `config:cache`.
 - **QR creation locks the user row** so two simultaneous creates can't exceed the quota.
+
+## M3 — UI foundations
+
+- **Brand palette:** deep teal primary (OKLCH hue ~200) with a violet accent for gradients and the logo, cool slate neutrals. Distinct from Filament's amber and from the "purple QR app" cliché; works in light and dark.
+- **Typography:** IBM Plex Sans + IBM Plex Sans Arabic (a matched pair), self-hosted via @fontsource (no Google/Bunny CDN). Arabic gets 1.7 line-height.
+- **Dark mode ships now** (tokens make it a token-only change), defaulting to the OS setting with a toggle; this pulls part of L3 forward.
+- **Arabic strings are added phase by phase** (`lang/ar.json`, enforced by TranslationCoverageTest) instead of all at L8, so no phase leaves untranslated UI behind. L8 then covers validation/auth messages, Filament and RTL QA.
+- **Three CI guardrails as PHPUnit tests:** no physical left/right utilities, no untranslated view text, every string has an Arabic translation with matching placeholders.
+- **Eloquent strict-ish mode outside production:** lazy-loading (N+1) and silently discarded attributes throw. Not "missing attributes", because the in-memory free-plan fallback intentionally has unset columns.
+- **Component gallery at `/dev/ui`** exists from M3 (local/testing only) and is extended in L3.
+- **Skeleton `welcome.blade.php` removed;** `/` shows a minimal translated hero until the M6 landing page.
