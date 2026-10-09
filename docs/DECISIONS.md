@@ -129,3 +129,9 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 
 - **Landing demo needs no account and stores nothing;** previews and SVG download only (SVG works without imagick). Over the per-IP limit it shows a friendly notice instead of erroring.
 - **Contact form:** validation, a hidden honeypot field (bots get a fake "sent"), and 3 messages per 10 minutes per IP. Messages go to an admin inbox ("Messages", unread badge, mark as read, reply by email) rather than email, so nothing depends on a mail setup.
+
+## L6 — Admin reporting
+
+- **Revenue comes from Stripe's `invoice.paid` webhook,** recorded by a listener on Cashier's `WebhookReceived` event into a `payments` table (idempotent per invoice; zero-amount invoices skipped). It reflects money actually paid, unlike the old app's pre-payment "transactions".
+- **Admin dashboard:** "Revenue (30 days)" stat plus a 6-month revenue/sign-ups chart. Amounts are shown in USD (the configured Cashier currency).
+- **Add `invoice.paid` to the Stripe webhook events** (README lists it).

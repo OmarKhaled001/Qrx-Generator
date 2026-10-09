@@ -33,13 +33,13 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | L2 Analytics | ✅ done | see git log |
 | L3 Design completion | ✅ done | see git log |
 | L4 Marketing site | ✅ done | see git log |
-| L5 Free tier | ⏳ (folded into M2/M7, see DECISIONS) | |
-| L6 Admin reporting | 🔄 next | |
-| L7 Location QR | ⏳ (folded into M2, see DECISIONS) | |
-| L8 Arabic | ⏳ | |
+| L5 Free tier | ✅ folded into M2/M5/M7 | |
+| L6 Admin reporting | ✅ done | see git log |
+| L7 Location QR | ✅ folded into M2/M5/M6 | |
+| L8 Arabic | 🔄 next | |
 
 ## Current phase notes
 
-L4 done: landing live demo (`App\Livewire\Public\QrDemo`), contact form (`ContactForm`, `contacts` table, honeypot, throttle), admin Messages inbox (`ContactResource`).
+L6 done: `payments` table + `RecordStripePayment` listener (invoice.paid), Revenue stat + `RevenueChart` widget.
 
-**Next:** L6 admin reporting: store Stripe `invoice.paid` events (Cashier `WebhookReceived` listener → `payments` table), revenue + signups chart widgets. Then L8 Arabic QA (validation/auth/password messages in `lang/ar/*.php`, Filament in Arabic, RTL review), then final merge + local run + report.
+**Next:** L8 Arabic: `lang/ar/{validation,auth,passwords,pagination}.php`, Filament in Arabic check, RTL review in a real browser, then final merge to master + local run + final report.
