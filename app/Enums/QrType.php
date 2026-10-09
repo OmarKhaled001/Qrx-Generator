@@ -2,13 +2,15 @@
 
 namespace App\Enums;
 
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
 use Illuminate\Support\Str;
 
 /**
  * Every QR code points at its short URL (/x/{code}); the type decides what the
  * scan page shows and which payload fields are stored and validated.
  */
-enum QrType: string
+enum QrType: string implements HasIcon, HasLabel
 {
     case Url = 'url';
     case Text = 'text';
@@ -200,5 +202,15 @@ enum QrType: string
         };
 
         return Str::limit((string) $summary, 60);
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label();
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon();
     }
 }

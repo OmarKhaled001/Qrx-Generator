@@ -27,8 +27,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M5 QR management | ✅ done | see git log |
 | M6 Public | ✅ done | see git log |
 | M7 Billing | ✅ done | see git log |
-| M8 Admin | 🔄 next | |
-| M9 MVP cutover | ⏳ | |
+| M8 Admin | ✅ done | see git log |
+| M9 MVP cutover | 🔄 next | |
 | L1 Social login | ⏳ | |
 | L2 Analytics | ⏳ | |
 | L3 Design completion | ⏳ | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M7 done: `/billing` (plan, usage, grace/past-due notices, plans), `/billing/checkout/{plan:slug}` (Cashier Checkout or swap), `/billing/portal`, Stripe webhook CSRF-exempt, `.env.example` Stripe/OAuth placeholders. Tests stub Stripe via `Tests\Concerns\FakesStripe`.
+M8 done: Filament 5 panel at `/admin` (is_admin only, brand colours, dark mode, SetLocale), resources Users / QR codes / Plans, StatsOverview widget, `app:make-admin` command.
 
-**Next:** M8 admin: Filament 5 panel (canAccessPanel via is_admin, brand colour, SetLocale), resources Users (toggle admin), Plans, QR codes; `app:make-admin` command.
+**Next:** M9 MVP cutover: end-to-end journey test (register → verify → create QR → scan → edit → download; RTL), behaviour-inventory parity check (every row → v2 test), README + deploy docs, remove `spikes/` vendor leftovers, merge `redesign/v2` into `master` (local only, no push).

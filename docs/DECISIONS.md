@@ -87,3 +87,13 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Promotion codes are allowed** in Checkout (`allowPromotionCodes`), as in the old app.
 - **Stripe webhooks are CSRF-exempt** (`stripe/*`), as Cashier requires; signature verification is on as soon as `STRIPE_WEBHOOK_SECRET` is set.
 - **Checkout URL uses the plan slug** (`/billing/checkout/business`); free, inactive and unknown plans return 404.
+
+## M8 — Admin
+
+- **Panel access = `users.is_admin`** (approved); the separate admins table and guard are gone. `User` defaults `is_admin` to false in memory too, so a fresh model is never a "null" admin.
+- **`is_admin` stays non-fillable;** the Filament user pages set it with `forceFill`. Admins cannot remove their own admin flag or delete their own account.
+- **Admins do not create or edit QR content.** They can rename, pause/resume or delete any QR code; content belongs to the owner's builder. (The old admin had 7 per-type resources.)
+- **Plan price is edited in dollars and stored in cents;** a plan needs a Stripe price ID unless it is the free plan.
+- **Admin panel uses the brand teal, IBM Plex Sans, dark mode, and follows the user's language** (SetLocale added to the panel middleware; Filament ships Arabic).
+- **`php artisan app:make-admin email@…`** creates or promotes an administrator on real servers (the demo seeder only runs outside production).
+- **Admin stats widget** (users, paying subscribers, QR codes, scans in 30 days) is in M8 rather than L6, because it is small and useful from day one; L6 adds revenue reporting.

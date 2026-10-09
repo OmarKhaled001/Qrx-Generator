@@ -23,6 +23,11 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference,
     /** @use HasFactory<UserFactory> */
     use Billable, HasFactory, Notifiable;
 
+    // Mirrors the column default so new, unsaved-or-unrefreshed users are never "null" admins.
+    protected $attributes = [
+        'is_admin' => false,
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
