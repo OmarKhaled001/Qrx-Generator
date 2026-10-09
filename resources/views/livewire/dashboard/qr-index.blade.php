@@ -19,7 +19,7 @@
                     wire:click="$set('status', '{{ $filter }}')"
                     @class([
                         'inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition',
-                        'bg-primary text-on-primary shadow-card' => $status === $filter,
+                        'bg-primary text-on-primary shadow-xs' => $status === $filter,
                         'text-ink-muted hover:bg-sunken hover:text-ink' => $status !== $filter,
                     ])
                 >
@@ -46,9 +46,9 @@
     @else
         <ul class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" wire:loading.class="opacity-60">
             @foreach ($qrCodes as $qrCode)
-                <li wire:key="qr-{{ $qrCode->id }}" class="group flex flex-col rounded-lg border border-line bg-surface shadow-card transition hover:border-line-strong">
+                <li wire:key="qr-{{ $qrCode->id }}" class="group flex flex-col rounded-lg border border-line bg-surface shadow-card inset-shadow-highlight transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-line-strong hover:shadow-raised">
                     <a href="{{ route('qr.show', $qrCode) }}" wire:navigate class="flex items-center gap-4 p-4">
-                        <span class="qr-stage grid size-24 shrink-0 place-items-center rounded-md p-2">
+                        <span class="qr-stage grid size-24 shrink-0 place-items-center rounded-lg p-2 transition-transform duration-200 group-hover:scale-[1.03]">
                             <img src="{{ $previews[$qrCode->id] }}" alt="{{ __('QR code for :name', ['name' => $qrCode->name]) }}" class="size-20 rounded-sm" loading="lazy">
                         </span>
                         <span class="min-w-0 flex-1">
@@ -57,7 +57,7 @@
                                 <x-dynamic-component :component="$qrCode->type->icon()" class="size-3.5" aria-hidden="true" />
                                 {{ $qrCode->type->label() }}
                             </span>
-                            <span class="mt-1 block truncate text-xs text-ink-muted" dir="ltr">{{ $qrCode->type->summary($qrCode->payload) }}</span>
+                            <span class="mt-1 block truncate text-xs text-ink-muted" dir="auto">{{ $qrCode->type->summary($qrCode->payload) }}</span>
                             <span class="mt-2 flex flex-wrap items-center gap-2">
                                 <x-qr.status-badge :qr-code="$qrCode" :plan="$plan" />
                                 <span class="text-xs text-ink-subtle tabular-nums">{{ trans_choice(':count scan|:count scans', $qrCode->scan_count, ['count' => Number::format($qrCode->scan_count)]) }}</span>

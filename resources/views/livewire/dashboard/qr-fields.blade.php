@@ -88,7 +88,7 @@
                     <x-ui.input name="payload.password" wire:model.live.debounce.400ms="payload.password" autocomplete="off" dir="ltr" />
                 </x-ui.field>
             @endif
-            <x-ui.checkbox id="payload-hidden" wire:model.live="payload.hidden" :label="__('Hidden network')" class="sm:col-span-2" />
+            <div class="sm:col-span-2"><x-ui.checkbox id="payload-hidden" wire:model.live="payload.hidden" :label="__('Hidden network')" /></div>
         </div>
         @break
 

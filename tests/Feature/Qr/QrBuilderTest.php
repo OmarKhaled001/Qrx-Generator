@@ -55,6 +55,23 @@ class QrBuilderTest extends TestCase
         $this->assertSame($this->user->id, $qrCode->user_id);
     }
 
+    public function test_a_style_preset_fills_in_the_design_and_saves(): void
+    {
+        Livewire::test(QrBuilder::class)
+            ->call('applyPreset', 'sunset')
+            ->assertSet('useGradient', true)
+            ->assertSet('design.style', 'dot')
+            ->assertSet('design.bg', '#fff7ed')
+            ->call('applyPreset', 'no-such-preset')
+            ->assertSet('design.style', 'dot')
+            ->set('name', 'Sunset menu')
+            ->set('payload', ['url' => 'https://example.com/menu'])
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertEquals(['from' => '#c2410c', 'to' => '#be185d'], QrCode::sole()->design['gradient']);
+    }
+
     public function test_the_create_page_renders_with_a_preview(): void
     {
         $this->get('/qr/create')->assertOk()->assertSee('data:image/svg+xml;base64,', false)->assertSee(__('Create QR code'));

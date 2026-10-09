@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Payment;
 use App\Models\User;
+use App\Support\Locales;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -40,6 +41,9 @@ class RevenueChart extends ChartWidget
                         ->whereBetween('paid_at', [$month, $month->copy()->endOfMonth()])
                         ->sum('amount_cents') / 100, 2))->all(),
                     'yAxisID' => 'y',
+                    'backgroundColor' => '#00a5ab',
+                    'borderRadius' => 6,
+                    'maxBarThickness' => 40,
                 ],
                 [
                     'label' => __('Sign-ups'),
@@ -48,6 +52,9 @@ class RevenueChart extends ChartWidget
                         ->whereBetween('created_at', [$month, $month->copy()->endOfMonth()])
                         ->count())->all(),
                     'yAxisID' => 'y1',
+                    'borderColor' => '#7543e9',
+                    'backgroundColor' => '#7543e9',
+                    'tension' => 0.35,
                 ],
             ],
             'labels' => $months->map(fn ($month) => $month->translatedFormat('M Y'))->all(),
@@ -56,10 +63,18 @@ class RevenueChart extends ChartWidget
 
     protected function getOptions(): array
     {
+        // In Arabic, time runs right to left and the axes swap sides, like the client dashboard chart.
+        $rtl = Locales::isRtl();
+
         return [
             'scales' => [
-                'y' => ['beginAtZero' => true, 'position' => 'left'],
-                'y1' => ['beginAtZero' => true, 'position' => 'right', 'grid' => ['drawOnChartArea' => false]],
+                'x' => ['reverse' => $rtl, 'grid' => ['display' => false]],
+                'y' => ['beginAtZero' => true, 'position' => $rtl ? 'right' : 'left'],
+                'y1' => ['beginAtZero' => true, 'position' => $rtl ? 'left' : 'right', 'grid' => ['drawOnChartArea' => false]],
+            ],
+            'plugins' => [
+                'legend' => ['rtl' => $rtl, 'labels' => ['usePointStyle' => true]],
+                'tooltip' => ['rtl' => $rtl],
             ],
         ];
     }

@@ -165,3 +165,14 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Two OG cards (en, ar)** picked by page language rather than one bilingual card; each is readable at feed-thumbnail size.
 - **Rasterising with Playwright's Docker image + `playwright-core`** (no browser download on `npm install`). Chrome isn't installed on the host; the image is pinned to the same version as the package.
 - **`APP_NAME` default changed to `Qrx`** (the local `.env` said `Laravel`, which leaked into titles and the admin brand name).
+
+## R3 — Design-system polish
+
+- **Bug found by the screenshots: Alpine never loaded on pages without a Livewire component** (dashboard, login, billing, profile, scan pages), so the mobile menu was stuck open and dropdowns, theme toggle and copy buttons were dead there. Layouts now load `@livewireStyles`/`@livewireScripts` themselves; `ScriptsTest` checks every layout loads it exactly once.
+- **Elevation is tinted and layered** (`--shadow-tint` swaps in dark mode) plus a 1px top highlight in dark mode, where shadows disappear. Primary buttons get a teal glow on hover; everything presses down slightly (`active:scale`). `prefers-reduced-motion` still zeroes all transitions.
+- **Time-series charts run in the reading direction**: mirrored in Arabic (newest on the left), client chart and admin Chart.js alike. Replaces the earlier "always left to right" call; Arabic readers scan right to left, and the axis labels now follow.
+- **Prices use one format in both languages ("$29")** via `App\Support\Money`. ICU's Arabic `US$ 29` was reordered by the bidi algorithm into "$US 29".
+- **Style presets** (`App\Support\QrPresets`) shared by the builder, the landing demo and (R4) the style gallery; a test keeps every preset at ≥ 4.5:1 contrast so they scan reliably.
+- **Plan name shown under a "Current plan" label, never composed into a sentence** (`:plan plan`): Arabic adjective agreement made composed phrases ungrammatical.
+- **Auth pages are split-screen on large screens**; the brand panel states what the product does (no testimonials or numbers).
+- **Screen-reader tables wrap in an `sr-only` div**: a `<table class="sr-only">` keeps its row heights and was stretching pages by ~250px.

@@ -41,6 +41,16 @@ class MarketingTest extends TestCase
         $this->assertDatabaseCount('qr_codes', 0);
     }
 
+    public function test_the_style_gallery_applies_a_preset_to_the_demo(): void
+    {
+        Livewire::test(QrDemo::class)
+            ->dispatch('apply-preset', key: 'ocean')
+            ->assertSet('style', 'round')
+            ->assertSet('gradient', ['from' => '#0e7490', 'to' => '#7c3aed'])
+            ->set('color', '#111111')
+            ->assertSet('gradient', null);
+    }
+
     public function test_the_demo_is_rate_limited_per_ip(): void
     {
         for ($i = 0; $i < config('qrx.demo.requests_per_minute'); $i++) {

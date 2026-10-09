@@ -15,3 +15,42 @@
 html:lang(ar) {
     --font-family: 'Cairo Variable', 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Same depth, radius and brand accents as the product. Unlayered, so these refine Filament's component layer. */
+.fi-section:not(.fi-section-not-contained),
+.fi-wi-stats-overview-stat,
+.fi-ta-ctn {
+    box-shadow: var(--shadow-card), inset 0 1px 0 0 var(--highlight);
+}
+
+.fi-wi-stats-overview-stat-value {
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Active navigation item: a brand bar on the start edge, like the client dashboard. */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    position: relative;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before {
+    content: '';
+    position: absolute;
+    inset-block: 0.5rem;
+    inset-inline-start: 0;
+    width: 0.25rem;
+    border-start-end-radius: 9999px;
+    border-end-end-radius: 9999px;
+    background-color: var(--primary);
+}
+
+/* Sign-in page: the soft brand glow used on the product's auth pages. */
+.fi-simple-layout {
+    background-image: var(--gradient-glow);
+    background-repeat: no-repeat;
+    background-size: 100% 28rem;
+}
+
+.fi-simple-main {
+    box-shadow: var(--shadow-raised), inset 0 1px 0 0 var(--highlight);
+}

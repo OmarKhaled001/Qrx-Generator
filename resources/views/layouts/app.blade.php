@@ -8,6 +8,8 @@
         ['route' => 'profile', 'active' => 'profile', 'label' => __('Profile'), 'icon' => 'heroicon-o-user-circle'],
     ])->filter(fn (array $item) => Route::has($item['route']));
     $user = auth()->user();
+    $plan = $user ? app(\App\Services\Subscriptions::class)->currentPlan($user) : null;
+    $qrCount = $user ? $user->qrCodes()->count() : 0;
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ \App\Support\Locales::dir() }}">
@@ -17,61 +19,86 @@
 <body>
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-2 focus:shadow-pop">{{ __('Skip to content') }}</a>
 
-    <div x-data="{ sidebar: false }" class="min-h-dvh lg:grid lg:grid-cols-[16.5rem_minmax(0,1fr)]">
+    <div x-data="{ sidebar: false }" x-on:keydown.escape.window="sidebar = false" class="min-h-dvh lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
         {{-- Mobile backdrop --}}
-        <div x-show="sidebar" x-cloak x-transition.opacity x-on:click="sidebar = false" class="fixed inset-0 z-30 bg-neutral-950/40 lg:hidden"></div>
+        <div x-show="sidebar" x-cloak x-transition.opacity x-on:click="sidebar = false" class="fixed inset-0 z-30 bg-neutral-950/40 backdrop-blur-sm lg:hidden"></div>
 
-        <aside
-            :class="sidebar ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'"
-            class="fixed inset-y-0 start-0 z-40 flex w-66 flex-col border-e border-line bg-surface transition-transform duration-200 lg:sticky lg:top-0 lg:h-dvh lg:w-auto lg:translate-x-0 lg:rtl:translate-x-0"
-            aria-label="{{ __('Main navigation') }}"
-        >
-            <div class="flex h-16 items-center justify-between px-5">
-                <a href="{{ Route::has('dashboard') ? route('dashboard') : url('/') }}"><x-ui.logo /></a>
-                <button type="button" class="grid size-9 place-items-center rounded-md text-ink-muted hover:bg-sunken lg:hidden" x-on:click="sidebar = false" aria-label="{{ __('Close menu') }}">
-                    <x-heroicon-o-x-mark class="size-5" aria-hidden="true" />
-                </button>
-            </div>
-
-            @if (Route::has('qr.create'))
-                <div class="px-4 pb-2">
-                    <x-ui.button :href="route('qr.create')" icon="heroicon-o-plus" class="w-full">{{ __('Create QR code') }}</x-ui.button>
+        {{-- The column carries the background so it spans the full page height; the sidebar inside stays in view. --}}
+        <div class="lg:border-e lg:border-line lg:bg-surface">
+            <aside
+                :class="{ 'translate-x-0!': sidebar }"
+                class="fixed inset-y-0 start-0 z-40 flex w-72 -translate-x-full flex-col border-e border-line bg-surface shadow-pop transition-transform duration-300 ease-out-soft rtl:translate-x-full lg:sticky lg:top-0 lg:h-dvh lg:w-auto lg:translate-x-0 lg:border-e-0 lg:shadow-none lg:rtl:translate-x-0"
+                aria-label="{{ __('Main navigation') }}"
+            >
+                <div class="flex h-16 items-center justify-between px-5">
+                    <a href="{{ Route::has('dashboard') ? route('dashboard') : url('/') }}"><x-ui.logo /></a>
+                    <button type="button" class="grid size-9 place-items-center rounded-md text-ink-muted hover:bg-sunken lg:hidden" x-on:click="sidebar = false" aria-label="{{ __('Close menu') }}">
+                        <x-heroicon-o-x-mark class="size-5" aria-hidden="true" />
+                    </button>
                 </div>
-            @endif
 
-            <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-3">
-                @foreach ($navigation as $item)
-                    @php($active = request()->routeIs($item['active']))
-                    <a
-                        href="{{ route($item['route']) }}"
-                        @if ($active) aria-current="page" @endif
-                        @class([
-                            'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition',
-                            'bg-primary-soft text-primary-ink' => $active,
-                            'text-ink-muted hover:bg-sunken hover:text-ink' => ! $active,
-                        ])
-                    >
-                        <x-dynamic-component :component="$item['icon']" class="size-5 shrink-0" aria-hidden="true" />
-                        {{ $item['label'] }}
-                    </a>
-                @endforeach
-            </nav>
+                @if (Route::has('qr.create'))
+                    <div class="px-4 pt-2 pb-3">
+                        <x-ui.button :href="route('qr.create')" icon="heroicon-o-plus" class="w-full">{{ __('Create QR code') }}</x-ui.button>
+                    </div>
+                @endif
 
-            @if ($user?->is_admin)
-                <div class="border-t border-line p-3">
-                    <a href="{{ url('/admin') }}" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-ink-muted transition hover:bg-sunken hover:text-ink">
-                        <x-heroicon-o-shield-check class="size-5 shrink-0" aria-hidden="true" />
-                        {{ __('Admin panel') }}
-                    </a>
+                <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-2">
+                    @foreach ($navigation as $item)
+                        @php($active = request()->routeIs($item['active']))
+                        <a
+                            href="{{ route($item['route']) }}"
+                            @if ($active) aria-current="page" @endif
+                            @class([
+                                'group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+                                'bg-primary-soft text-primary-ink' => $active,
+                                'text-ink-muted hover:bg-sunken hover:text-ink' => ! $active,
+                            ])
+                        >
+                            @if ($active)<span class="absolute inset-y-2 start-0 w-1 rounded-e-full bg-primary" aria-hidden="true"></span>@endif
+                            <x-dynamic-component :component="$item['icon']" @class(['size-5 shrink-0 transition-colors', 'text-ink-subtle group-hover:text-ink' => ! $active]) aria-hidden="true" />
+                            {{ $item['label'] }}
+                        </a>
+                    @endforeach
+                </nav>
+
+                <div class="space-y-3 p-4">
+                    @if ($plan)
+                        @php($usage = $plan->qr_limit > 0 ? min(100, (int) round($qrCount / $plan->qr_limit * 100)) : 0)
+                        <div class="rounded-lg border border-line bg-sunken/60 p-4">
+                            <p class="text-xs text-ink-subtle">{{ __('Current plan') }}</p>
+                            <div class="mt-0.5 flex items-baseline justify-between gap-2">
+                                <p class="text-sm font-semibold text-ink">{{ __($plan->name) }}</p>
+                                <p class="text-xs text-ink-subtle tabular-nums">{{ __(':used of :limit used', ['used' => Number::format($qrCount), 'limit' => Number::format($plan->qr_limit)]) }}</p>
+                            </div>
+                            <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuemin="0" aria-valuemax="{{ $plan->qr_limit }}" aria-valuenow="{{ $qrCount }}" aria-label="{{ __('QR codes') }}">
+                                <div @class(['h-full rounded-full', 'bg-warning-600' => $usage >= 100, 'bg-brand-gradient' => $usage < 100]) style="width: {{ $usage }}%"></div>
+                            </div>
+                            @if ($plan->is_free && Route::has('billing'))
+                                <a href="{{ route('billing') }}" class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-ink hover:underline">
+                                    {{ __('Upgrade for more') }}
+                                    <x-heroicon-m-arrow-right class="size-4 rtl:-scale-x-100" aria-hidden="true" />
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+
+                    @if ($user?->is_admin)
+                        <a href="{{ url('/admin') }}" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-ink-muted transition hover:bg-sunken hover:text-ink">
+                            <x-heroicon-o-shield-check class="size-5 shrink-0" aria-hidden="true" />
+                            {{ __('Admin panel') }}
+                        </a>
+                    @endif
                 </div>
-            @endif
-        </aside>
+            </aside>
+        </div>
 
         <div class="flex min-w-0 flex-col">
             <header class="sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-line bg-surface/85 px-4 backdrop-blur sm:px-6">
-                <button type="button" class="grid size-9 place-items-center rounded-md text-ink-muted hover:bg-sunken lg:hidden" x-on:click="sidebar = true" aria-label="{{ __('Open menu') }}">
+                <button type="button" class="grid size-9 place-items-center rounded-md text-ink-muted hover:bg-sunken lg:hidden" x-on:click="sidebar = true" :aria-expanded="sidebar" aria-label="{{ __('Open menu') }}">
                     <x-heroicon-o-bars-3 class="size-5" aria-hidden="true" />
                 </button>
+                <a href="{{ Route::has('dashboard') ? route('dashboard') : url('/') }}" class="lg:hidden"><x-ui.logo class="h-7" /></a>
                 <div class="flex-1"></div>
                 <x-ui.locale-switcher />
                 <x-ui.theme-toggle />
@@ -104,12 +131,13 @@
                 @endif
             </header>
 
-            <main id="main" class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-10">
+            <main id="main" class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
                 {{ $slot }}
             </main>
         </div>
     </div>
 
     <x-ui.toast-stack />
+    @livewireScripts
 </body>
 </html>

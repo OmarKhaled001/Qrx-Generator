@@ -30,4 +30,6 @@
         document.documentElement.classList.toggle('dark', dark);
     })();
 </script>
+{{-- Livewire ships Alpine; load it on every page, not only pages with a Livewire component. --}}
+@livewireStyles
 @vite(['resources/css/app.css', 'resources/js/app.js'])

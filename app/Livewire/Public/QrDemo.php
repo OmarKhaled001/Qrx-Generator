@@ -4,8 +4,10 @@ namespace App\Livewire\Public;
 
 use App\Services\QrRenderer;
 use App\Support\QrDesign;
+use App\Support\QrPresets;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -24,6 +26,9 @@ class QrDemo extends Component
 
     public string $bg = '#ffffff';
 
+    /** @var array{from: string, to: string}|null Set by a preset; cleared when the colour is picked by hand. */
+    public ?array $gradient = null;
+
     public bool $limited = false;
 
     public function hydrate(): void
@@ -34,6 +39,23 @@ class QrDemo extends Component
         if (! $this->limited) {
             RateLimiter::hit($key, 60);
         }
+    }
+
+    #[On('apply-preset')]
+    public function applyPreset(string $key): void
+    {
+        $preset = QrPresets::find($key);
+
+        if ($preset === null) {
+            return;
+        }
+
+        [$this->style, $this->eye, $this->color, $this->bg, $this->gradient] = [$preset['style'], $preset['eye'], $preset['color'], $preset['bg'], $preset['gradient']];
+    }
+
+    public function updatedColor(): void
+    {
+        $this->gradient = null;
     }
 
     public function download(QrRenderer $renderer): ?StreamedResponse
@@ -59,13 +81,14 @@ class QrDemo extends Component
      */
     private function design(): array
     {
-        return QrDesign::normalize(['style' => $this->style, 'eye' => $this->eye, 'color' => $this->color, 'bg' => $this->bg]);
+        return QrDesign::normalize(['style' => $this->style, 'eye' => $this->eye, 'color' => $this->color, 'bg' => $this->bg, 'gradient' => $this->gradient]);
     }
 
     public function render(QrRenderer $renderer): View
     {
         return view('livewire.public.qr-demo', [
             'preview' => $renderer->svgDataUri($this->content(), $this->design(), 280),
+            'presets' => QrPresets::all(),
         ]);
     }
 }
