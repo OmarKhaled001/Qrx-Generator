@@ -124,3 +124,8 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **`tokens.css` is the single source for the admin too:** `App\Support\BrandPalette` reads the OKLCH brand and neutral palettes from it for Filament's `colors()`, and the Filament theme imports the same file. Change a token once; app and admin follow.
 - **Admin fonts are self-hosted** (Filament's default would load Bunny Fonts from a CDN).
 - **Dark mode already shipped in M3,** so L3 covered the admin theme and the gallery (now including the chart).
+
+## L4 — Marketing site
+
+- **Landing demo needs no account and stores nothing;** previews and SVG download only (SVG works without imagick). Over the per-IP limit it shows a friendly notice instead of erroring.
+- **Contact form:** validation, a hidden honeypot field (bots get a fake "sent"), and 3 messages per 10 minutes per IP. Messages go to an admin inbox ("Messages", unread badge, mark as read, reply by email) rather than email, so nothing depends on a mail setup.

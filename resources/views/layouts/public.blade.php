@@ -13,7 +13,7 @@
                 <nav class="hidden items-center gap-6 text-sm font-medium text-ink-muted md:flex" aria-label="{{ __('Main navigation') }}">
                     <a href="{{ url('/#features') }}" class="hover:text-ink">{{ __('Features') }}</a>
                     <a href="{{ url('/#pricing') }}" class="hover:text-ink">{{ __('Pricing') }}</a>
-                    @if (Route::has('contact.store'))
+                    @if (View::exists('partials.landing-contact'))
                         <a href="{{ url('/#contact') }}" class="hover:text-ink">{{ __('Contact') }}</a>
                     @endif
                 </nav>

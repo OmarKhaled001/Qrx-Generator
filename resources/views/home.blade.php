@@ -59,4 +59,5 @@
             </div>
         </div>
     </section>
+    @includeWhen(View::exists('partials.landing-contact'), 'partials.landing-contact')
 </x-layouts::public>

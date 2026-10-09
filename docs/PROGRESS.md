@@ -32,14 +32,14 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | L1 Social login | ✅ done | see git log |
 | L2 Analytics | ✅ done | see git log |
 | L3 Design completion | ✅ done | see git log |
-| L4 Marketing site | 🔄 next | |
+| L4 Marketing site | ✅ done | see git log |
 | L5 Free tier | ⏳ (folded into M2/M7, see DECISIONS) | |
-| L6 Admin reporting | ⏳ | |
+| L6 Admin reporting | 🔄 next | |
 | L7 Location QR | ⏳ (folded into M2, see DECISIONS) | |
 | L8 Arabic | ⏳ | |
 
 ## Current phase notes
 
-L3 done: Filament theme (`resources/css/filament/admin/theme.css`) importing tokens + local fonts, `BrandPalette` reads tokens for Filament colours, gallery has the chart.
+L4 done: landing live demo (`App\Livewire\Public\QrDemo`), contact form (`ContactForm`, `contacts` table, honeypot, throttle), admin Messages inbox (`ContactResource`).
 
-**Next:** L4 marketing: landing live QR demo (Livewire, rate-limited per IP), contact form (`contacts` table, throttled, honeypot) + admin Contacts resource, via `partials/landing-extra.blade.php`.
+**Next:** L6 admin reporting: store Stripe `invoice.paid` events (Cashier `WebhookReceived` listener → `payments` table), revenue + signups chart widgets. Then L8 Arabic QA (validation/auth/password messages in `lang/ar/*.php`, Filament in Arabic, RTL review), then final merge + local run + report.

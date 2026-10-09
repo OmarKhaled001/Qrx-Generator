@@ -337,5 +337,21 @@
     "No data yet.": "لا توجد بيانات بعد.",
     "Mobile": "هاتف محمول",
     "Tablet": "جهاز لوحي",
-    "Desktop": "حاسوب مكتبي"
+    "Desktop": "حاسوب مكتبي",
+    "Try it now": "جرّبه الآن",
+    "Type anything, pick a style and download your code. No account needed.": "اكتب أي شيء، واختر التصميم، ثم نزّل رمزك. لا حاجة لحساب.",
+    "Questions? Talk to us": "لديك أسئلة؟ تواصل معنا",
+    "Bulk codes, custom plans or anything else: send us a message.": "رموز بالجملة أو خطط مخصصة أو أي شيء آخر: أرسل لنا رسالة.",
+    "Your text or link": "النص أو الرابط",
+    "Nothing is saved. Create a free account to edit it later.": "لا يتم حفظ أي شيء. أنشئ حسابًا مجانيًا لتعديله لاحقًا.",
+    "You are going a bit fast. Wait a minute and try again.": "أنت تسرع قليلًا. انتظر دقيقة ثم حاول مجددًا.",
+    "Download SVG": "تنزيل SVG",
+    "Message sent": "تم إرسال الرسالة",
+    "Thanks for reaching out. We usually reply within one working day.": "شكرًا لتواصلك معنا. نرد عادةً خلال يوم عمل واحد.",
+    "Messages": "الرسائل",
+    "Received": "تاريخ الاستلام",
+    "Read": "مقروءة",
+    "Mark as read": "تعليم كمقروءة",
+    "Reply": "رد",
+    "Too many messages. Please try again in a few minutes.": "رسائل كثيرة جدًا. يرجى المحاولة بعد بضع دقائق."
 }
