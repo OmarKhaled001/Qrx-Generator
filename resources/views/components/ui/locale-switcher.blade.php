@@ -3,7 +3,7 @@
     <x-slot:trigger>
         <button type="button" class="inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-ink-muted transition hover:bg-sunken hover:text-ink" aria-label="{{ __('Language') }}">
             <x-heroicon-o-language class="size-5" aria-hidden="true" />
-            <span class="uppercase">{{ $current }}</span>
+            <span>{{ mb_strtoupper($current) }}</span>
         </button>
     </x-slot:trigger>
     @foreach (\App\Support\Locales::supported() as $locale)

@@ -217,3 +217,32 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Only transforms and opacity are animated.** Measured in headless Chromium while scrubbing: 60 fps average, p95 frame 16.7 ms, no long tasks; layout shift 0.0065 (good is < 0.1).
 - **RTL:** the drawing contains no text and is mirrored as a whole with `rtl:-scale-x-100`, so the phone comes from the reading direction's end and the on-screen UI reads right to left. The check mark is flipped back because it isn't directional (a test fails if `<text>` ever appears inside).
 - **The printed code is a real QR code for the site** (built from the raw matrix by `App\Support\QrMatrix` so individual modules can animate).
+
+## R6 — Language review
+
+- **`ArabicPagesTest` renders every page in Arabic and fails on any leftover English word:** public, scan (all types), signed-in and admin pages. Fixtures hold Arabic content, so anything Latin comes from the app. What it ignores:
+  - brands and technical tokens (Qrx, QR, PNG, Apple…);
+  - emails, links, paths, IDs and elements marked `translate="no"`.
+
+  It found and fixed:
+  - the admin brand name ("Qrx Admin");
+  - an unlabeled Filament field ("Payload"), which screen readers announced;
+  - raw plan names on admin titles and tables;
+  - a Latin "Wi-Fi" in new Arabic copy;
+  - a lowercase locale code made uppercase with CSS.
+- **`TranslationParityTest` fails when a key exists in one language but not the other.** It covers `lang/{en,ar}.json` and every PHP group with nested keys, plus placeholders. `lang/en.json` now exists, and English copy edits live in its values so keys stay stable (e.g. "Organization" → "Organisation"). Arabic validation went from 71 to all 150 entries; English got friendly attribute names ("email address").
+- **Emails were English-only:** Fortify's verify and reset messages used Laravel's defaults and had no Arabic. Changes:
+  - rewritten in the product's voice;
+  - sent in the user's saved language (`preferredLocale`, set at sign-up);
+  - published mail layout renders `dir="rtl"` for Arabic, shows the Qrx PNG logo and uses the brand button colour.
+
+  `AccountEmailsTest` covers it.
+- **Arabic terminology and style are fixed in docs/GLOSSARY.md:**
+  - plan names in definite feminine forms ("المجانية"; "مجاني" didn't agree with "الخطة");
+  - no "قم بـ…" calques;
+  - "تم + مصدر" only for short confirmations;
+  - "واي فاي" in Arabic script.
+- **RTL details:**
+  - `<x-ui.button icon>` mirrors directional icons (open-in-new, send, arrows) automatically.
+  - LTR fields (email, URL, phone, coordinates) align to the end in Arabic forms.
+  - The register page reads the free plan's real limit instead of a hardcoded "3".

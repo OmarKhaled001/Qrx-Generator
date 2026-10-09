@@ -12,5 +12,7 @@
         'placeholder:text-ink-subtle/80 hover:border-ink-subtle/60 focus:border-primary focus:ring-4 focus:ring-primary/15 focus:outline-none',
         'border-danger-600' => $invalid,
         'border-line-strong' => ! $invalid,
+        // Emails, links and numbers keep dir="ltr" but line up with the other fields in Arabic.
+        'rtl:text-end' => $attributes->get('dir') === 'ltr',
     ]) }}
 >

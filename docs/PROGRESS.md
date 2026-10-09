@@ -47,8 +47,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | R3 Design-system polish (tokens, components, layouts, pages, admin) | ✅ done |
 | R4 Landing sections | ✅ done |
 | R5 Hero illustration + GSAP scroll animation | ✅ done |
-| R6 Language review, glossary, en/ar parity test, RTL audit | 🔄 next |
-| R7 Screenshots (Playwright in Docker), review, fixes, merge | ⏳ |
+| R6 Language review, glossary, en/ar parity test, RTL audit | ✅ done |
+| R7 Screenshots (Playwright in Docker), review, fixes, merge | 🔄 next |
 
 ## Current phase notes
 

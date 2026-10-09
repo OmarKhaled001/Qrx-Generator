@@ -56,7 +56,7 @@ class QrCodeResource extends Resource
                 Select::make('type')->label(__('Type'))->options(QrType::class)->disabled()->dehydrated(false),
             ]),
             Section::make(__('Content'))->components([
-                KeyValue::make('payload')->hiddenLabel()->disabled()->dehydrated(false),
+                KeyValue::make('payload')->label(__('Content'))->hiddenLabel()->keyLabel(__('Field'))->valueLabel(__('Value'))->disabled()->dehydrated(false),
             ]),
         ]);
     }
@@ -72,7 +72,7 @@ class QrCodeResource extends Resource
                 TextColumn::make('type')->label(__('Type'))->badge(),
                 TextColumn::make('status')->label(__('Status'))->badge(),
                 TextColumn::make('scan_count')->label(__('Scans'))->numeric()->sortable(),
-                TextColumn::make('code')->label(__('Short code'))->searchable()->copyable()->fontFamily('mono'),
+                TextColumn::make('code')->label(__('Short code'))->searchable()->copyable()->fontFamily('mono')->extraAttributes(['translate' => 'no', 'dir' => 'ltr']),
                 TextColumn::make('created_at')->label(__('Created'))->date()->sortable(),
             ])
             ->filters([
