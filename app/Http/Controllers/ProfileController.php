@@ -16,11 +16,12 @@ class ProfileController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
+
+        // Accounts created through social login have no password: confirm with the email instead.
+        $request->validateWithBag('userDeletion', $user->password === null
+            ? ['confirm_email' => ['required', 'in:'.$user->email]]
+            : ['password' => ['required', 'current_password']]);
 
         // Stop billing before the account (and its Stripe link) disappears.
         if ($user->subscribed()) {

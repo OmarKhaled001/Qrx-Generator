@@ -29,8 +29,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M7 Billing | ✅ done | see git log |
 | M8 Admin | ✅ done | see git log |
 | M9 MVP cutover | ✅ done (merged to master locally) | see git log |
-| L1 Social login | 🔄 next | |
-| L2 Analytics | ⏳ | |
+| L1 Social login | ✅ done | see git log |
+| L2 Analytics | 🔄 next | |
 | L3 Design completion | ⏳ | |
 | L4 Marketing site | ⏳ | |
 | L5 Free tier | ⏳ (folded into M2/M7, see DECISIONS) | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M9 done: end-to-end journey test (LTR + RTL), 165 tests green on PHP 8.5 with SQLite and MySQL 8.4, behaviour inventory mapped to v2 tests, README rewritten, MVP merged into `master` (local).
+L1 done: Socialite Google/Facebook (`App\Http\Controllers\Auth\SocialiteController`), buttons on login/register only when configured, account linking by email, password-less account deletion by email confirmation. Unit tests added.
 
-**Next:** L1 social login (Google/Facebook via Socialite; buttons only when configured), then L2 analytics, L3 design completion (Filament theme, gallery), L4 marketing (demo, contact form), L6 admin reporting (invoice.paid), L8 Arabic QA (validation/auth messages, Filament). L5 (free tier) and L7 (Location) were folded into the MVP.
+**Next:** L2 analytics: per-QR scan chart (30 days) + device/country breakdown on the QR detail page (paid plans; free sees totals + upsell), dashboard 30-day scans chart.

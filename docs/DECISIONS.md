@@ -103,3 +103,11 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **"Browser smoke test" = an HTTP + Livewire end-to-end journey test** (register → verify → create → scan → change → download, plus the RTL pass over every dashboard page). A real browser pass is done once at the end of the run (final report).
 - **JSON key order is not asserted:** MySQL normalises JSON object key order, so tests compare payloads by keys and values. Nothing in the app depends on payload key order.
 - **MVP merged into `master` locally** with a merge commit; nothing is pushed (origin is public). Later phases continue on `redesign/v2` and are merged again at the end.
+
+## L1 — Social login
+
+- **Google and Facebook buttons appear only when their client ID is configured;** unconfigured providers return 404.
+- **A social sign-in with the email of an existing account links to that account** instead of failing or duplicating it. Google/Facebook verify emails, so this is safe; the email is lower-cased first.
+- **New social accounts are created verified** and without a password; such users can set one via "Forgot password", and delete their account by typing their email (no password to confirm with).
+- **No email from the provider → clear error,** no account (Facebook accounts can withhold the email).
+- **Found during L1:** `tests/Unit` was an empty directory that git does not track, so after switching branches PHPUnit refused to start. It now holds real unit tests (vCard escaping, contrast, clamping).

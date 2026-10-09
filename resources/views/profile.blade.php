@@ -63,6 +63,7 @@
         <x-ui.card :heading="__('Delete account')" :description="__('Permanently delete your account, your QR codes and their scan history. Printed codes stop working.')">
             <x-ui.button variant="danger" x-data x-on:click="$dispatch('open-modal', 'delete-account')">{{ __('Delete account') }}</x-ui.button>
             @error('password', 'userDeletion')<p class="mt-3 text-sm font-medium text-danger-600" role="alert">{{ $message }}</p>@enderror
+            @error('confirm_email', 'userDeletion')<p class="mt-3 text-sm font-medium text-danger-600" role="alert">{{ __('That is not your email address.') }}</p>@enderror
         </x-ui.card>
     </div>
 
@@ -70,10 +71,17 @@
         <form id="delete-account-form" method="POST" action="{{ route('profile.destroy') }}" class="space-y-4">
             @csrf
             @method('DELETE')
-            <p>{{ __('This cannot be undone. Enter your password to confirm.') }}</p>
-            <x-ui.field :label="__('Password')" for="delete-password">
-                <x-ui.input id="delete-password" name="password" type="password" autocomplete="current-password" />
-            </x-ui.field>
+            @if ($user->password === null)
+                <p>{{ __('This cannot be undone. Type your email address to confirm.') }}</p>
+                <x-ui.field :label="__('Email address')" for="confirm-email">
+                    <x-ui.input id="confirm-email" name="confirm_email" type="email" autocomplete="off" dir="ltr" />
+                </x-ui.field>
+            @else
+                <p>{{ __('This cannot be undone. Enter your password to confirm.') }}</p>
+                <x-ui.field :label="__('Password')" for="delete-password">
+                    <x-ui.input id="delete-password" name="password" type="password" autocomplete="current-password" />
+                </x-ui.field>
+            @endif
         </form>
         <x-slot:footer>
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal')">{{ __('Cancel') }}</x-ui.button>
