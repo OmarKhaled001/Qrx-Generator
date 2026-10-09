@@ -38,6 +38,18 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | L7 Location QR | ✅ folded into M2/M5/M6 | |
 | L8 Arabic | ✅ done | see git log |
 
+## Round 2 — UI and brand upgrade (branch `ui/brand-upgrade`)
+
+| Step | State |
+|---|---|
+| R1 Typography (Cairo + Plus Jakarta Sans) | ✅ done |
+| R2 Logo and brand assets | 🔄 next |
+| R3 Design-system polish (tokens, components, layouts, pages, admin) | ⏳ |
+| R4 Landing sections | ⏳ |
+| R5 Hero illustration + GSAP scroll animation | ⏳ |
+| R6 Language review, glossary, en/ar parity test, RTL audit | ⏳ |
+| R7 Screenshots (Playwright in Docker), review, fixes, merge | ⏳ |
+
 ## Current phase notes
 
 All phases done (M0–M9, L1–L8). 197 tests green on PHP 8.5 (SQLite; MySQL 8.4 verified at M9). Pint and Larastan clean.

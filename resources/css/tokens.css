@@ -73,9 +73,10 @@
     --color-info-700: oklch(0.488 0.200 264);
     --color-info-900: oklch(0.379 0.138 266);
 
-    /* Typography: IBM Plex Sans pairs with IBM Plex Sans Arabic. */
-    --font-sans: 'IBM Plex Sans', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
-    --font-arabic: 'IBM Plex Sans Arabic', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    /* Typography: Plus Jakarta Sans (Latin) pairs with Cairo (Arabic); both variable, self-hosted.
+       html:lang(ar) swaps the order so Arabic pages use Cairo first (see app.css). */
+    --font-sans: 'Plus Jakarta Sans Variable', 'Cairo Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-arabic: 'Cairo Variable', 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
     /* Shape. */

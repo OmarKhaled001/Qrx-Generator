@@ -46,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
                 'info' => Color::Blue,
             ])
             // Self-hosted through the theme (no font CDN).
-            ->font('IBM Plex Sans', provider: LocalFontProvider::class)
+            ->font('Plus Jakarta Sans Variable', provider: LocalFontProvider::class)
             ->darkMode()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

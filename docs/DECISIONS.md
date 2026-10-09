@@ -148,3 +148,11 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 
 - **Real-browser visual check not done:** this machine has no Chrome, and installing one was out of scope for an unattended run. Every page is covered by HTTP/Livewire tests (incl. the RTL pass over all dashboard pages), but nobody has looked at the pages yet. Please click through the list in the final report.
 - **Local server runs on port 8010,** because port 8000 is used by another app on this machine; it runs inside the PHP 8.5 Docker image so PNG/EPS downloads (imagick) work. `.env` `APP_URL` was set to `http://localhost:8010`.
+
+# Round 2 — UI and brand upgrade (branch `ui/brand-upgrade`)
+
+## R1 — Typography
+
+- **Arabic: Cairo (variable, 200–1000), self-hosted** via `@fontsource-variable/cairo` (as requested).
+- **English: Plus Jakarta Sans (variable), self-hosted.** It shares Cairo's open, geometric-humanist shapes, generous x-height and round terminals, so mixed Arabic/Latin lines (emails, URLs, plan names) look like one family. Inter was the alternative; it reads colder and narrower next to Cairo.
+- **Fonts switch by locale:** `html:lang(ar)` swaps the `--font-sans` token to put Cairo first; app and Filament admin both follow. IBM Plex (round 1) is removed.

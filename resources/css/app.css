@@ -1,13 +1,9 @@
 @import 'tailwindcss';
 @import './tokens.css';
 
-/* Self-hosted fonts (no third-party CDN). */
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
-@import '@fontsource/ibm-plex-sans/600.css';
-@import '@fontsource/ibm-plex-sans-arabic/400.css';
-@import '@fontsource/ibm-plex-sans-arabic/500.css';
-@import '@fontsource/ibm-plex-sans-arabic/600.css';
+/* Self-hosted variable fonts (no third-party CDN). */
+@import '@fontsource-variable/plus-jakarta-sans/index.css';
+@import '@fontsource-variable/cairo/index.css';
 
 @source '../views';
 @source '../../app';
@@ -21,8 +17,12 @@
         font-feature-settings: 'cv05', 'ss01';
     }
 
+    /* Fonts follow the language: Cairo first for Arabic, Plus Jakarta Sans otherwise. */
+    html:lang(ar) {
+        --font-sans: var(--font-arabic);
+    }
+
     html:lang(ar) body {
-        font-family: var(--font-arabic);
         line-height: 1.7;
     }
 
