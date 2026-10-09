@@ -1,316 +1,220 @@
-# Qrx-Generator — Redesign & Modernization Plan (Phase 2)
+# Qrx-Generator — Redesign & Modernization Plan
 
-_Written 2026-10-09 against `fix/schema-and-tests` @ `0484b97`. **Proposal only. Nothing below is implemented until you approve it.**_
+_Revision 2, 2026-10-09, on `master` @ `ce4ddf1`. Strategy and schema are approved; the MVP roadmap below **awaits your approval before `redesign/v2` is created**. Revision 1 (the A-vs-B comparison) is in git history at `ce4ddf1`._
 
-## 0. Where we are
+## 0. Status
 
 | Done | Commit | Result |
 |---|---|---|
-| Security fixes (ownership policies, Livewire 2.12.7, URL/size/format checks, demo rate limit) | `26cc548`, merged to `master` | Locally merged, not pushed |
-| Migrations as single source of truth + all tests green | `0484b97` on `fix/schema-and-tests` | Awaiting your review |
+| Security fixes (ownership policies, Livewire 2.12.7, URL/size/format checks, demo rate limit) | `26cc548` | On `master` (local, not pushed) |
+| Migrations as single source of truth; all 62 tests green; `migrate:fresh --seed` clean on MySQL 8.4 strict | `0484b97` | On `master` |
+| Audit + plan moved to `docs/` | `ce4ddf1` | On `master` |
 
-**Test suite today:** 62 tests, all passing on PHP 8.3 + MySQL 8.4 (strict mode) with `imagick` and `gd`. `php artisan migrate:fresh --seed` runs cleanly on the same stack. On a machine without imagick, the 5 tests that render PNGs are skipped (via `#[RequiresPhpExtension('imagick')]`), not failed.
+**Target stack** (verified 2026-10-09 from php.net and Packagist): **PHP 8.5.11** · Laravel 13.35 · Livewire 4.4 · Filament 5.10 · Cashier 16.8 · Tailwind 4.3 · Vite 8.3. There is no version ceiling.
 
-**Schema approach chosen: edit migrations in place, not squash.**
-- *Why not squash (`schema:dump`)?* A dump is a database-specific SQL file. It would replace readable migrations with SQL right before Strategy B (recommended below) redesigns the schema anyway, and it gives the SQLite test runs a separate code path.
-- *Why editing is safe now:* nothing is deployed, so no environment has run the old versions.
-- *Once a real environment exists:* every change becomes a new migration.
+**Required host PHP extensions:** `imagick` (PNG/EPS QR output), `gd`, `intl`, `pdo_mysql`, `bcmath`.
 
-**Target versions** (verified 2026-10-09 from php.net and Packagist):
+---
 
-| | Latest stable | Requires |
+## 1. Decisions
+
+### Approved
+
+| # | Decision | Consequence in this plan |
 |---|---|---|
-| PHP | **8.5.11** (2026-09-24) | — |
-| Laravel | 13.35.0 | PHP ≥ 8.3 |
-| Livewire | 4.4.7 | PHP ≥ 8.1, Laravel 10–13 |
-| Filament | 5.10.1 | PHP ≥ 8.2, Laravel ≥ 11.28, Livewire ≥ 4.4.7 |
-| Cashier (Stripe) | 16.8.0 | Laravel 10–13 |
-| Tailwind CSS / Vite / laravel-vite-plugin | 4.3.3 / 8.3.4 / 3.2.0 | — |
+| 1 | **Strategy B**: fresh Laravel 13 project on `redesign/v2`, in this repository. **MVP first**, everything else in later phases | §5 roadmap |
+| 2a | **One `qr_codes` table**: `type` column + JSON `payload` validated per type (+ JSON `design`) | Replaces `qrx_codes`, `styles` and the 7 `feature_*` tables (§3.1) |
+| 2b | **`scans` table** for analytics | Scans are *recorded* from the MVP; charts come in a later phase |
+| 2c | **Single `users` table with `is_admin`**, enforced in Filament's `canAccessPanel()` | The `admins` table and second guard are not carried over |
+| 3a | **Fortify** for authentication | Headless; our own Livewire/Blade views |
+| 3b | **Cashier for billing; no custom transactions logic** | See below |
+| 5 | `fix/schema-and-tests` merged; docs in `docs/` | Done |
 
-**No version ceiling:** every target package accepts PHP 8.5. Required PHP extensions on the host: `imagick` (PNG/EPS QR output), `gd` (avatars), `intl` (Filament, locale-aware formatting), `pdo_mysql`, `bcmath`.
+**On Cashier replacing the transactions table:** I see no strong reason against it, so it's adopted.
+- Cashier already stores what the app needs locally (`subscriptions` and `subscription_items`) and keeps them current through Stripe webhooks.
+- The old `transactions` table was written *before* payment, so it was never accurate.
+- Invoices and receipts come from Stripe on demand (`$user->invoices()`) and through the Stripe Billing Portal.
+- **The one thing lost** is local revenue totals for the admin dashboard widget. In the MVP, the admin links to the Stripe Dashboard for revenue. If a local revenue report is wanted later, it's a small webhook listener that stores `invoice.paid` events (phase L6).
 
----
+### Still open: your three decisions arrived as template placeholders
 
-## 1. Strategy comparison
+Nothing in the MVP's first steps (M0–M2) depends on them, so they can be decided at the first review point. Here is what each option costs:
 
-The current code by layer (lines):
-
-| Layer | Lines | Fate in **A** (incremental) | Fate in **B** (fresh project) |
+| Decision | Option 1 | Option 2 | Needed by |
 |---|---|---|---|
-| Blade views (2 Bootstrap themes) | 3,187 | Rewritten (redesign) | Rewritten (redesign) |
-| Filament v2 resources/widgets | 1,608 | Upgraded v2→v3 (near-rewrite), →v4, →v5 | Written once for v5 |
-| Livewire 2 components | 803 | Upgraded v2→v3→v4, then refactored | Rewritten as Livewire 4 + services |
-| Controllers (non-auth) | 409 | Upgraded, then refactored | Rewritten thin, over services |
-| Models | 603 | Kept, cleaned | Ported, cleaned |
-| Migrations | 748 | Kept | Ported (or redesigned, see §3.2) |
-| Tests | 1,206 (15 files) | Kept; run at every hop | **Ported first**; they become the acceptance spec |
-| Static theme assets | 128 MB | Deleted at the end | Never copied |
-
-### A) Incremental upgrade
-
-Path: Laravel 10 → 11 → 12 → 13, with Livewire 2 → 3 and Filament 2 → 3 **together** (Filament 3 requires Livewire 3), then Filament 3 → 4 → 5 and Livewire 3 → 4, then the redesign.
-
-- **Effort:** ~6–9 days of upgrade work before any redesign, plus ~18–25 days of redesign. **Total ≈ 24–34 days.**
-- **Risk:** medium–high.
-  - The Livewire 3 + Filament 3 hop is one large, untestable-in-between step: 11 resources, 3 widgets and 3 components all change API at once.
-  - Each later hop repeats this on code that the redesign will throw away anyway.
-  - The Laravel 11 "slim skeleton" structure (no `Kernel.php`, `bootstrap/app.php` routing) is optional in an upgrade, so the codebase keeps its old structure unless it is migrated manually.
-- **Carried over:** everything, including legacy structure, naming (`generat`, `subscripe`…), the dual auth guard, 7 feature tables and the copy-pasted QR rendering, until each is refactored.
-- **Rewritten:** all views, all Filament resources (during the v3 hop), all Livewire components.
-- **How tests prove nothing was lost:** the 62 tests run after every hop. This works well, but most of the effort goes into keeping tests green on code that is about to be deleted.
-
-### B) Fresh Laravel 13 project, porting the domain ✅ **Recommended**
-
-Path: new Laravel 13 skeleton on PHP 8.5 with Livewire 4, Filament 5 and Tailwind 4 from day one. Port the migrations, models, policies, business rules and tests, then build the UI directly in Tailwind.
-
-- **Effort:** ~3 days skeleton, CI and spikes · ~5–7 days domain + test port · ~18–25 days UI (same as A) · ~3 days cutover. **Total ≈ 29–38 days.**
-  - The totals overlap with A. The difference is in *what the days buy*: in B no day is spent upgrading code that is later deleted.
-- **Risk:** medium, and concentrated in one place: forgetting a behaviour the old app had. That risk is handled explicitly (next paragraph). There are no big-bang framework hops.
-- **Carried over:**
-  - the 62 tests, as behaviour specs;
-  - the migrations (or a deliberately redesigned schema, §3.2);
-  - models, `QrxCodePolicy`, the `QrOptions` limits;
-  - the plan/quota rules, the public `/x/{code}` contract, the Stripe/Cashier integration and the Socialite flow.
-- **Rewritten:** UI, Livewire components, Filament resources, controllers (thin, over services) and QR rendering (one service instead of ~14 copies).
-- **How tests prove nothing was lost:**
-  1. **Behaviour inventory first.** Before porting, list every route and user flow (§2 of `PROJECT_AUDIT.md` + this plan's §7) and map each one to a test in the current suite. Flows without a test get a *characterization test written against the old app first*, on `master`, so it captures today's behaviour.
-  2. **Port the suite before the features.** Tests are copied into the new project at the start and marked `skip` until their feature lands. "Done" for any step means its tests are un-skipped and green.
-  3. **The cutover gate** is: zero skipped tests, plus a browser smoke test of the critical journeys (register → subscribe → create QR → scan → edit → download), plus an RTL (Arabic) smoke run.
-
-**Why B:** nothing is live, there is no data to migrate, and ~80 % of the code (views, Filament, Livewire) is rewritten in *both* strategies. B also lets us fix the structural problems (dual guards, 7 feature tables, scattered subscription logic) once, instead of upgrading them three times. B is done in the **same repository** on branch `redesign/v2`, so git history is kept.
-
-**When A would be better:** if the app were live with data and users, or if the UI were staying. Neither is true.
+| **Free tier** | **No free tier:** nothing extra; users without a subscription see plans | **Limited free tier** (e.g. N QR codes, M scans/month): a "free" `Plan` row with no Stripe price, quota checks in the `Subscriptions` service, a downgrade path when a paid plan ends. **+1.5–2 days** if in the MVP, or a later phase (L5) | M2.3 (quota rules) |
+| **Location & MP3** | **Drop them:** nothing extra | **Keep them:** Location is a small payload type (~0.5 day). MP3 needs file upload, storage, an audio player on the scan page and upload limits (~2 days). Planned as a later phase (L7), not MVP | L7 only |
+| **Brand** | **hossam-x-studios is the theme author:** remove all references and propose a new palette (the plan's default: a deep teal-blue direction, §4) | **It is the client's brand:** keep it, take its colours, logo and fonts as the primitive palette, and design around it. You'd need to send the brand assets | M3.1 (tokens) |
 
 ---
 
-## 2. Assumptions for the open questions you left to my judgement
+## 2. MVP scope
 
-Each assumption is cheap to reverse **before** the step that depends on it. Please correct any that are wrong.
+**MVP = a working, end-to-end v2:** register/login → subscribe with Stripe → create and manage QR codes → a printed QR scans correctly → admins manage users, plans and QR codes. When the MVP is done, `redesign/v2` replaces the old app on `master`, including deleting the Bootstrap themes and the 128 MB of assets.
 
-| # | Question | Assumption | Step that depends on it |
-|---|---|---|---|
-| Q5 | Brand | Keep the name **Qrx** and design a new palette and logo treatment (§4). The `hossam-x-studios.com` preview URL is replaced by a neutral sample and the footer credit is removed | P4 |
-| Q6 | Dark mode | Tokens are dark-mode-ready from day one, and light **and** dark ship together (with tokens it costs little). A toggle plus `prefers-color-scheme` default | P4 |
-| Q7/8 | Admin | Filament 5 for admins only. The 7 per-type "Feature" resources disappear; the admin edits a QR's content inside one QR resource | P8 |
-| Q9 | Billing | Plan length and renewal come from **Stripe** (subscription status via Cashier), not "created_at + 1 year". No free tier. When an owner's subscription lapses, their QR codes show a friendly "temporarily unavailable" page (not a 500) | P3, P7 |
-| Q10 | QR types | Launch with the 7 working types. **Location** and **MP3** are dropped from v2; the new schema makes adding a type a small, isolated change | P3 |
-| Q11 | Scan analytics | Each scan is recorded (timestamp, device class, referrer host; obvious bots excluded) so the dashboard can show scans over time. No IP or personal data stored. Unique-visitor counting is deferred | P3, P5 |
-| Q12 | API / mobile | No consumers. `tymon/jwt-auth`, the unrouted `Api` controllers and Sanctum are **not** carried over | P2 |
-| Q13 | Social login | Google + Facebook (already configured). Buttons are added to login/register | P4 |
-| Q14 | URLs | Typos in route names and URLs are fixed (nothing to redirect). **`/x/{code}` stays exactly as is** | P3 |
-| Q15 | Assets in git | The 128 MB of theme assets is deleted in a normal commit (no history rewrite) | P9 |
-| — | Auth tables | **One `users` table with an `is_admin` flag** replaces the separate `admins` table + second guard. The dual-guard setup caused two of today's bugs (wrong guard in confirm-password, Filament 403) | P3 |
-| — | Auth scaffolding | **Laravel Fortify** (headless) + our own Livewire views, for full control over design and RTL. The Laravel starter kits bring their own UI (Flux) that we would fight | P4 |
-| — | Test framework | Keep **PHPUnit** so the 62 tests port without rewriting | P2 |
+| Area | In the MVP | Later phase |
+|---|---|---|
+| Auth | Register, login, logout, forgot/reset password, email verification, profile (name, email, password, delete account) | Google/Facebook login (L1) |
+| QR codes | All 7 current types (URL, text, phone, SMS, email, Wi-Fi, vCard), each with per-type validation. One create/edit builder with live preview and design options (colour, gradient, style, eye, margin). List with status filter and search. Detail page with copy short URL, download PNG/SVG/EPS, pause/resume, delete | Location / MP3 (L7, if kept) |
+| Scan page `/x/{code}` | All 7 types, plus friendly paused / expired / owner-lapsed / not-found states. Scan recorded in `scans` | — |
+| Analytics | Recording only (counter + `scans` rows) | Charts, overview dashboard, per-QR stats (L2) |
+| Billing | Pricing page, Stripe Checkout, webhooks (Cashier), quota and expiry enforced from the subscription, Billing Portal link | Free tier (L5, if chosen); local revenue report (L6) |
+| Admin (Filament 5) | Users (incl. `is_admin`), Plans, QR codes. Default Filament look with our primary colour | Contacts, dashboard widgets, full token theme (L3) |
+| Public site | Minimal landing: hero, short feature list, pricing, footer | Live demo, features section, contact form (L4) |
+| Design system | Tokens (light mode), fonts, 3 layouts, the ~15 components the MVP pages use, Heroicons | Dark mode, `/dev/ui` gallery, remaining components, Filament theme (L3) |
+| i18n / RTL | **RTL-ready from day one:** every string in `__()` → `lang/en.json`; `dir` from the locale; logical properties only (CI lint); RTL pseudo-locale smoke test | Arabic translation + locale switcher (L8) |
+
+**Features the old app has that are absent from `master` between MVP cutover and their later phase:**
+- social login;
+- the landing-page live demo;
+- the contact form;
+- the dashboard charts;
+- the admin Contacts resource and widgets.
+
+Nothing is live, so this is acceptable. Each returns in the phase named above.
 
 ---
 
-## 3. Target architecture
+## 3. Architecture (unchanged in substance from revision 1, updated for the decisions)
 
-### 3.1 Code structure
+### 3.1 Data model
+
+| Table | Columns (key ones) | Notes |
+|---|---|---|
+| `users` | name, email, password, `is_admin` (bool), phone/country/city/area (nullable), provider/provider_id (nullable, for L1), locale, Cashier columns | `User implements FilamentUser`; `canAccessPanel()` returns `$this->is_admin` |
+| `plans` | title, stripe_product_id, stripe_price_id, price, qr_limit, scan_limit, is_active, sort_order, features (JSON) | Maps a Stripe price to quotas |
+| `qr_codes` | user_id, name, `type` (enum), `payload` (JSON), `design` (JSON), `code` (unique short code), `status` (enum), `scan_count`, image_path | One model; `payload` cast to a per-type value object |
+| `scans` | qr_code_id, scanned_at, device (mobile/tablet/desktop), referrer_host | No IP or personal data; obvious bots skipped |
+| Cashier | `subscriptions`, `subscription_items` | Source of truth for "is subscribed / which plan / until when" |
+| `contacts` | — | Comes back with the contact form in L4 |
+
+- **Enums:** `QrType` (7 cases, extensible) and `QrStatus` (active / paused / expired).
+- **Per-type payloads:** each type is one class with its validation rules, the string encoded in the QR, and the Blade partial for the scan page. Adding a type means one class, one form partial and one scan partial.
+
+### 3.2 Code layout
 
 ```
-app/
-  Enums/            QrType, QrStatus, …                 (replace magic strings)
-  Models/           User, QrCode, QrScan, Plan, Contact, (+ Cashier models)
-  Policies/         QrCodePolicy                         (ported from QrxCodePolicy)
-  Actions/          CreateQrCode, UpdateQrCode, DeleteQrCode, RecordScan, ToggleQrStatus
-  Services/         QrRenderer (one place that turns a QrCode into SVG/PNG/EPS)
-                    Subscriptions (current plan, quota, "can create?", grace period)
-  Support/          QrOptions (ported), QrPayload/* (one validated value object per type)
-  Livewire/         Dashboard/*, Public/QrDemo               (thin: call Actions)
-  Filament/         Admin panel only
-  Http/Controllers/ PublicScanController (/x/{code}), Download, Stripe webhooks
-lang/               en.json (ar.json later)
-resources/css/      tokens.css, app.css, filament/admin/theme.css
-resources/views/    components/ui/*, layouts/{app,guest,public}.blade.php, …
+app/Enums, app/Models, app/Policies/QrCodePolicy
+app/Actions/      CreateQrCode, UpdateQrCode, DeleteQrCode, ToggleQrStatus, RecordScan
+app/Services/     QrRenderer (bacon/bacon-qr-code 3.x), Subscriptions (plan, quota, expiry)
+app/Support/      QrOptions (ported), QrPayloads/* (one per type)
+app/Livewire/     Dashboard/*  (thin; call Actions)
+app/Filament/     admin panel only
 ```
 
-Rules: Livewire components and controllers stay thin and call **Actions**. Only `QrRenderer` touches the QR library. Only `Subscriptions` answers "what plan is this user on, and what may they do?". This removes ~14 copies of QR rendering and 5 copies of the plan lookup.
+Livewire components and controllers stay thin. Only `QrRenderer` touches the QR library, and only `Subscriptions` answers "what may this user do?".
 
-### 3.2 Schema (redesign while there is no data; your decision)
+### 3.3 QR rendering
 
-| Today | Proposed | Why |
-|---|---|---|
-| `qrx_codes` + `styles` + 7 `feature_*` tables | `qr_codes` with `type` (enum), `payload` (JSON, validated per type), `design` (JSON: colours, gradient, eye, style, margin) | One model, no type `switch` statements, no orphan rows when the type changes (audit M2), one Filament resource |
-| `users` + `admins` (two guards) | `users.is_admin` | One guard (see §2) |
-| `scan_count` column only | `qr_codes.scan_count` (cached counter, incremented atomically) + `qr_scans` rows | Analytics (Q11), and fixes the non-atomic increment (M7) |
-| `code = 'qx-' + rand(6 digits)` | Random 8-char base62, unique, generated with retry | Not guessable (M6). Route stays `/x/{code}` |
-| `transactions` written before payment | Written from Stripe webhooks (`checkout.session.completed`, `invoice.paid`) | Revenue figures become real |
-| `plans` | Unchanged columns + `sort_order`, `features` (JSON, for the pricing page) | Pricing copy comes from the DB |
+`simplesoftwareio/simple-qrcode` is unmaintained (last release 2021) and pinned to bacon 2.x, so `QrRenderer` calls **`bacon/bacon-qr-code` 3.1.1** directly. The **M0 spike** proves visual parity for every style × eye × gradient combination, rendered side by side. The fallback is `endroid/qr-code` 6.x.
 
-**Alternative if you'd rather not change the schema:** port today's tables 1:1. Everything else in this plan still works; the per-type code just stays more verbose.
+### 3.4 Billing flow (Cashier)
 
-### 3.3 QR rendering (needs a spike in P1)
+1. **Pricing → checkout:** the pricing page leads to `CheckoutController`, which calls `$user->newSubscription('default', $plan->stripe_price_id)->checkout(...)`.
+2. **Webhooks:** Cashier's `/stripe/webhook` keeps `subscriptions` in sync.
+3. **Gating:** `Subscriptions::currentPlan($user)` reads `$user->subscription('default')` (valid / on grace period) and maps the Stripe price to a `Plan`. QR creation checks `qr_limit`, and the scan page checks owner validity and `scan_limit`.
+4. **Billing page:** shows the current plan and renewal date, with a "Manage billing" button (`$user->redirectToBillingPortal()`).
 
-`simplesoftwareio/simple-qrcode` is unmaintained (last release 2021) and pins `bacon/bacon-qr-code` 2.x. Plan: call **`bacon/bacon-qr-code` 3.1.1** directly from `QrRenderer`. simple-qrcode was a thin wrapper over it, so module styles, eye shapes, gradients, margin and SVG/PNG/EPS output are all available in the library itself.
+### 3.5 i18n / RTL (from the first UI commit)
 
-The P1 spike must prove *visual parity* with today's output: every style × eye × gradient combination, rendered side by side.
-
-Fallback: `endroid/qr-code` 6.x (PHP ≥ 8.4, also built on bacon 3). It's more batteries-included but has weaker gradient support.
-
-### 3.4 Multi-language and RTL from day one
-
-- **Translatable strings:** every user-facing string goes through `__()`, with keys in `lang/en.json`. `ar.json` is added later without touching templates. A test fails the build if a Blade view contains hard-coded user-facing text outside `__()` (checked by a simple scanner test).
-- **Locale and `dir`:**
-  - `SetLocale` middleware takes the locale from the user preference, falling back to `Accept-Language` and then `en`.
-  - `<html lang="{{ app()->getLocale() }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">` lives in the single layout.
-- **Logical properties only:**
-  - Use Tailwind's logical utilities (`ms-*`/`me-*`, `ps-*`/`pe-*`, `start-*`/`end-*`, `text-start`/`text-end`, `rounded-s-*`/`rounded-e-*`, `border-s`/`border-e`).
-  - Physical `ml-/mr-/pl-/pr-/left-/right-` are banned, enforced by a lint step in CI.
-  - Directional icons (arrows, chevrons) use the `rtl:` variant to mirror.
-- **Fonts:** **IBM Plex Sans** + **IBM Plex Sans Arabic**, a matched pair designed together, self-hosted via `@fontsource` (no Google Fonts CDN).
-- **Formatting:** dates and numbers go through Laravel's locale-aware helpers (`Number::format`, Carbon `translatedFormat`).
-- **Filament:** Filament renders RTL automatically for RTL locales. It's included in the RTL smoke test.
+- **Strings:** every user-facing string goes through `__()` with keys in `lang/en.json`. A CI test fails on hard-coded text in views.
+- **Direction:** `<html lang dir>` is set in the single layout from the locale.
+- **Logical properties only:** `ms-/me-/ps-/pe-/start-/end-/text-start`, enforced by a CI lint that rejects `ml-/mr-/pl-/pr-/left-/right-`. Directional icons use the `rtl:` variant.
+- **Fonts:** IBM Plex Sans + IBM Plex Sans Arabic, self-hosted.
+- **Smoke test:** an RTL pseudo-locale run (a fake `xx-rtl` locale that wraps strings) catches layout breaks before Arabic translations exist.
 
 ---
 
-## 4. Design-token system (Tailwind 4, shared by dashboard, public site and Filament)
+## 4. Design tokens (Tailwind 4)
 
-**Single source of truth:** `resources/css/tokens.css`, a Tailwind 4 `@theme` block. Both `resources/css/app.css` (public site and client dashboard) and `resources/css/filament/admin/theme.css` (Filament custom theme) `@import` it.
+The design from revision 1 is unchanged; what changes is how much of it the MVP builds. Tokens live in **`resources/css/tokens.css`** (an `@theme` block) and are imported by the app CSS and, in L3, by the Filament theme.
 
-**Two layers of tokens:**
+- **Primitives:** brand / neutral / success / warning / danger / info, 50–950, in OKLCH. The brand palette depends on decision 4 (§1).
+- **Semantic tokens:** `bg`, `surface`, `text`, `text-muted`, `border`, `primary` (+hover / on-primary), `success`/`warning`/`danger` (the **QR status mapping**), `focus`.
+  - **MVP:** light values only, but every component uses semantic tokens, so dark mode (L3) is a token-only change.
+- **Typography:** IBM Plex Sans / IBM Plex Sans Arabic. Scale xs 12 → 5xl 48; weights 400 / 500 / 600.
+- **Shape and motion:** radius 6 / 10 / 16 / full; two shadows; 120 / 200 ms motion, off under `prefers-reduced-motion`.
+- **Spacing and breakpoints:** Tailwind defaults; mobile-first (the scan page is designed at 360 px).
+- **Icons:** Heroicons only (`blade-ui-kit/blade-heroicons`), the same set Filament uses.
+- **MVP components:** `button`, `input`, `textarea`, `select`, `checkbox`, `color-picker`, `field` (label / hint / error with `aria-describedby`), `card`, `badge`, `alert`, `modal`, `dropdown`, `tabs`, `table`, `pagination`, `empty-state`, `toast`.
+- **Filament in the MVP:** `->colors(['primary' => <brand-600 hex>])` in the `PanelProvider`. The full shared token theme comes in L3.
 
-1. **Primitive palette** (never used directly in components): `--color-brand-50 … 950`, `--color-neutral-50 … 950`, `--color-success-*`, `--color-warning-*`, `--color-danger-*`, `--color-info-*`. Defined in OKLCH so the steps are perceptually even. **Proposed brand: a deep teal-blue** (`brand-600 ≈ oklch(0.52 0.12 230)`). It reads as "tech/utility", works in light and dark, and is distinct from Filament's default amber and from typical "QR generator" purple. To be confirmed with a visual board in P4.
-2. **Semantic tokens** (what components use), switched for dark mode under `.dark`:
+---
 
-| Token | Light | Dark | Used for |
+## 5. Roadmap
+
+Estimates are working days for one developer familiar with Laravel, **±30 %**. Every step is a small PR into `redesign/v2`, and CI must be green: PHP 8.5 + MySQL 8.4 with imagick / gd / intl, PHPUnit, Pint, Larastan, the logical-property lint and the hard-coded-string check. Nothing is live, so **rollback = revert the PR**; `master` keeps the old app until M9.
+
+### MVP
+
+| Phase | Steps | Proven by | Days |
 |---|---|---|---|
-| `--color-bg` / `--color-surface` / `--color-surface-raised` | neutral-50 / white / white | neutral-950 / 900 / 800 | Page, cards, popovers |
-| `--color-text` / `--color-text-muted` | neutral-900 / 600 | neutral-50 / 400 | Body, secondary |
-| `--color-border` | neutral-200 | neutral-800 | Dividers, inputs |
-| `--color-primary` / `--color-primary-hover` / `--color-on-primary` | brand-600 / 700 / white | brand-400 / 300 / neutral-950 | Main actions, links |
-| `--color-success` / `--color-warning` / `--color-danger` | 600 shades | 400 shades | **QR status: active / paused / expired** (one mapping, used everywhere) |
-| `--color-focus` | brand-500 | brand-400 | Focus rings (visible, 2 px, offset) |
+| **M0 Prep** (on `master`) | Behaviour inventory (every MVP flow → existing test, or a new characterization test against the old app) · QR renderer spike on bacon 3 (visual parity) | `docs/behaviour-inventory.md`; parity image grid + snapshot tests | 1–2 |
+| **M1 Skeleton** | Laravel 13 / PHP 8.5 skeleton on `redesign/v2`; Livewire 4, Filament 5, Fortify, Cashier 16, Tailwind 4, Vite 8; CI; port the MVP-relevant tests, marked skipped | CI green; tests listed as skipped, 0 failing | 1–2 |
+| **M2 Domain** | 2.1 Migrations, enums, models, factories, seeders · 2.2 7 payload types + `QrRenderer` + `QrOptions` · 2.3 Actions, `QrCodePolicy`, `Subscriptions` service · 2.4 `RecordScan` | `migrate:fresh --seed`; un-skipped ownership, creation, URL-scheme and size-clamp tests; unit tests per payload type | 4–6 |
+| **M3 UI foundations** | 3.1 Tokens (light), fonts, Heroicons, app / guest / public layouts · 3.2 MVP components · 3.3 i18n + RTL infrastructure and CI checks | Component render tests; RTL pseudo-locale snapshot; lint in CI | 3–4 |
+| **M4 Auth** | Fortify views: login, register, forgot/reset, verify email, profile (+ delete account) | Ported Breeze-era auth and profile tests | 1.5–2 |
+| **M5 QR management** | 5.1 List (filter, search, pagination) · 5.2 Create/edit builder with live preview · 5.3 Detail: copy URL, download PNG/SVG/EPS, pause/resume, delete | Ported authorization and download tests; Livewire tests per screen | 5–7 |
+| **M6 Public** | 6.1 Scan page: 7 types + 4 states · 6.2 Minimal landing + pricing · 6.3 Error pages | Ported scan-page tests (incl. stored-URL safety); a11y check ≥ 95 on the scan page | 2–3 |
+| **M7 Billing** | Checkout, webhook wiring, quota/expiry gating, billing page + portal | Ported checkout test (stubbed Stripe); webhook tests with signed payloads; one manual Stripe test-mode run | 1.5–2.5 |
+| **M8 Admin** | Filament 5 panel, `canAccessPanel` via `is_admin`; Users, Plans, QR codes resources; `app:make-admin` command for real environments | Ported admin tests + Filament resource tests | 1.5–2.5 |
+| **M9 MVP cutover** | Browser smoke tests of the end-to-end journey (LTR + RTL pseudo-locale) · delete old code, Bootstrap themes and 128 MB of assets · README and deploy docs · merge to `master` | 0 skipped MVP tests; smoke suite green; `grep` finds no `assets-dashboard`/`assets-frontend` | 1–2 |
+| | | **MVP total** | **22–33** |
 
-**Typography:**
-- Font: IBM Plex Sans / IBM Plex Sans Arabic.
-- Scale: `xs 12 · sm 14 · base 16 · lg 18 · xl 20 · 2xl 24 · 3xl 30 · 4xl 36 · 5xl 48`, line-height 1.5 for body and 1.2 for headings.
-- Weights: 400 / 500 / 600 only.
-- Arabic gets +1 step of line-height via `:lang(ar)`.
+### Later phases (each independent and shippable on its own after M9)
 
-**Spacing and shape:**
-- Spacing: Tailwind's default 4 px base (no custom scale). Layout rhythm uses 4 / 6 / 8 / 12 / 16.
-- Radius: `--radius-sm 6px`, `--radius 10px` (cards, inputs, buttons), `--radius-lg 16px` (modals, hero cards), `--radius-full`.
-- Shadows: two only, `--shadow-sm` (cards) and `--shadow-lg` (popovers, modals).
-- Motion: `--duration-fast 120ms`, `--duration 200ms`, one easing. Everything is disabled under `prefers-reduced-motion`.
-- Breakpoints: Tailwind defaults (`sm 640 · md 768 · lg 1024 · xl 1280 · 2xl 1536`). Mobile-first; the public scan page is designed at 360 px first.
+| Phase | Scope | Days |
+|---|---|---|
+| **L1** Social login | Google + Facebook via Socialite; buttons on login/register | 1 |
+| **L2** Analytics | Overview dashboard (usage, scans over time, top QRs), per-QR scan chart | 2–3 |
+| **L3** Design completion | Dark mode + toggle, `/dev/ui` component gallery, Filament theme sharing `tokens.css` | 2–3 |
+| **L4** Marketing site | Live QR demo (rate-limited), features section, contact form + admin Contacts resource | 2–3 |
+| **L5** Free tier (*only if chosen*) | Free plan, quota rules, downgrade path | 1.5–2 |
+| **L6** Admin reporting (*optional*) | Store `invoice.paid` webhooks; revenue and signups widgets | 1–2 |
+| **L7** Location / MP3 (*only if kept*) | Location payload; MP3 upload, storage, player, limits | 2.5 |
+| **L8** Arabic | Translation file (translator-supplied), locale switcher, RTL visual QA pass | 1–2 + translation |
+| | **Later total** | **9–14**, plus 1.5–4.5 if L5 / L7 are chosen |
 
-**Filament:**
-- The custom admin theme imports `tokens.css` and maps Filament's `primary`/`gray`/`success`/`warning`/`danger` palettes to our primitives, so the admin panel matches the product.
-- **Spike item (P1):** confirm the cleanest way in Filament 5 to feed panel colours from the same token file. The fallback is a small `config/brand.php` that both the CSS build and the `PanelProvider` read, so there is still only one source.
+**Review points with you:**
+- after **M0** (parity spike + inventory, and your three open decisions);
+- after **M3** (you see the design foundations before any feature page is built);
+- after **M5.2** (the builder, the core of the product);
+- at **M9** (the end-to-end MVP).
 
-**Components:** anonymous Blade components in `resources/views/components/ui/`, each documented on an internal `/dev/ui` page (local env only) that renders every variant in light, dark, LTR and RTL:
+### About cost
 
-`button` (primary / secondary / ghost / danger; sm / md / lg; loading state) · `input` · `textarea` · `select` · `checkbox` · `radio-group` · `color-picker` · `field` (label + hint + error, wired with `aria-describedby`) · `card` · `stat` · `badge` (status mapping) · `alert` · `modal` · `dropdown` · `tabs` · `table` · `pagination` · `empty-state` · `avatar` · `icon` · `toast` · `skeleton`.
+These per-phase estimates come out **higher than revision 1's lump estimate** (29–38 days for everything). The full total is now **31–47 days** plus optional phases, because the breakdown exposed work the lump figure underweighted: per-type payloads, quota and expiry logic, CI checks, and cutover. Revision 1's figures for Strategy A were estimated the same way and are likely understated by a similar margin.
 
-**One icon set: Heroicons** (outline 24 for UI, solid 20 for small badges), via `blade-ui-kit/blade-heroicons`. Filament already uses Heroicons, so admin and dashboard share one visual language. The 7 icon sets in use today (Flaticon, Font Awesome, Remix, MDI, Phosphor, Bootstrap Icons, Heroicons) go away.
+Two levers if the MVP needs to be smaller:
+- ship the MVP with **URL, text and Wi-Fi only** (−1.5 days; the other 4 types move into L-phases);
+- drop **EPS** download (−0.5 day).
 
 ---
 
-## 5. Client dashboard (custom Livewire 4 + Tailwind)
+## 6. Removing the Bootstrap themes and static assets
 
-**One layout,** `layouts/app.blade.php`:
-- Sidebar (collapsible; becomes a drawer below `lg`), top bar (search, locale switcher, theme toggle, user menu), content slot, toasts.
-- Navigation is defined once in a config array, so menu items and active states aren't duplicated.
+This happens in **M9**: `public/assets-dashboard` (115 MB) and `public/assets-frontend` (13 MB) are never copied into v2, and they are deleted from `master` at cutover. That includes the CDN tags, jQuery and its plugins, the theme customizer and the 7 icon sets.
 
-**Pages:**
+Verification: `grep` finds no references, the browser smoke run shows no missing static files, and Vite's manifest is the only asset source.
 
-| Page | Notes |
+Git history is not rewritten. A `git filter-repo` purge of the old blobs is possible later, as a separate, explicitly approved step.
+
+---
+
+## 7. Risks
+
+| Risk | Mitigation |
 |---|---|
-| Overview | Plan usage (QRs used / quota, days left, from Stripe), scans over the last 30 days, top QR codes. Empty state with "Create your first QR" |
-| QR codes | One page with a status filter (all / active / paused / expired), search and a grid/list toggle. Replaces today's 4 near-identical pages |
-| Create / edit QR | One Livewire builder used for both: type picker → content form (validated per type) → design panel (colours, gradient, style, eye, margin) → live preview → save. Preview is debounced; **no `wire:poll`** |
-| QR detail | Preview, short URL with copy, download (PNG/SVG/EPS, size), scans chart, pause/resume, delete with confirmation |
-| Billing | Current plan, upgrade (Stripe Checkout), manage payment and invoices (Stripe Billing Portal) |
-| Profile & settings | Name, email, password, language, theme, delete account |
-| Auth | Login, register (+ Google/Facebook), forgot/reset password, verify email, using `layouts/guest.blade.php` |
-
-**Public side,** `layouts/public.blade.php`:
-- **Landing:** hero, live QR demo (rate-limited as today), features, pricing from the DB, contact form with throttling, footer.
-- **Scan page `/x/{code}`:** the most-seen page in the product. Mobile-first, fast (no JS framework, minimal CSS), one template per type, accessible. Friendly pages for paused, expired and owner-lapsed states.
-- **Error pages:** 404 / 403 / 429 / 500, in the same style.
-
-**Accessibility baseline (each page must pass before it counts as done):**
-- Keyboard-only flow works.
-- Visible focus.
-- Labels on every input, with errors announced.
-- Contrast ≥ 4.5:1 (checked on tokens, light and dark).
-- No disabled context menu.
-- Lighthouse a11y ≥ 95 on the landing and scan pages.
+| QR output looks different after the library switch | M0 parity spike before anything depends on it; snapshot tests |
+| PNG/EPS need `imagick` on the host | Listed requirement; CI runs with it; SVG works without it |
+| Features absent from `master` between M9 and their L-phase (§2) | Accepted, since nothing is live; each has a named phase |
+| Stripe webhooks need test-mode setup | Stubbed-client tests in CI + one manual Stripe CLI run in M7 |
+| The three open decisions block M2.3 / M3.1 if still open | Asked at the M0 review; defaults are the "Option 1" column in §1 if you prefer not to decide yet |
+| Estimates ±30 % | Small PRs give visible progress; scope levers listed in §5 |
 
 ---
 
-## 6. Removing the Bootstrap themes and 128 MB of static assets
+## 8. Needed from you
 
-- In B, the new project never copies `public/assets-dashboard` (115 MB) or `public/assets-frontend` (13 MB).
-- **At cutover (P9):** delete both directories and every view that references them, in one commit.
-- **Verification:**
-  - `grep -r "assets-dashboard\|assets-frontend" resources app routes config` returns nothing;
-  - the browser smoke tests show no 404s for static files;
-  - Vite's manifest is the only asset source.
-- **Also removed:**
-  - CDN `<script>`/`<link>` tags (Font Awesome, the 7× clipboard.js copies);
-  - jQuery and its plugins;
-  - the theme customizer;
-  - `changer.js`/`styleswitch.js`.
-- **Clipboard:** a 10-line Alpine `x-on:click="navigator.clipboard.writeText(...)"`.
-- **Git history:** not rewritten (§2, Q15), so clones still contain the old blobs. If clone size matters later, a one-off `git filter-repo` can remove them. That's destructive and needs your separate approval.
-
----
-
-## 7. Phased roadmap
-
-Every step is a small PR into `redesign/v2`. "Done" means the step's tests are green in CI (GitHub Actions: PHP 8.5 + MySQL 8.4 with imagick, gd and intl) plus Pint and Larastan. Nothing is live, so **rollback = revert the PR**. `master` keeps the old app working until cutover.
-
-| Phase | Step | Proven by |
-|---|---|---|
-| **P0** ✅ | Security fixes; schema matches code; 62 tests green | Done (`26cc548`, `0484b97`) |
-| **P1 Prep** (on `master`) | 1.1 Behaviour inventory (every route/flow → test) and characterization tests for any gaps | Inventory table in `docs/behaviour-inventory.md`; new tests green on the old app |
-| | 1.2 Spike: `QrRenderer` on bacon 3 with visual parity | Side-by-side image grid + snapshot tests |
-| | 1.3 Spike: shared tokens → Filament 5 theme | Throwaway branch screenshot; mechanism written into §4 |
-| **P2 Skeleton** | 2.1 Fresh Laravel 13 / PHP 8.5 skeleton on `redesign/v2`; Livewire 4, Filament 5, Tailwind 4, Vite 8, Pint, Larastan, CI | CI green on an empty app |
-| | 2.2 Port the test suite, all marked skipped with a reason | CI lists N skipped, 0 failed |
-| **P3 Domain** | 3.1 Migrations (new schema §3.2 or 1:1 port), enums, models, factories, seeders | `migrate:fresh --seed` in CI; model tests |
-| | 3.2 `QrRenderer`, `QrOptions`, per-type payload validation | Unit tests incl. the URL-scheme and size-clamp cases |
-| | 3.3 Actions + `QrCodePolicy` + `Subscriptions` service (Cashier-based quota and grace logic) | Ported ownership + creation tests un-skipped |
-| | 3.4 Public `/x/{code}` controller + scan recording | Ported scan tests + new analytics tests |
-| **P4 Foundations** | 4.1 Tokens, fonts, light/dark, base layouts, `/dev/ui` component gallery | Component tests; a11y check on the gallery in 4 modes |
-| | 4.2 i18n + RTL infrastructure (`SetLocale`, `lang/en.json`, logical-property lint, hard-coded-string test) | RTL snapshot of layouts; lint in CI |
-| | 4.3 Auth with Fortify (+ Google/Facebook) | Ported auth + social-login tests |
-| **P5 Dashboard** | 5.1 QR list · 5.2 Create/edit builder · 5.3 QR detail + download · 5.4 Overview · 5.5 Profile/settings | Each un-skips its ported tests and adds Livewire tests; browser smoke per page |
-| **P6 Public site** | 6.1 Scan page (all types + states) · 6.2 Landing + demo + pricing + contact · 6.3 Error pages | Ported scan/demo tests; Lighthouse a11y ≥ 95 |
-| **P7 Billing** | 7.1 Checkout (Cashier 16) · 7.2 Webhooks → transactions and status · 7.3 Billing portal | Ported checkout test (stubbed Stripe); webhook tests with signed payloads; manual Stripe test-mode run |
-| **P8 Admin** | 8.1 Filament 5 panel + theme · 8.2 Users, Plans, QR codes, Contacts, Transactions resources · 8.3 Dashboard widgets | Ported admin tests + Filament resource tests |
-| **P9 Cutover** | 9.1 Gate: 0 skipped tests, browser smoke of the critical journeys (LTR + RTL), a11y checks · 9.2 Delete old code and the 128 MB of assets · 9.3 README, deploy docs, `.env.example` · 9.4 Merge `redesign/v2` → `master` | All of the left; final review with you |
-
-**Order and parallelism:**
-- P3 must precede P5–P8.
-- P4 can overlap with P3.
-- P5, P6 and P7 are independent of each other once P4 is done.
-
-**Your review points:** after P1 (spikes and inventory), after P4 (design system: you see the gallery before any page is built), after P5.2 (the builder, the core of the product), and at P9.
-
----
-
-## 8. Risks
-
-| Risk | Impact | Mitigation |
-|---|---|---|
-| QR output differs visually after switching library | Users see different QR styling | P1.2 parity spike before anything depends on it; snapshot tests |
-| PNG/EPS output depends on `imagick` on the host | Downloads fail on hosts without it | Listed as a hosting requirement (§0); CI runs with imagick; SVG works without it |
-| Token sharing with Filament 5 is awkward | Admin drifts from the product's look | P1.3 spike; `config/brand.php` fallback keeps one source |
-| Schema redesign (§3.2) is a bigger change than a 1:1 port | More porting work in P3 | Optional; decide now. Both paths keep the same tests |
-| Stripe webhooks need test-mode setup | Billing untested end-to-end | Stubbed-client tests in CI + one manual Stripe CLI run in P7 |
-| Estimates are rough (one developer, ±30 %) | Timeline slips | Small PRs make progress visible weekly; scope cuts are possible per phase (e.g. analytics charts) |
-| Arabic typography and RTL edge cases only show up with real translations | Layout bugs later | RTL smoke tests from P4 using pseudo-translated strings |
-
----
-
-## 9. Decisions I need from you to start
-
-1. **Strategy:** approve **B** (fresh Laravel 13 project on `redesign/v2`)?
-2. **Schema:** redesign per §3.2 (`qr_codes` + JSON payload/design, `qr_scans`, single `users` table), or a 1:1 port?
-3. **§2 assumptions:** anything to change, especially billing (Stripe-driven plan length, no free tier), dropping Location/MP3, and one `users` table?
-4. **Brand:** OK to propose a new palette (deep teal-blue direction) and drop the hossam-x-studios references?
-5. **`fix/schema-and-tests`:** merge into `master` before P1?
+1. **Approve the MVP roadmap** (§5) so I can create `redesign/v2` and start M0.
+2. **Free tier, Location/MP3, brand:** your answers came through as template placeholders. They can wait until the M0 review.
