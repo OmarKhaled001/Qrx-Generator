@@ -90,6 +90,19 @@
 }
 
 @layer components {
+    /* Hero illustration: hidden until hero.js has drawn the first frame, so the finished frame never
+       flashes first. If the script never arrives, it appears anyway after 2.5s. */
+    .motion-ok [data-hero-scene]:not([data-ready]) {
+        opacity: 0;
+        animation: scene-reveal 0.4s 2.5s forwards;
+    }
+
+    @keyframes scene-reveal {
+        to {
+            opacity: 1;
+        }
+    }
+
     /* Dotted stage behind QR previews so light backgrounds stay visible. */
     .qr-stage {
         background-color: var(--surface-sunken);

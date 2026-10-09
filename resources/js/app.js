@@ -43,3 +43,9 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 });
+
+// Landing hero animation: GSAP is fetched only on the landing page and only when motion is welcome.
+const heroScene = document.querySelector('[data-hero-scene]');
+if (heroScene && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    import('./hero.js').then(({ playHero }) => playHero(heroScene));
+}

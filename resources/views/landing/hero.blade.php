@@ -1,26 +1,27 @@
-{{-- Hero. --}}
-<section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute inset-0 bg-linear-to-b from-brand-100/60 via-transparent to-transparent dark:from-brand-950/50" aria-hidden="true"></div>
-    <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:py-28">
-        <div>
-            <x-ui.badge color="primary">{{ __('Dynamic QR codes') }}</x-ui.badge>
-            <h1 class="mt-5 text-4xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl">{{ __('Print once. Change it any time.') }}</h1>
-            <p class="mt-5 max-w-xl text-lg text-ink-muted">{{ __('Create branded QR codes for links, Wi-Fi, contact cards, menus and more. Edit where they point after printing and see how often they are scanned.') }}</p>
+{{-- Hero. On large screens it stays pinned while the illustration plays (resources/js/hero.js). --}}
+<section data-hero class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[36rem] bg-glow" aria-hidden="true"></div>
+    <div class="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[1fr_1.05fr] lg:gap-6 lg:py-10">
+        <div class="max-w-xl">
+            <x-ui.badge color="primary" dot>{{ __('Dynamic QR codes') }}</x-ui.badge>
+            <h1 class="mt-5 text-4xl font-bold tracking-tight text-ink sm:text-5xl lg:text-6xl lg:leading-[1.05]">{{ __('Print once. Change it any time.') }}</h1>
+            <p class="mt-6 text-lg text-ink-muted sm:text-xl">{{ __('Create branded QR codes for links, Wi-Fi, contact cards, menus and more. Edit where they point after printing and see how often they are scanned.') }}</p>
             <div class="mt-8 flex flex-wrap gap-3">
                 <x-ui.button :href="auth()->check() ? route('qr.create') : route('register')" size="lg" icon="heroicon-o-plus">{{ __('Create a free QR code') }}</x-ui.button>
-                <x-ui.button href="#pricing" variant="secondary" size="lg">{{ __('See pricing') }}</x-ui.button>
+                <x-ui.button href="#how-it-works" variant="secondary" size="lg">{{ __('See how it works') }}</x-ui.button>
             </div>
-            <p class="mt-4 text-sm text-ink-subtle">{{ __('Start free with 3 dynamic QR codes. No card needed.') }}</p>
+            <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-muted">
+                @php($freeCodes = $plans->firstWhere('is_free', true)?->qr_limit ?? \App\Models\Plan::free()->qr_limit)
+                @foreach ([__('No card needed'), trans_choice(':count free code|:count free codes', $freeCodes, ['count' => Number::format($freeCodes)]), __('Edit after printing')] as $point)
+                    <li class="flex items-center gap-1.5"><x-heroicon-m-check-circle class="size-4 text-success-600" aria-hidden="true" />{{ $point }}</li>
+                @endforeach
+            </ul>
         </div>
-        <div class="relative mx-auto w-full max-w-sm" aria-hidden="true">
-            <div class="absolute -inset-6 rounded-[2rem] bg-linear-to-tr from-brand-400/30 to-accent-400/30 blur-2xl"></div>
-            <div class="relative rounded-2xl border border-line bg-surface p-6 shadow-pop">
-                <img src="{{ app(\App\Services\QrRenderer::class)->svgDataUri(url('/'), ['style' => 'round', 'eye' => 'circle', 'gradient' => ['from' => '#0e7490', 'to' => '#7c3aed']], 360) }}" alt="" class="aspect-square w-full">
-                <div class="mt-4 flex items-center justify-between text-sm">
-                    <span class="font-medium text-ink">{{ __('Restaurant menu') }}</span>
-                    <x-ui.badge color="success" dot>{{ __('Active') }}</x-ui.badge>
-                </div>
-            </div>
-        </div>
+
+        @include('landing.hero-scene')
+    </div>
+
+    <div class="pointer-events-none absolute inset-x-0 bottom-5 hidden justify-center text-ink-subtle lg:flex" aria-hidden="true">
+        <x-heroicon-o-chevron-double-down class="size-6 motion-safe:animate-bounce" />
     </div>
 </section>

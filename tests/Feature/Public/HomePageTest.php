@@ -72,4 +72,17 @@ class HomePageTest extends TestCase
 
         $this->get('/')->assertDontSee(['testimonial', 'Trusted by', 'customers', 'happy users'], false);
     }
+
+    public function test_the_hero_illustration_is_decorative_and_mirrorable(): void
+    {
+        $this->seed(PlanSeeder::class);
+
+        $html = $this->get('/')->getContent();
+        $scene = substr($html, strpos($html, 'data-hero-scene'), strpos($html, '</svg>', strpos($html, 'data-hero-scene')) - strpos($html, 'data-hero-scene'));
+
+        $this->assertStringContainsString('rtl:-scale-x-100', $scene);
+        $this->assertStringContainsString('aria-hidden="true"', $scene);
+        $this->assertStringNotContainsString('<text', $scene, 'Text inside the drawing would read backwards when it is mirrored');
+        $this->assertStringContainsString('data-part="phone"', $scene);
+    }
 }

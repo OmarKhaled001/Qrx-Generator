@@ -28,6 +28,8 @@
         try { theme = localStorage.getItem('qrx-theme'); } catch {}
         const dark = theme ? theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
         document.documentElement.classList.toggle('dark', dark);
+        // Animated illustrations stay hidden until their script has set the first frame (see app.css).
+        if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.classList.add('motion-ok');
     })();
 </script>
 {{-- Livewire ships Alpine; load it on every page, not only pages with a Livewire component. --}}

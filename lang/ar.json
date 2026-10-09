@@ -445,5 +445,9 @@
     "Made for the places people scan": "مصمَّم للأماكن التي يمسح فيها الناس الرموز",
     "A few ways businesses use dynamic codes. Every one of them can be changed after printing.": "بعض الطرق التي تستخدم بها الأنشطة التجارية الرموز الديناميكية، وكلها قابلة للتعديل بعد الطباعة.",
     "QR code types": "أنواع رموز QR",
-    "Live demo": "تجربة مباشرة"
+    "Live demo": "تجربة مباشرة",
+    "See how it works": "شاهد طريقة العمل",
+    "No card needed": "دون بطاقة دفع",
+    ":count free code|:count free codes": "{1} رمز مجاني واحد|{2} رمزان مجانيان|[3,10] :count رموز مجانية|[11,*] :count رمزًا مجانيًا",
+    "Edit after printing": "تعديل بعد الطباعة"
 }

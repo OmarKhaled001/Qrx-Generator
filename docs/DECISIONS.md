@@ -201,3 +201,19 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Free plan price shown as "$0 / month"** instead of the word "Free" next to the plan named "Free".
 - **Contrast fixes found while reviewing:** brand-600 nudged from L 0.556 to 0.545 (white on primary buttons was 4.43:1, now 4.6:1); a deeper gradient (`brand-700 → accent-700`, ≥ 6.3:1) for surfaces with white text (CTA band, auth panel, "Most popular").
 - **Bug found by the mobile screenshots:** the comparison table's `sr-only` labels are absolutely positioned and escaped their `overflow-x-auto` scroller, making every page 600px wide on phones. The scroller is now `relative`; `scripts/screenshots.mjs` warns about any page wider than the viewport.
+
+## R5 — Hero illustration and scroll animation
+
+- **GSAP + ScrollTrigger** (as suggested). A lighter CSS scroll-timeline version can't scrub a pinned, multi-stage story in all browsers yet (Firefox and Safari lack `animation-timeline`). The 45 KB (gzip) chunk is code-split and fetched only on the landing page and only when the visitor allows motion.
+- **The server renders the finished frame**; the timeline animates *from* the first frame. Visitors with reduced motion or without JavaScript see the complete picture, and GSAP is never downloaded for them. With motion allowed, the scene stays hidden until the first frame is drawn (a CSS fallback reveals it after 2.5s if the script fails), so the finished frame never flashes first.
+- **Large screens:** the hero pins for 110% of the viewport height while the scroll scrubs the story:
+  1. the phone swings in;
+  2. the viewfinder locks on;
+  3. a scan line sweeps and the printed code pings;
+  4. the code breaks into particles;
+  5. the screen builds the content.
+
+  **Small screens:** no pinning (scroll-jacking on a phone is hostile). A shorter version without particles plays once when the scene comes into view.
+- **Only transforms and opacity are animated.** Measured in headless Chromium while scrubbing: 60 fps average, p95 frame 16.7 ms, no long tasks; layout shift 0.0065 (good is < 0.1).
+- **RTL:** the drawing contains no text and is mirrored as a whole with `rtl:-scale-x-100`, so the phone comes from the reading direction's end and the on-screen UI reads right to left. The check mark is flipped back because it isn't directional (a test fails if `<text>` ever appears inside).
+- **The printed code is a real QR code for the site** (built from the raw matrix by `App\Support\QrMatrix` so individual modules can animate).

@@ -46,8 +46,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | R2 Logo and brand assets (public/brand, docs/BRAND.md) | ✅ done |
 | R3 Design-system polish (tokens, components, layouts, pages, admin) | ✅ done |
 | R4 Landing sections | ✅ done |
-| R5 Hero illustration + GSAP scroll animation | 🔄 next |
-| R6 Language review, glossary, en/ar parity test, RTL audit | ⏳ |
+| R5 Hero illustration + GSAP scroll animation | ✅ done |
+| R6 Language review, glossary, en/ar parity test, RTL audit | 🔄 next |
 | R7 Screenshots (Playwright in Docker), review, fixes, merge | ⏳ |
 
 ## Current phase notes
