@@ -1,17 +1,18 @@
-@extends('auth.layout')
+<x-layouts::guest :heading="__('Forgot your password?')" :description="__('Enter your email and we will send you a link to choose a new one.')">
+    @if (session('status'))
+        <x-ui.alert type="success" class="mb-5">{{ session('status') }}</x-ui.alert>
+    @endif
 
-@section('title', 'Forgot password')
-@section('intro', 'Enter your email and we will send you a link to choose a new password.')
-
-@section('content')
-    <form method="POST" action="{{ route('password.email') }}">
+    <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
         @csrf
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-control" required autofocus autocomplete="email">
-            @error('email') <p class="text-danger mt-1">{{ $message }}</p> @enderror
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Email password reset link</button>
+        <x-ui.field :label="__('Email address')" for="email">
+            <x-ui.input name="email" type="email" :value="old('email')" required autofocus autocomplete="email" dir="ltr" />
+        </x-ui.field>
+
+        <x-ui.button type="submit" class="w-full">{{ __('Email me a reset link') }}</x-ui.button>
     </form>
-    <p class="text-center mt-4 mb-0"><a href="{{ route('login') }}">Back to sign in</a></p>
-@endsection
+
+    <x-slot:footer>
+        <a href="{{ route('login') }}" class="font-medium text-primary-ink hover:underline">{{ __('Back to log in') }}</a>
+    </x-slot:footer>
+</x-layouts::guest>

@@ -2,58 +2,31 @@
 
 namespace App\Filament\Widgets;
 
-use Carbon\Carbon;
-use App\Models\Plan;
+use App\Models\QrCode;
+use App\Models\Scan;
 use App\Models\User;
-use App\Models\Client;
-use App\Models\QrxCode;
-use App\Models\Transaction;
-use Filament\Widgets\StatsOverviewWidget\Card;
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Number;
+use Laravel\Cashier\Subscription;
 
-class StatsOverview extends BaseWidget
+class StatsOverview extends StatsOverviewWidget
 {
-    protected static ?string $pollingInterval = '10s';
+    protected static ?int $sort = 1;
 
-    
-    protected function getCards(): array
+    // Four cheap counts: render with the page instead of a second request.
+    protected static bool $isLazy = false;
+
+    protected function getStats(): array
     {
-        //client
-        $client = User::select('*')
-        ->whereBetween('created_at', 
-            [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
-        )->get();
-        //Qr Code
-        $qrx = QrxCode::select('*')
-        ->whereBetween('created_at', 
-            [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
-        )->get();
+        $since = now()->subDays(30);
 
         return [
-            //client
-            Card::make('Clients', User::count())
-            ->description('New clients during the week'.' ' .$client->count())
-            ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([1, 2, 5, 3, 7, 12, 17])
-            ->color('success'),
-            //qr codes
-            Card::make('Qr Codes', QrxCode::count())
-            ->description('New qr code during the week'. ' '.$qrx->count())
-            ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([7, 5, 10, 3, 11, 4, 14])
-            ->color('success'),
-            //plans
-            Card::make('Plans', Plan::count())
-            ->description('Count of our plans')
-            ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([1, 2, 3, 2, 4, 3, 4])
-            ->color('success'),
-            //Transaction
-            Card::make('Transaction', Transaction::sum('amount').' $')
-            ->description('amount')
-            ->descriptionIcon('heroicon-s-trending-up')
-            ->chart([7, 2, 10, 8, 15, 4, 17])
-            ->color('success'),
+            Stat::make(__('Users'), Number::format(User::query()->count()))
+                ->description(__(':count new in the last 30 days', ['count' => Number::format(User::query()->where('created_at', '>=', $since)->count())])),
+            Stat::make(__('Paying subscribers'), Number::format(Subscription::query()->whereIn('stripe_status', ['active', 'trialing', 'past_due'])->count())),
+            Stat::make(__('QR codes'), Number::format(QrCode::query()->count())),
+            Stat::make(__('Scans (30 days)'), Number::format(Scan::query()->where('scanned_at', '>=', $since)->count())),
         ];
     }
 }

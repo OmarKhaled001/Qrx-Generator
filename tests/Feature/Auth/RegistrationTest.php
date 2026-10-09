@@ -2,35 +2,61 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Providers\RouteServiceProvider;
+use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_can_be_rendered(): void
+    private function form(array $overrides = []): array
     {
-        $response = $this->get('/register');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_new_users_can_register(): void
-    {
-        $response = $this->post('/register', [
+        return array_merge([
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'phone' => '01000000000',
+            'phone' => '+20 100 000 0000',
             'country' => 'Egypt',
             'city' => 'Cairo',
-            'area' => 'Nasr City',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+            'area' => 'Zamalek',
+            'password' => 'password-123',
+            'password_confirmation' => 'password-123',
+        ], $overrides);
+    }
+
+    public function test_registration_screen_can_be_rendered(): void
+    {
+        $this->get('/register')->assertOk()->assertSee(__('Create your account'));
+    }
+
+    public function test_new_users_can_register_and_must_verify_their_email(): void
+    {
+        Notification::fake();
+
+        $this->post('/register', $this->form())->assertRedirect('/dashboard');
 
         $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+        $user = User::sole();
+        $this->assertSame('Cairo', $user->city);
+        $this->assertSame('en', $user->locale);
+        $this->assertFalse($user->is_admin);
+        Notification::assertSentTo($user, VerifyEmail::class);
+
+        $this->get('/dashboard')->assertRedirect(route('verification.notice'));
+    }
+
+    public function test_contact_details_are_required(): void
+    {
+        $this->post('/register', $this->form(['phone' => '', 'city' => '']))->assertSessionHasErrors(['phone', 'city']);
+        $this->assertGuest();
+    }
+
+    public function test_registering_in_arabic_saves_the_language(): void
+    {
+        $this->withSession(['locale' => 'ar'])->post('/register', $this->form());
+
+        $this->assertSame('ar', User::sole()->locale);
     }
 }

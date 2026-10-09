@@ -1,3 +1,58 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Self-hosted fonts (no third-party CDN). */
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+
+@source '../views';
+@source '../../app';
+@source '../../storage/framework/views/*.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+    html {
+        @apply bg-page text-ink antialiased;
+        font-feature-settings: 'cv05', 'ss01';
+    }
+
+    html:lang(ar) body {
+        font-family: var(--font-arabic);
+        line-height: 1.7;
+    }
+
+    body {
+        @apply min-h-dvh;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-focus;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    /* Dotted stage behind QR previews so light backgrounds stay visible. */
+    .qr-stage {
+        background-color: var(--surface-sunken);
+        background-image: radial-gradient(var(--line) 1px, transparent 1px);
+        background-size: 14px 14px;
+    }
+}

@@ -3,29 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
+use App\Services\Subscriptions;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-
-    public function getPlans(){
-        if(Auth()->user()){
-            if(count(Auth()->user()->subscriptions) > 0){
-                $user   = Auth()->user();
-                $subscription = $user->subscriptions->first();
-                $plan_id = $subscription->items->first()->stripe_product;
-                $plans = Plan::where('plan_id', '!=', $plan_id)->get();
-                //retu plan 
-                return view('Frontend.index',compact('plans'));        
-            }else{
-                $plans = Plan::all();
-                //retu plan 
-                return view('Frontend.index',compact('plans'));
-            }
-        }else{
-            $plans = Plan::all();
-            //retu plan 
-            return view('Frontend.index',compact('plans'));
-        }
+    public function __invoke(Request $request, Subscriptions $subscriptions): View
+    {
+        return view('home', [
+            // Only active plans are shown (and purchasable): approved change.
+            'plans' => Plan::query()->active()->get(),
+            'currentPlan' => $request->user() ? $subscriptions->currentPlan($request->user()) : null,
+        ]);
     }
 }

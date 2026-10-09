@@ -8,10 +8,15 @@ namespace App\Support;
 final class QrOptions
 {
     public const MIN_SIZE = 100;
-    // Largest preview the Livewire builders render (the UI offers up to 500).
+
+    // Largest preview the builder renders (the UI offers up to 500).
     public const MAX_PREVIEW_SIZE = 500;
-    // Largest file the download endpoint will generate.
+
+    // Largest file the download endpoint generates.
     public const MAX_DOWNLOAD_SIZE = 2000;
+
+    public const DEFAULT_DOWNLOAD_SIZE = 1000;
+
     public const MAX_MARGIN = 10;
 
     // Allowed download formats => Content-Type.

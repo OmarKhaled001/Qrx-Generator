@@ -1,16 +1,10 @@
-@extends('auth.layout')
-
-@section('title', 'Confirm your password')
-@section('intro', 'This is a secure area. Please confirm your password to continue.')
-
-@section('content')
-    <form method="POST" action="{{ route('password.confirm') }}">
+<x-layouts::guest :heading="__('Confirm your password')" :description="__('This is a secure area. Please confirm your password to continue.')">
+    <form method="POST" action="{{ route('password.confirm.store') }}" class="space-y-5">
         @csrf
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input id="password" type="password" name="password" class="form-control" required autocomplete="current-password">
-            @error('password') <p class="text-danger mt-1">{{ $message }}</p> @enderror
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Confirm</button>
+        <x-ui.field :label="__('Password')" for="password">
+            <x-ui.input name="password" type="password" required autofocus autocomplete="current-password" />
+        </x-ui.field>
+
+        <x-ui.button type="submit" class="w-full">{{ __('Confirm') }}</x-ui.button>
     </form>
-@endsection
+</x-layouts::guest>

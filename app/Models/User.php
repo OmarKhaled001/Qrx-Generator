@@ -2,90 +2,61 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\QrxCode;
-use Laravel\Cashier\Billable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\MediaLibrary\HasMedia;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Notifications\Notifiable;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
-class User extends Authenticatable implements JWTSubject, HasMedia
+// is_admin, provider and provider_id are deliberately not fillable.
+#[Fillable(['name', 'email', 'password', 'phone', 'country', 'city', 'area', 'locale'])]
+#[Hidden(['password', 'remember_token'])]
+class User extends Authenticatable implements FilamentUser, HasLocalePreference, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable ,Billable,InteractsWithMedia;
+    /** @use HasFactory<UserFactory> */
+    use Billable, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'phone',
-        'country',
-        'city',
-        'area',
-        'is_active',
-        'email',
-        'password',
-        'provider',
-        'provider_id',
+    // Mirrors the column default so new, unsaved-or-unrefreshed users are never "null" admins.
+    protected $attributes = [
+        'is_admin' => false,
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Get the attributes that should be cast.
      *
-     * @var array<int, string>
+     * @return array<string, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_admin' => 'boolean',
+        ];
+    }
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * @return HasMany<QrCode, $this>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public function generateCode() {
-        
-        $this->timestamps = false;
-        $this->code = rand(1000,9999);
-        $this->expire_at = now()->addMinute(15);
-        $this->save();
-        
+    public function qrCodes(): HasMany
+    {
+        return $this->hasMany(QrCode::class);
     }
 
-    public function destoryCode() {
-        
-        $this->timestamps = false;
-        $this->code = null;
-        $this->expire_at = null;
-        $this->save();
-        
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->is_admin;
     }
 
-    public function qrxCodes( ){
-        return $this->hasMany(QrxCode::class);
+    public function preferredLocale(): ?string
+    {
+        return $this->locale;
     }
-
-        public function getJWTIdentifier() {
-        return $this->getKey();
-    }
-
-    
-    public function getJWTCustomClaims() {
-        return [];
-    }
-    
-
-
-
 }

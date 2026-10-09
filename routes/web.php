@@ -1,61 +1,47 @@
 <?php
 
-use App\Http\Controllers\Api\ApiSocialiteController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\QrDownloadController;
+use App\Http\Controllers\ScanController;
+use App\Livewire\Dashboard\QrBuilder;
+use App\Livewire\Dashboard\QrIndex;
+use App\Livewire\Dashboard\QrShow;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('/', HomeController::class)->name('home');
 
-
-Route::get('/', [App\Http\Controllers\HomeController::class, 'getPlans'])->name('home');
-// Client Dashboard
-Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(function () {
-    // get qrs by status
-    Route::get('/', [App\Http\Controllers\QrxController::class, 'statistics']);
-    Route::get('/qr', [App\Http\Controllers\QrxController::class, 'getAllQr'])->name('.qr.all');
-    Route::get('/qr-active', [App\Http\Controllers\QrxController::class, 'getAllActiveQr'])->name('.qr.active');
-    Route::get('/qr-pause', [App\Http\Controllers\QrxController::class, 'getAllPauseQr'])->name('.qr.pause');
-    Route::get('/qr-expire', [App\Http\Controllers\QrxController::class, 'getAllExpiredQr'])->name('.qr.expire');
-    // change qrx status by id
-    Route::put('/status/{id}', [App\Http\Controllers\QrxController::class, 'switchStatuQr'])->name('.qr.status');
-    // delet qrx by id
-    Route::delete('/delete/{id}', [App\Http\Controllers\QrxController::class, 'deleteQr'])->name('.qr.delete');
-    // create new qrx by livewire
-    Route::view('/create','Dashboard.qrx-create')->name('.qr.create');
-    Route::view('/plan-subscripe','Dashboard.error-plan-subscripe')->name('.error.plan.subscripe');
-    Route::view('/plan-upgrade','Dashboard.error-plan-upgrade')->name('.error.plan.upgrade');
-    // edit qrx by livewire
-    Route::get('/edit/{id}', [App\Http\Controllers\QrxController::class, 'editQr'])->name('.qr.edit');
-    Route::get('/download', [App\Http\Controllers\QrxController::class, 'downloadQr'])->name('.qr.download');
+// The public page every printed QR code opens. Keep this URL stable.
+Route::middleware('throttle:scans')->group(function () {
+    Route::get('/x/{code}', [ScanController::class, 'show'])->name('scan.show');
+    Route::get('/x/{code}/contact.vcf', [ScanController::class, 'vcard'])->name('scan.vcard');
 });
-Route::post('/', [App\Http\Controllers\ContactController::class, 'store'])->name('countact');
-Route::get('/x/{code}', [App\Http\Controllers\QrxController::class, 'showQr'])->name('qr.show');
-Route::get('checkout/{id?}', CheckoutController::class)->middleware('auth')->name('checkout');
 
+Route::post('/locale/{locale}', LocaleController::class)->name('locale.update');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::livewire('/qr', QrIndex::class)->name('qr.index');
+    Route::livewire('/qr/create', QrBuilder::class)->name('qr.create');
+    Route::livewire('/qr/{qrCode}', QrShow::class)->name('qr.show');
+    Route::livewire('/qr/{qrCode}/edit', QrBuilder::class)->name('qr.edit');
+    Route::get('/qr/{qrCode}/download', QrDownloadController::class)->name('qr.download');
+
+    Route::get('/billing', [BillingController::class, 'show'])->name('billing');
+    Route::get('/billing/checkout/{plan:slug}', [BillingController::class, 'checkout'])->name('billing.checkout');
+    Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
+
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('auth')->name('socialite.')->controller(SocialiteController::class)->where(['provider' => 'google|facebook'])->group(function(){
-    Route::get('/{provider}/callback','callback')->name('callback');
-    Route::get('/{provider}/redirect','redirect')->name('redirect');
-});
+if (app()->environment('local', 'testing')) {
+    Route::view('/dev/ui', 'dev.ui')->name('dev.ui');
+}
 
-
-
-
-require __DIR__.'/auth.php';
+// Unknown URLs go through the web middleware too, so the 404 page is localised.
+Route::fallback(fn () => abort(404));
