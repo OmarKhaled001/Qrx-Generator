@@ -11,6 +11,7 @@ use App\Http\Controllers\ScanController;
 use App\Livewire\Dashboard\QrBuilder;
 use App\Livewire\Dashboard\QrIndex;
 use App\Livewire\Dashboard\QrShow;
+use App\Support\Locales;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -47,6 +48,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 if (app()->environment('local', 'testing')) {
     Route::view('/dev/ui', 'dev.ui')->name('dev.ui');
+    Route::get('/dev/og-image/{locale}', function (string $locale) {
+        abort_unless(Locales::isSupported($locale), 404);
+        app()->setLocale($locale);
+
+        return view('dev.og-image');
+    })->name('dev.og-image');
 }
 
 // Unknown URLs go through the web middleware too, so the 404 page is localised.

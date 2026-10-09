@@ -45,7 +45,7 @@
 
     <footer class="border-t border-line bg-surface">
         <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-ink-subtle sm:px-6">
-            <x-ui.logo />
+            <x-ui.logo class="text-ink" />
             <p>{{ __('© :year :app. All rights reserved.', ['year' => now()->year, 'app' => config('app.name')]) }}</p>
         </div>
     </footer>

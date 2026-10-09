@@ -43,8 +43,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | Step | State |
 |---|---|
 | R1 Typography (Cairo + Plus Jakarta Sans) | ✅ done |
-| R2 Logo and brand assets | 🔄 next |
-| R3 Design-system polish (tokens, components, layouts, pages, admin) | ⏳ |
+| R2 Logo and brand assets (public/brand, docs/BRAND.md) | ✅ done |
+| R3 Design-system polish (tokens, components, layouts, pages, admin) | 🔄 next |
 | R4 Landing sections | ⏳ |
 | R5 Hero illustration + GSAP scroll animation | ⏳ |
 | R6 Language review, glossary, en/ar parity test, RTL audit | ⏳ |

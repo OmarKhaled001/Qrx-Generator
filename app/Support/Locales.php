@@ -27,6 +27,14 @@ final class Locales
         return self::dir($locale) === 'rtl';
     }
 
+    /**
+     * Open Graph locale, e.g. ar_AR.
+     */
+    public static function ogLocale(?string $locale = null): string
+    {
+        return config('qrx.locales.'.($locale ?? app()->getLocale()).'.og', 'en_US');
+    }
+
     public static function name(string $locale): string
     {
         return config("qrx.locales.{$locale}.name", $locale);

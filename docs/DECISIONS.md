@@ -156,3 +156,12 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Arabic: Cairo (variable, 200–1000), self-hosted** via `@fontsource-variable/cairo` (as requested).
 - **English: Plus Jakarta Sans (variable), self-hosted.** It shares Cairo's open, geometric-humanist shapes, generous x-height and round terminals, so mixed Arabic/Latin lines (emails, URLs, plan names) look like one family. Inter was the alternative; it reads colder and narrower next to Cairo.
 - **Fonts switch by locale:** `html:lang(ar)` swaps the `--font-sans` token to put Cairo first; app and Filament admin both follow. IBM Plex (round 1) is removed.
+
+## R2 — Logo and brand assets
+
+- **Mark = QR finder pattern that is also a "Q"** (ring + centre module, two modules as the tail). One idea, readable at 16 px; a full 3-finder QR glyph turned to mush below 32 px.
+- **Wordmark is drawn, not typeset** (same 4.5-unit round stroke as the ring), so the logo never depends on a font being loaded and can't drift from the mark.
+- **Logo is never mirrored in RTL**; only layout around it is. Inline `<x-ui.logo>` uses `currentColor` for the wordmark so one component serves light and dark.
+- **Two OG cards (en, ar)** picked by page language rather than one bilingual card; each is readable at feed-thumbnail size.
+- **Rasterising with Playwright's Docker image + `playwright-core`** (no browser download on `npm install`). Chrome isn't installed on the host; the image is pinned to the same version as the package.
+- **`APP_NAME` default changed to `Qrx`** (the local `.env` said `Laravel`, which leaked into titles and the admin brand name).

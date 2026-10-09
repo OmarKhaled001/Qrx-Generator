@@ -35,6 +35,9 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->brandName(config('app.name').' Admin')
+            ->brandLogo(asset('brand/qrx-logo.svg'))
+            ->darkModeBrandLogo(asset('brand/qrx-logo-dark.svg'))
+            ->brandLogoHeight('2rem')
             ->favicon(asset('favicon.svg'))
             ->colors([
                 // Read from resources/css/tokens.css: one source for app and admin.
