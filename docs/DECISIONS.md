@@ -44,3 +44,12 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Eloquent strict-ish mode outside production:** lazy-loading (N+1) and silently discarded attributes throw. Not "missing attributes", because the in-memory free-plan fallback intentionally has unset columns.
 - **Component gallery at `/dev/ui`** exists from M3 (local/testing only) and is extended in L3.
 - **Skeleton `welcome.blade.php` removed;** `/` shows a minimal translated hero until the M6 landing page.
+
+## M4 — Auth
+
+- **Registration keeps the old fields** (phone, country, city, area) as required, per the inventory; on the profile they are optional so social-login accounts (L1) are not blocked.
+- **Email verification is required** for the dashboard (approved change #1); registration lands on "Check your inbox".
+- **Deleting an account cancels any Stripe subscription immediately** (`cancelNow`) before the user and their QR codes are deleted, so nobody keeps being billed for a deleted account.
+- **Login is throttled to 5 attempts per minute per email + IP** (Fortify default kept).
+- **New users get the language they signed up in** (`users.locale`).
+- **Arabic plurals** use Laravel's range syntax with Arabic's zero/one/two/few/many forms rather than English singular/plural.

@@ -21,7 +21,7 @@ class TranslationCoverageTest extends TestCase
 
         foreach ([resource_path('views'), app_path()] as $directory) {
             foreach (File::allFiles($directory) as $file) {
-                preg_match_all('/(?:__|@lang|trans)\(\s*([\'"])((?:\\\\.|(?!\1).)+)\1/s', file_get_contents($file->getPathname()), $matches);
+                preg_match_all('/(?:__|@lang|trans|trans_choice)\(\s*([\'"])((?:\\\\.|(?!\1).)+)\1/s', file_get_contents($file->getPathname()), $matches);
                 foreach ($matches[2] as $index => $key) {
                     $keys[] = $matches[1][$index] === "'" ? str_replace("\\'", "'", $key) : stripcslashes($key);
                 }
@@ -51,10 +51,13 @@ class TranslationCoverageTest extends TestCase
         foreach ($arabic as $key => $translation) {
             preg_match_all('/:[a-z_]+/', $key, $expected);
             preg_match_all('/:[a-z_]+/', $translation, $actual);
-            sort($expected[0]);
-            sort($actual[0]);
+            // Compare the set of placeholders: plural forms repeat :count a different number of times.
+            $expected = array_unique($expected[0]);
+            $actual = array_unique($actual[0]);
+            sort($expected);
+            sort($actual);
 
-            if ($expected[0] !== $actual[0]) {
+            if ($expected !== $actual) {
                 $broken[] = $key;
             }
         }

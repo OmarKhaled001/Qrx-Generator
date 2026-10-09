@@ -23,8 +23,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M1 Skeleton | ✅ done | see git log |
 | M2 Domain | ✅ done | see git log |
 | M3 UI foundations | ✅ done | see git log |
-| M4 Auth | 🔄 next | |
-| M5 QR management | ⏳ | |
+| M4 Auth | ✅ done | see git log |
+| M5 QR management | 🔄 next | |
 | M6 Public | ⏳ | |
 | M7 Billing | ⏳ | |
 | M8 Admin | ⏳ | |
@@ -40,8 +40,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-M3 done: tokens (`resources/css/tokens.css`), IBM Plex fonts, light/dark, layouts `layouts::app|guest|public`, `x-ui.*` components, `/dev/ui` gallery, SetLocale + `/locale/{locale}`, `lang/ar.json`, lint tests (logical properties, hard-coded strings, translation coverage).
+M4 done: Fortify views (login, register, forgot/reset, verify email, confirm password), `/profile` (details, password, delete account), first `/dashboard` (plan usage, scans, most scanned), all behind `auth` + `verified`.
 
-**Next:** M4 auth (Fortify views: login, register, forgot/reset, verify email, confirm password; profile page with delete account).
+**Next:** M5 QR management: Livewire `Dashboard\QrIndex` (list, search, status filter incl. derived "limit reached"), `Dashboard\QrBuilder` (create/edit, live preview), `Dashboard\QrShow` (detail, copy, download PNG/SVG/EPS, pause/resume, delete), download controller.
 
-Rule for every new view: strings in `__()`, Arabic added to `lang/ar.json`, logical utilities only (the tests enforce all three). Run `npm run build` before `bin/test`.
+Helper: `python3 <scratchpad>/missing_keys.py` lists strings missing from `lang/ar.json` (TranslationCoverageTest enforces it anyway).
