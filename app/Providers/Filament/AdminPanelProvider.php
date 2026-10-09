@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\SetLocale;
+use App\Support\BrandPalette;
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,19 +32,21 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->brandName(config('app.name').' Admin')
             ->favicon(asset('favicon.svg'))
             ->colors([
-                // Brand teal and slate from resources/css/tokens.css.
-                'primary' => Color::hex('#0e7a8a'),
-                'gray' => Color::Slate,
+                // Read from resources/css/tokens.css: one source for app and admin.
+                'primary' => BrandPalette::get('brand'),
+                'gray' => BrandPalette::get('neutral'),
                 'danger' => Color::Red,
                 'success' => Color::Emerald,
                 'warning' => Color::Amber,
                 'info' => Color::Blue,
             ])
-            ->font('IBM Plex Sans')
+            // Self-hosted through the theme (no font CDN).
+            ->font('IBM Plex Sans', provider: LocalFontProvider::class)
             ->darkMode()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

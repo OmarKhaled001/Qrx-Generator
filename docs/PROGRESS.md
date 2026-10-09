@@ -31,8 +31,8 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | M9 MVP cutover | ✅ done (merged to master locally) | see git log |
 | L1 Social login | ✅ done | see git log |
 | L2 Analytics | ✅ done | see git log |
-| L3 Design completion | 🔄 next | |
-| L4 Marketing site | ⏳ | |
+| L3 Design completion | ✅ done | see git log |
+| L4 Marketing site | 🔄 next | |
 | L5 Free tier | ⏳ (folded into M2/M7, see DECISIONS) | |
 | L6 Admin reporting | ⏳ | |
 | L7 Location QR | ⏳ (folded into M2, see DECISIONS) | |
@@ -40,6 +40,6 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 
 ## Current phase notes
 
-L2 done: `App\Services\ScanStats`, `x-ui.bar-chart`, per-QR analytics partial (paid) / upgrade card (free), dashboard 30-day chart.
+L3 done: Filament theme (`resources/css/filament/admin/theme.css`) importing tokens + local fonts, `BrandPalette` reads tokens for Filament colours, gallery has the chart.
 
-**Next:** L3 design completion: Filament custom theme importing `tokens.css` (vite theme), gallery additions (bar chart, status badges), remaining polish.
+**Next:** L4 marketing: landing live QR demo (Livewire, rate-limited per IP), contact form (`contacts` table, throttled, honeypot) + admin Contacts resource, via `partials/landing-extra.blade.php`.

@@ -118,3 +118,9 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
 - **Charts are server-rendered SVG** with a screen-reader table, no JavaScript chart library. Time runs left to right in both languages (a mirrored time axis confuses more than it helps).
 - **"Unique visitors" = distinct daily visitor hashes, summed over days,** because the hash key rotates daily (privacy by design); the same person on two days counts twice.
 - **Country names come from ICU (`intl`)** in the user's language, e.g. "مصر" for EG in Arabic.
+
+## L3 — Design completion
+
+- **`tokens.css` is the single source for the admin too:** `App\Support\BrandPalette` reads the OKLCH brand and neutral palettes from it for Filament's `colors()`, and the Filament theme imports the same file. Change a token once; app and admin follow.
+- **Admin fonts are self-hosted** (Filament's default would load Bunny Fonts from a CDN).
+- **Dark mode already shipped in M3,** so L3 covered the admin theme and the gallery (now including the chart).

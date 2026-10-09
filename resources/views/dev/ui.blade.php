@@ -54,6 +54,10 @@
             <x-ui.stat :label="__('Current plan')" :value="__('Free')" icon="heroicon-o-credit-card" />
         </div>
 
+        <x-ui.card :heading="__('Scans')" :description="__('Last 30 days')">
+            <x-ui.bar-chart :series="collect(range(29, 0))->mapWithKeys(fn ($d) => [now()->subDays($d)->toDateString() => (int) round(20 + 15 * sin($d / 3) + $d % 7)])->all()" :label="__('Scans per day, last 30 days')" />
+        </x-ui.card>
+
         <x-ui.empty-state :heading="__('No QR codes yet')" :description="__('Create your first dynamic QR code. You can change where it points at any time.')">
             <x-ui.button icon="heroicon-o-plus">{{ __('Create QR code') }}</x-ui.button>
         </x-ui.empty-state>
