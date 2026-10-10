@@ -95,6 +95,8 @@ docker run --rm --network host --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD"
 
 ## Production notes
 
+The live deployment (Hostinger, `qrx-generator.omarkhaled.info`) and the update flow are documented in [DEPLOYMENT.md](DEPLOYMENT.md), in Arabic. `.env.production.example` is the server's settings template; `deploy.sh` is the update script.
+
 - `APP_ENV=production`, `APP_DEBUG=false`, MySQL, a real mail driver.
 - `php artisan migrate --force && php artisan db:seed --class=PlanSeeder --force`, then `php artisan app:make-admin you@example.com`.
 - `php artisan config:cache route:cache view:cache` and `npm run build` on deploy.
