@@ -6,8 +6,9 @@ Dynamic QR codes you can edit, track and brand. Every printed code opens a short
 - **Builder:** live preview, module and corner styles, colours or gradients, quiet zone, low-contrast warning
 - **Scan analytics:** counts and per-scan rows (device, referrer, country) with **no raw IP addresses stored**
 - **Plans:** a free tier (3 codes, 100 scans each) and paid plans through Stripe (Laravel Cashier)
-- **English and Arabic,** right-to-left ready throughout; light and dark mode
-- **Admin panel (Filament)** for users, QR codes and plans
+- **English and Arabic,** right-to-left throughout (including emails and the admin); light and dark mode
+- **Admin panel (Filament)** for users, QR codes, plans and messages, in the same brand theme
+- **Landing page** with a scroll-driven hero animation (GSAP), use cases, style gallery, live demo, analytics preview, plan comparison and FAQ
 
 ## Stack
 
@@ -43,7 +44,8 @@ docker run --rm -p 8000:8000 -v "$PWD":/app -w /app qrx-php85 php artisan serve 
 | Account | Email | Use |
 |---|---|---|
 | Admin | `admin@qrx.test` | Admin panel at `/admin` |
-| Demo customer | `demo@qrx.test` | Dashboard with one QR code of every type and sample scans |
+| Demo customer | `demo@qrx.test` | Free plan; one QR code of every type and sample scans (more than the free limit, to show the "limit reached" states) |
+| Subscriber | `subscriber@qrx.test` | Business plan, Arabic interface. Created by hand in the local database (a local subscription record, no Stripe), not by the seeder; `scripts/screenshots.mjs` uses it for the builder. |
 
 Mail goes to the log (`MAIL_MAILER=log`), so verification and reset links are in `storage/logs/laravel.log`.
 
@@ -69,7 +71,27 @@ vendor/bin/pint --test        # code style
 vendor/bin/phpstan analyse    # static analysis (Larastan level 5)
 ```
 
-The suite includes three guardrails: no physical left/right CSS utilities (RTL), no untranslated view text, and a complete Arabic translation file. CI (`.github/workflows/ci.yml`) runs everything on SQLite and MySQL 8.4.
+Guardrails in the suite:
+
+- no physical left/right CSS utilities (RTL);
+- no untranslated view text;
+- every key present in both `lang/en*` and `lang/ar*` (JSON and PHP groups);
+- no English left on any page rendered in Arabic (public, signed-in and admin);
+- Alpine loaded on every layout.
+
+CI (`.github/workflows/ci.yml`) runs everything on SQLite and MySQL 8.4.
+
+## Brand, language and screenshots
+
+- **Logo and icons:** `public/brand/` (SVG masters, PNG sizes, Open Graph cards), favicons and the web manifest in `public/`. Usage and colours: [docs/BRAND.md](docs/BRAND.md).
+- **Terminology and writing rules (English and Arabic):** [docs/GLOSSARY.md](docs/GLOSSARY.md).
+- **Screenshots** of every main page in English and Arabic, desktop and mobile, plus the hero animation frame by frame, are in [docs/screenshots/](docs/screenshots). To regenerate them against a running, seeded app:
+
+```sh
+npm run build
+docker run --rm --network host --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/app -w /app \
+  mcr.microsoft.com/playwright:v1.64.0-noble node scripts/screenshots.mjs   # APP_URL=… to target another URL
+```
 
 ## Production notes
 
@@ -92,5 +114,7 @@ The suite includes three guardrails: no physical left/right CSS utilities (RTL),
 | `app/Filament/*` | Admin panel |
 | `resources/css/tokens.css` | Design tokens (colours, type, radii) |
 | `resources/views/components/ui/*` | UI components (`/dev/ui` gallery locally) |
-| `lang/ar.json` | Arabic translations |
-| `docs/` | Audit, plan, decisions log, progress, behaviour inventory |
+| `resources/views/landing/*` | Landing page sections; `resources/js/hero.js` is the hero animation |
+| `lang/en.json`, `lang/ar.json`, `lang/{en,ar}/*.php` | Translations (English copy edits go in `en.json` values) |
+| `public/brand/`, `scripts/brand-assets.mjs` | Logo files and the script that rasterises them |
+| `docs/` | Audit, plan, decisions log, progress, brand guide, glossary, screenshots |

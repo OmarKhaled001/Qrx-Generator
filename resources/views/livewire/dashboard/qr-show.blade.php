@@ -1,5 +1,5 @@
 <div>
-    <x-ui.page-header :heading="$qrCode->name">
+    <x-ui.page-header :heading="$qrCode->name" :description="$qrCode->type->label().' · '.__('Created :date', ['date' => $qrCode->created_at->translatedFormat('j M Y')])">
         <x-slot:actions>
             <x-ui.button :href="route('qr.edit', $qrCode)" variant="secondary" icon="heroicon-o-pencil-square" wire:navigate>{{ __('Edit') }}</x-ui.button>
             <x-ui.button variant="secondary" :icon="$qrCode->isPaused() ? 'heroicon-o-play' : 'heroicon-o-pause'" wire:click="toggleStatus">
@@ -22,8 +22,8 @@
 
     <div class="grid gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
         <x-ui.card>
-            <div class="qr-stage grid place-items-center rounded-md p-6">
-                <img src="{{ $preview }}" alt="{{ __('QR code for :name', ['name' => $qrCode->name]) }}" class="aspect-square w-full max-w-64 rounded-sm shadow-card">
+            <div class="qr-stage grid place-items-center rounded-lg p-6">
+                <img src="{{ $preview }}" alt="{{ __('QR code for :name', ['name' => $qrCode->name]) }}" class="aspect-square w-full max-w-64 rounded-md shadow-raised">
             </div>
 
             <form method="GET" action="{{ route('qr.download', $qrCode) }}" class="mt-5 space-y-4">

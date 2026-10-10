@@ -34,7 +34,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
-            ->brandName(config('app.name').' Admin')
+            ->brandName(fn () => __(':app admin', ['app' => config('app.name')]))
+            ->brandLogo(asset('brand/qrx-logo.svg'))
+            ->darkModeBrandLogo(asset('brand/qrx-logo-dark.svg'))
+            ->brandLogoHeight('2rem')
             ->favicon(asset('favicon.svg'))
             ->colors([
                 // Read from resources/css/tokens.css: one source for app and admin.
@@ -46,7 +49,7 @@ class AdminPanelProvider extends PanelProvider
                 'info' => Color::Blue,
             ])
             // Self-hosted through the theme (no font CDN).
-            ->font('IBM Plex Sans', provider: LocalFontProvider::class)
+            ->font('Plus Jakarta Sans Variable', provider: LocalFontProvider::class)
             ->darkMode()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

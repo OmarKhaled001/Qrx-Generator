@@ -38,8 +38,24 @@ vendor/bin/pint --test && vendor/bin/phpstan analyse
 | L7 Location QR | ✅ folded into M2/M5/M6 | |
 | L8 Arabic | ✅ done | see git log |
 
+## Round 2 — UI and brand upgrade (branch `ui/brand-upgrade`)
+
+| Step | State |
+|---|---|
+| R1 Typography (Cairo + Plus Jakarta Sans) | ✅ done |
+| R2 Logo and brand assets (public/brand, docs/BRAND.md) | ✅ done |
+| R3 Design-system polish (tokens, components, layouts, pages, admin) | ✅ done |
+| R4 Landing sections | ✅ done |
+| R5 Hero illustration + GSAP scroll animation | ✅ done |
+| R6 Language review, glossary, en/ar parity test, RTL audit | ✅ done |
+| R7 Screenshots (Playwright in Docker), review, fixes, merge | ✅ done |
+
 ## Current phase notes
 
-All phases done (M0–M9, L1–L8). 197 tests green on PHP 8.5 (SQLite; MySQL 8.4 verified at M9). Pint and Larastan clean.
+All phases done: M0–M9, L1–L8, and Round 2 (R1–R7).
 
-**Done.** Merged into `master` (local, not pushed); app running at http://localhost:8010 (`docker rm -f qrx-serve` to stop). Real-browser visual check still to do by a person (no Chrome on this machine).
+- **Tests:** 224 green on PHP 8.5 (SQLite; MySQL 8.4 verified at M9).
+- **Pint and Larastan:** clean.
+- **Merge:** Round 2 is merged into `master`, local only, not pushed.
+- **App:** running at http://localhost:8010 (`docker rm -f qrx-serve` to stop).
+- **Visual check:** done with headless Chromium (Playwright image); see `docs/screenshots/`. A check on real phones (iOS Safari, Android Chrome) is still worth doing before launch.

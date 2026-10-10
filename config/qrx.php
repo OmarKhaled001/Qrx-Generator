@@ -32,8 +32,8 @@ return [
     ],
 
     'locales' => [
-        'en' => ['name' => 'English', 'dir' => 'ltr'],
-        'ar' => ['name' => 'العربية', 'dir' => 'rtl'],
+        'en' => ['name' => 'English', 'dir' => 'ltr', 'og' => 'en_US'],
+        'ar' => ['name' => 'العربية', 'dir' => 'rtl', 'og' => 'ar_AR'],
     ],
 
 ];

@@ -7,23 +7,33 @@
         @endif
     </x-ui.page-header>
 
-    <div class="grid gap-4 sm:grid-cols-3">
+    @php($overLimit = $qrCount >= $plan->qr_limit)
+    <div class="grid gap-4 sm:grid-cols-3 lg:gap-6">
         <x-ui.stat :label="__('QR codes')" :value="Number::format($qrCount)" :hint="__(':used of :limit used', ['used' => Number::format($qrCount), 'limit' => Number::format($plan->qr_limit)])" icon="heroicon-o-qr-code">
-            <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-sunken" role="progressbar" aria-valuemin="0" aria-valuemax="{{ $plan->qr_limit }}" aria-valuenow="{{ $qrCount }}" aria-label="{{ __('QR codes') }}">
-                <div class="h-full rounded-full bg-primary" style="width: {{ $plan->qr_limit > 0 ? min(100, round($qrCount / $plan->qr_limit * 100)) : 0 }}%"></div>
+            <div class="mt-auto pt-4">
+                <div class="h-1.5 overflow-hidden rounded-full bg-sunken" role="progressbar" aria-valuemin="0" aria-valuemax="{{ $plan->qr_limit }}" aria-valuenow="{{ $qrCount }}" aria-label="{{ __('QR codes') }}">
+                    <div @class(['h-full rounded-full', 'bg-warning-600' => $overLimit, 'bg-brand-gradient' => ! $overLimit]) style="width: {{ $plan->qr_limit > 0 ? min(100, round($qrCount / $plan->qr_limit * 100)) : 0 }}%"></div>
+                </div>
             </div>
         </x-ui.stat>
-        <x-ui.stat :label="__('Total scans')" :value="Number::format($totalScans)" icon="heroicon-o-cursor-arrow-rays" />
-        <x-ui.stat :label="__('Current plan')" :value="__($plan->name)" :hint="__(':scans scans per QR code', ['scans' => Number::format($plan->scan_limit)])" icon="heroicon-o-credit-card" />
+        <x-ui.stat :label="__('Total scans')" :value="Number::format($totalScans)" :hint="__(':count in the last 30 days', ['count' => Number::format(array_sum($dailyScans))])" icon="heroicon-o-cursor-arrow-rays" />
+        <x-ui.stat :label="__('Current plan')" :value="__($plan->name)" :hint="__(':scans scans per QR code', ['scans' => Number::format($plan->scan_limit)])" icon="heroicon-o-credit-card">
+            @if (Route::has('billing'))
+                <a href="{{ route('billing') }}" class="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-semibold text-primary-ink hover:underline">
+                    {{ $plan->is_free ? __('Upgrade your plan') : __('Manage plan') }}
+                    <x-heroicon-m-arrow-right class="size-4 rtl:-scale-x-100" aria-hidden="true" />
+                </a>
+            @endif
+        </x-ui.stat>
     </div>
 
     @if ($qrCount > 0)
-        <x-ui.card :heading="__('Scans')" :description="__('Last 30 days')" class="mt-8">
+        <x-ui.card :heading="__('Scans')" :description="__('Last 30 days')" icon="heroicon-o-chart-bar" class="mt-6 lg:mt-8">
             <x-ui.bar-chart :series="$dailyScans" :label="__('Scans per day, last 30 days')" />
         </x-ui.card>
     @endif
 
-    <div class="mt-8">
+    <div class="mt-6 lg:mt-8">
         @if ($topQrCodes->isEmpty())
             <x-ui.empty-state :heading="__('No QR codes yet')" :description="__('Create your first dynamic QR code. You can change where it points at any time.')">
                 @if (Route::has('qr.create'))
@@ -31,16 +41,21 @@
                 @endif
             </x-ui.empty-state>
         @else
-            <x-ui.card :heading="__('Most scanned')" :padded="false">
+            <x-ui.card :heading="__('Most scanned')" icon="heroicon-o-fire" :padded="false">
+                @if (Route::has('qr.index'))
+                    <x-slot:actions>
+                        <x-ui.button :href="route('qr.index')" variant="ghost" size="sm">{{ __('View all') }}</x-ui.button>
+                    </x-slot:actions>
+                @endif
                 <ul class="divide-y divide-line">
                     @foreach ($topQrCodes as $qrCode)
-                        <li class="flex items-center gap-4 px-5 py-3">
+                        <li class="relative flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-sunken/60 sm:px-6">
                             <span class="grid size-9 shrink-0 place-items-center rounded-md bg-primary-soft text-primary-ink">
                                 <x-dynamic-component :component="$qrCode->type->icon()" class="size-5" aria-hidden="true" />
                             </span>
                             <div class="min-w-0 flex-1">
                                 @if (Route::has('qr.show'))
-                                    <a href="{{ route('qr.show', $qrCode) }}" class="block truncate text-sm font-medium text-ink hover:underline">{{ $qrCode->name }}</a>
+                                    <a href="{{ route('qr.show', $qrCode) }}" class="block truncate text-sm font-medium text-ink after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:rounded-md focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-focus">{{ $qrCode->name }}</a>
                                 @else
                                     <p class="truncate text-sm font-medium text-ink">{{ $qrCode->name }}</p>
                                 @endif

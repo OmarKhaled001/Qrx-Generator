@@ -10,6 +10,7 @@ use App\Models\QrCode;
 use App\Services\QrRenderer;
 use App\Services\Subscriptions;
 use App\Support\QrDesign;
+use App\Support\QrPresets;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -50,6 +51,24 @@ class QrBuilder extends Component
 
         $this->useGradient = $design['gradient'] !== null;
         $this->design = array_merge($design, ['gradient' => $design['gradient'] ?? ['from' => '#0e7490', 'to' => '#7c3aed']]);
+    }
+
+    public function applyPreset(string $key): void
+    {
+        $preset = QrPresets::find($key);
+
+        if ($preset === null) {
+            return;
+        }
+
+        $this->useGradient = $preset['gradient'] !== null;
+        $this->design = array_merge($this->design, [
+            'style' => $preset['style'],
+            'eye' => $preset['eye'],
+            'color' => $preset['color'],
+            'bg' => $preset['bg'],
+            'gradient' => $preset['gradient'] ?? $this->design['gradient'],
+        ]);
     }
 
     public function selectType(string $type): void
@@ -117,6 +136,7 @@ class QrBuilder extends Component
 
         return view('livewire.dashboard.qr-builder', [
             'types' => QrType::cases(),
+            'presets' => QrPresets::all(),
             'preview' => $renderer->svgDataUri($content, $design, 320),
             'lowContrast' => QrDesign::weakestContrast($design) < 3,
             'atLimit' => ! $this->qrCode && ! $subscriptions->canCreateQrCode(auth()->user()),

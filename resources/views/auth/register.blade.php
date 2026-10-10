@@ -1,4 +1,4 @@
-<x-layouts::guest :heading="__('Create your account')" :description="__('Start free with 3 dynamic QR codes. No card needed.')">
+<x-layouts::guest :heading="__('Create your account')" :description="trans_choice('Start free with :count dynamic QR code. No card needed.|Start free with :count dynamic QR codes. No card needed.', \App\Models\Plan::free()->qr_limit, ['count' => Number::format(\App\Models\Plan::free()->qr_limit)])">
     <form method="POST" action="{{ route('register.store') }}" class="space-y-5">
         @csrf
         <x-ui.field :label="__('Full name')" for="name">

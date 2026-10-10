@@ -15,7 +15,7 @@
     --color-brand-300: oklch(0.836 0.098 196);
     --color-brand-400: oklch(0.745 0.118 197);
     --color-brand-500: oklch(0.652 0.120 199);
-    --color-brand-600: oklch(0.556 0.107 202);
+    --color-brand-600: oklch(0.545 0.107 202);
     --color-brand-700: oklch(0.476 0.090 205);
     --color-brand-800: oklch(0.404 0.073 207);
     --color-brand-900: oklch(0.343 0.058 209);
@@ -73,23 +73,30 @@
     --color-info-700: oklch(0.488 0.200 264);
     --color-info-900: oklch(0.379 0.138 266);
 
-    /* Typography: IBM Plex Sans pairs with IBM Plex Sans Arabic. */
-    --font-sans: 'IBM Plex Sans', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
-    --font-arabic: 'IBM Plex Sans Arabic', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    /* Typography: Plus Jakarta Sans (Latin) pairs with Cairo (Arabic); both variable, self-hosted.
+       html:lang(ar) swaps the order so Arabic pages use Cairo first (see app.css). */
+    --font-sans: 'Plus Jakarta Sans Variable', 'Cairo Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-arabic: 'Cairo Variable', 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
     /* Shape. */
     --radius-sm: 0.375rem;
     --radius-md: 0.625rem;
-    --radius-lg: 1rem;
-    --radius-xl: 1.5rem;
+    --radius-lg: 0.875rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.75rem;
 
-    /* Elevation. */
-    --shadow-card: 0 1px 2px 0 oklch(0.208 0.028 265 / 0.06), 0 1px 3px 0 oklch(0.208 0.028 265 / 0.08);
-    --shadow-pop: 0 12px 32px -8px oklch(0.208 0.028 265 / 0.22), 0 4px 8px -4px oklch(0.208 0.028 265 / 0.10);
+    /* Elevation: layered and tinted with the ink colour. --shadow-tint is redefined for dark mode below. */
+    --shadow-xs: 0 1px 2px 0 oklch(var(--shadow-tint) / 0.05);
+    --shadow-card: 0 1px 2px 0 oklch(var(--shadow-tint) / 0.04), 0 2px 8px -2px oklch(var(--shadow-tint) / 0.07);
+    --shadow-raised: 0 2px 4px -1px oklch(var(--shadow-tint) / 0.06), 0 14px 28px -8px oklch(var(--shadow-tint) / 0.16);
+    --shadow-pop: 0 12px 32px -8px oklch(var(--shadow-tint) / 0.22), 0 4px 8px -4px oklch(var(--shadow-tint) / 0.10);
+    --shadow-glow: 0 1px 2px 0 oklch(0.476 0.090 205 / 0.30), 0 6px 18px -6px oklch(0.556 0.107 202 / 0.55);
+    --inset-shadow-highlight: inset 0 1px 0 0 var(--highlight);
 
     /* Motion. */
     --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
     --default-transition-duration: 160ms;
 }
 
@@ -110,6 +117,13 @@
     --primary-ink: var(--color-brand-700);
     --on-primary: #ffffff;
     --focus: var(--color-brand-500);
+    --shadow-tint: 0.208 0.028 265;
+    --highlight: transparent;
+    /* Brand gradient (logo tile, hero accents, highlighted plan). */
+    --gradient-brand: linear-gradient(135deg, var(--color-brand-500), var(--color-accent-600));
+    /* Deeper variant for surfaces that carry white text (≥ 4.5:1 at both ends). */
+    --gradient-brand-deep: linear-gradient(135deg, var(--color-brand-700), var(--color-accent-700));
+    --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.906 0.066 196 / 0.55), transparent 70%);
     color-scheme: light;
 }
 
@@ -129,6 +143,11 @@
     --primary-ink: var(--color-brand-300);
     --on-primary: var(--color-neutral-950);
     --focus: var(--color-brand-400);
+    --shadow-tint: 0.05 0.02 265;
+    /* Hairline top highlight so raised surfaces read on dark backgrounds where shadows vanish. */
+    --highlight: oklch(1 0 0 / 0.05);
+    --gradient-brand: linear-gradient(135deg, var(--color-brand-400), var(--color-accent-500));
+    --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.404 0.073 207 / 0.45), transparent 70%);
     color-scheme: dark;
 }
 

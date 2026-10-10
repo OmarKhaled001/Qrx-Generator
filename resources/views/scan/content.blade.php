@@ -2,7 +2,7 @@
 @php
     $value = fn (string $key) => trim((string) ($payload[$key] ?? ''));
     $tel = fn (string $number) => 'tel:'.preg_replace('/[^0-9+]/', '', $number);
-    $actionClass = 'flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-medium text-on-primary shadow-card transition hover:bg-primary-hover';
+    $actionClass = 'flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-base font-semibold text-on-primary shadow-glow transition-[background-color,transform] hover:bg-primary-hover active:scale-[0.98]';
 @endphp
 
 @switch($type)
