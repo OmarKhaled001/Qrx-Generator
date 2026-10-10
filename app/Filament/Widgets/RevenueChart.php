@@ -68,7 +68,8 @@ class RevenueChart extends ChartWidget
 
         return [
             'scales' => [
-                'x' => ['reverse' => $rtl, 'grid' => ['display' => false]],
+                // Horizontal labels; on narrow screens Chart.js skips some instead of rotating (rotated Arabic clipped).
+                'x' => ['reverse' => $rtl, 'grid' => ['display' => false], 'ticks' => ['maxRotation' => 0, 'autoSkip' => true, 'autoSkipPadding' => 12]],
                 'y' => ['beginAtZero' => true, 'position' => $rtl ? 'right' : 'left'],
                 'y1' => ['beginAtZero' => true, 'position' => $rtl ? 'left' : 'right', 'grid' => ['drawOnChartArea' => false]],
             ],

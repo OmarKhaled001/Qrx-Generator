@@ -246,3 +246,16 @@ Judgement calls made during the autonomous v2 build, one line of reasoning each.
   - `<x-ui.button icon>` mirrors directional icons (open-in-new, send, arrows) automatically.
   - LTR fields (email, URL, phone, coordinates) align to the end in Arabic forms.
   - The register page reads the free plan's real limit instead of a hardcoded "3".
+
+## R7 — Screenshots, review and fixes
+
+- **Screenshots come from the official Playwright image** (Chromium) via `scripts/screenshots.mjs`:
+  - 10 pages × English/Arabic × desktop 1440 / mobile 390 into `docs/screenshots/`;
+  - dark-mode landing and dashboard;
+  - the hero animation in 5 frames per language (`docs/screenshots/hero/`).
+
+  Still pages use reduced motion so they show the finished hero. The script restores each account's language afterwards and warns about any horizontal overflow (none left).
+- **Builder screenshots use the subscriber account:** the free demo account is over its limit by design, which blocks creating.
+- **Fixes from the final review:**
+  - On phones the builder keeps a sticky bar with a live thumbnail and the save button. The full preview sits below the whole form there.
+  - The admin revenue chart keeps its month labels horizontal; rotated Arabic labels were clipped on phones.

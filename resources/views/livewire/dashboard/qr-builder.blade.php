@@ -129,5 +129,15 @@
                 </x-ui.button>
             </x-ui.card>
         </aside>
+
+        {{-- Small screens: the preview card sits below the whole form, so keep a live thumbnail and the save button in reach. --}}
+        <div class="h-20 lg:hidden" aria-hidden="true"></div>
+        <div class="fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-line bg-surface/90 px-4 py-3 shadow-pop backdrop-blur-lg lg:hidden">
+            <img src="{{ $preview }}" alt="" class="size-14 shrink-0 rounded-md bg-white p-1 ring-1 ring-line" wire:loading.class="opacity-40" wire:target="design, useGradient, applyPreset">
+            <p class="min-w-0 flex-1 truncate text-sm text-ink-muted">{{ $name !== '' ? $name : __('Preview') }}</p>
+            <x-ui.button type="submit" :disabled="$atLimit" wire:loading.attr="disabled" wire:target="save">
+                {{ $qrCode ? __('Save changes') : __('Create QR code') }}
+            </x-ui.button>
+        </div>
     </form>
 </div>
